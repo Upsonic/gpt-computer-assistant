@@ -75,7 +75,8 @@ def process_audio(take_screenshot=True, take_system_audio=False, dont_save_image
     
 
     if not is_just_text_model_active():
-        response_path = text_to_speech(llm_output)
+        from hashlib import sha256
+        response_path = text_to_speech(sha256(llm_output.encode()).hexdigest())
 
         def play_text():
             from ..gpt_computer_assistant import the_input_box
