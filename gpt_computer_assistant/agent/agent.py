@@ -30,8 +30,6 @@ except:
 
 
 
-<<<<<<< patch-1
-
 prompt_cache = {}
 def get_prompt(name):
     global prompt_cache
@@ -44,13 +42,6 @@ def get_prompt(name):
         return prompt
 
 
-
-from upsonic import Tiger
-tools = Tiger()
-tools.enable_auto_requirements = True
-tools = tools.langchain()
-=======
->>>>>>> master
 def get_agent_executor():
     
     model = load_model_settings()
