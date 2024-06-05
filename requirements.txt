@@ -1,7 +1,7 @@
 langgraph==0.0.55
 pyqt5==5.15.10
 scipy==1.13.1
-pygame==2.5.2
+pygame==2.5.0
 soundcard==0.4.3
 openai==1.30.3
 langchain_openai==0.1.7
