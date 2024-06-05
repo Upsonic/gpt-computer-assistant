@@ -1,6 +1,10 @@
 import os
 import sys
 import re
+import logging
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 def read_version():
     with open('gpt_computer_assistant/__init__.py', 'r') as file:
