@@ -16,7 +16,13 @@ def start():
         set_profile(profile)
     
 
-    from .gpt_computer_assistant import QApplication, MainWindow, sys
+    try:
+        from .gpt_computer_assistant import QApplication, MainWindow, sys
+    except ImportError:
+        from gpt_computer_assistant import QApplication, MainWindow, sys
+
     app = QApplication(sys.argv)
     ex = MainWindow()
     sys.exit(app.exec_())
+
+start()

@@ -1,20 +1,26 @@
 
 from .signal import *
 
-from ..audio.record import *
-
-from ..screen.shot import *
-
-from ..agent.proccess import *
-
-from ..agent.chat_history import clear_chat_history
-
+try:
+    from ..audio.record import *
+    from ..screen.shot import *
+    from ..agent.proccess import *
+    from ..agent.chat_history import clear_chat_history
+    from ..utils.db import screenshot_path, save_api_key, load_api_key, activate_just_text_model, deactivate_just_text_model, is_just_text_model_active, set_profile, get_profile
+    from ..screen.shot import take_screenshot
+except ImportError:
+    from audio.record import *
+    from screen.shot import *
+    from agent.proccess import *
+    from agent.chat_history import clear_chat_history
+    from utils.db import screenshot_path, save_api_key, load_api_key, activate_just_text_model, deactivate_just_text_model, is_just_text_model_active, set_profile, get_profile
+    from screen.shot import take_screenshot
+    
+    
 import pyautogui
 recording_thread = None
 
 
-from ..utils.db import screenshot_path, save_api_key, load_api_key, activate_just_text_model, deactivate_just_text_model, is_just_text_model_active, set_profile, get_profile
-from ..screen.shot import take_screenshot
 
 
 

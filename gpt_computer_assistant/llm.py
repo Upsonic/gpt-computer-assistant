@@ -1,7 +1,10 @@
 from openai import OpenAI
 from langchain_openai import ChatOpenAI
 
-from .utils.db import load_api_key
+try:
+    from .utils.db import load_api_key
+except ImportError:
+    from utils.db import load_api_key
 
 
 

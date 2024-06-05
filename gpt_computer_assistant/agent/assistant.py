@@ -2,8 +2,11 @@ import base64
 from langchain_core.messages import HumanMessage, SystemMessage, AIMessage
 from .chat_history import *
 from .agent import *
-from ..screen.shot import *
 
+try:
+    from ..screen.shot import *
+except ImportError:
+    from screen.shot import *
 
 
 config = {"configurable": {"thread_id": "abc123"}}

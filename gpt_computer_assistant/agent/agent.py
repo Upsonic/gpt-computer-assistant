@@ -1,4 +1,7 @@
-from ..llm import *
+try:
+    from ..llm import get_model
+except ImportError:
+    from llm import get_model
 
 
 
