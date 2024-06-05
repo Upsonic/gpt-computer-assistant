@@ -22,13 +22,9 @@ def assistant(llm_input, llm_history, client, screenshot_path=None):
 
     if screenshot_path:
         base64_image = encode_image(screenshot_path)
-        the_message.append(
-            {
-                    "type": "image_url",
-                    "image_url": {"url": f"data:image/jpeg;base64,{base64_image}"},
-                },
-        )
-        print("LEN OF İMAGE", len(base64_image)) 
+        image_url = {"url": f"data:image/jpeg;base64,{base64_image}"}
+        the_message.append({"type": "image_url", "image_url": image_url})
+        print("LEN OF IMAGE", len(base64_image))
 
     the_message = HumanMessage(content=the_message)
     get_chat_message_history().add_message(the_message)
@@ -38,16 +34,10 @@ def assistant(llm_input, llm_history, client, screenshot_path=None):
 
 
     if the_model == "gpt-4o":
-        msg = get_agent_executor().invoke({"messages":llm_history + [the_message]}, config=config)
-
-    elif the_model == "llava" or the_model == "bakllava":
-
-        get_agent_executor().invoke(
-            {
-                "input": the_message,
-                "chat_history": llm_history,
-            }
-        )
+        msg = get_agent_executor().invoke({"messages": llm_history + [the_message]}, config=config)
+    elif the_model in ["llava", "bakllava"]:
+        msg = get_agent_executor().invoke({"input": the_message, "chat_history": llm_history})
+    
 
 
 
