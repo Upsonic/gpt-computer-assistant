@@ -7,7 +7,7 @@ with open('requirements.txt') as fp:
     install_requires = fp.read()
 setup(
     name="gpt_computer_assistant",
-    version="0.6.11",
+    version="0.6.14",
     description="""GPT""",
     long_description="".join(open("README.md", encoding="utf-8").readlines()),
     long_description_content_type="text/markdown",
@@ -20,7 +20,7 @@ setup(
     entry_points={
         "console_scripts": ["computerassistant=gpt_computer_assistant.start:start"],
     },      
-    python_requires=">= 3",
+    python_requires=">= 3.9",
     zip_safe=False,
 )
 
