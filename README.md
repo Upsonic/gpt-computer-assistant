@@ -158,4 +158,3 @@ At this time we have many infrastructure elements. We just aim to provide whole 
 <a href="https://github.com/onuratakan/gpt-computer-assistant/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=onuratakan/gpt-computer-assistant" />
 </a>
-
