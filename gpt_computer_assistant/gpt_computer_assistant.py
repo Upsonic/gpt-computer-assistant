@@ -30,11 +30,12 @@ import random
 import numpy as np
 import sounddevice as sd
 import soundfile as sf
+from .utils.db import load_api_key, load_model_settings, screenshot_icon_path, microphone_icon_path, audio_icon_path
 
 from pygame import mixer
 import math
 from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget
-from PyQt5.QtGui import QMouseEvent, QPainter, QPen, QBrush
+from PyQt5.QtGui import QMouseEvent, QPainter, QPen, QBrush, QIcon, QPixmap
 from PyQt5.QtCore import Qt, QTimer, QRect, pyqtSignal, QObject
 from PyQt5.QtGui import QKeySequence
 from PyQt5.QtWidgets import QShortcut
@@ -49,8 +50,8 @@ from PyQt5 import QtWidgets, QtGui
 from PyQt5.QtGui import QIcon
 
 
-
-
+from .gui.settings import settings_popup
+from .gui.llmsettings import llmsettings_popup
 
 
 print("Imported all libraries")
@@ -73,6 +74,9 @@ except:
 the_input_box = None
 
 
+the_main_window = None
+
+
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -84,6 +88,15 @@ class MainWindow(QMainWindow):
         self.button_handler = ButtonHandler(self)
         self.initUI()
         self.old_position = self.pos()
+
+        if load_model_settings() == "gpt-4o":
+            self.should_paint = True  # Flag to control painting
+        else:
+            self.should_paint = False
+
+
+        global the_main_window
+        the_main_window = self
 
     def initUI(self):
         self.setWindowTitle('GPT')
@@ -194,12 +207,16 @@ class MainWindow(QMainWindow):
         self.layout.addLayout(button_layout)
 
 
-
-        settingsButton = QPushButton('Settings', self)
-
-        settingsButton.clicked.connect(self.button_handler.settings_popup)
         button_layout_ = QHBoxLayout()
+
+        settingsButton = QPushButton('Chat Settings', self)
+        settingsButton.clicked.connect(settings_popup)
+        
+        llmsettingsButton = QPushButton('LLM Settings', self)
+        llmsettingsButton.clicked.connect(llmsettings_popup)        
+
         button_layout_.addWidget(settingsButton)
+        button_layout_.addWidget(llmsettingsButton)
         self.layout.addLayout(button_layout_)
 
 
@@ -217,6 +234,9 @@ class MainWindow(QMainWindow):
             self.old_position = event.globalPos()
 
     def paintEvent(self, event):
+        if not self.should_paint:
+            return  # Skip the drawing if should_paint is False
+
         painter = QPainter(self)
         painter.setRenderHint(QPainter.Antialiasing)
         painter.setPen(QPen(Qt.black, 8, Qt.SolidLine))
@@ -244,34 +264,60 @@ class MainWindow(QMainWindow):
         self.circle_rect = QRect(int(center_x - radius / 2), int(center_y - radius / 2), int(radius), int(radius))
 
         
+
+
         small_center_x = self.width() - 30
-        small_center_y = self.height() - 160
-        small_radius = 20
+        small_center_y = self.height() - 150
+        small_radius = 30
         painter.drawEllipse(int(small_center_x - small_radius / 2), int(small_center_y - small_radius / 2), int(small_radius), int(small_radius))
         
         self.small_circle_rect = QRect(int(small_center_x - small_radius / 2), int(small_center_y - small_radius / 2), int(small_radius), int(small_radius))
 
+        # Draw the icon inside the circle
+        icon_size = small_radius * 2 // 3  # Adjust the icon size relative to the circle
+        icon_rect = QRect(small_center_x - icon_size // 2, small_center_y - icon_size // 2, icon_size, icon_size)
+        self.small_circle_recticon = QIcon(microphone_icon_path)
+        self.small_circle_recticon.paint(painter, icon_rect)
 
 
         
         small_center_x = 30 
-        small_center_y = self.height() - 130
-        small_radius = 20
+        small_center_y = self.height() - 125
+        small_radius = 30
         painter.drawEllipse(int(small_center_x - small_radius / 2), int(small_center_y - small_radius / 2), int(small_radius), int(small_radius))
 
         self.small_circle_left = QRect(int(small_center_x - small_radius / 2), int(small_center_y - small_radius / 2), int(small_radius), int(small_radius))
 
+        # Draw the icon inside the circle
+        icon_size = small_radius * 2 // 3  # Adjust the icon size relative to the circle
+        icon_rect = QRect(small_center_x - icon_size // 2, small_center_y - icon_size // 2, icon_size, icon_size)
+        self.small_circle_lefticon = QIcon(audio_icon_path)
+        self.small_circle_lefticon.paint(painter, icon_rect)
+
 
         
         small_center_x = 30
-        small_center_y = 30
-        small_radius = 25
+        small_center_y = 25
+        small_radius = 30
         painter.drawEllipse(int(small_center_x - small_radius / 2), int(small_center_y - small_radius / 2), int(small_radius), int(small_radius))
 
         self.small_circle_left_top = QRect(int(small_center_x - small_radius / 2), int(small_center_y - small_radius / 2), int(small_radius), int(small_radius))
 
+        # Draw the icon inside the circle
+        icon_size = small_radius * 2 // 3  # Adjust the icon size relative to the circle
+        icon_rect = QRect(small_center_x - icon_size // 2, small_center_y - icon_size // 2, icon_size, icon_size)
+        self.small_circle_left_topticon = QIcon(screenshot_icon_path)
+        self.small_circle_left_topticon.paint(painter, icon_rect)
 
 
+
+    def remove_painting(self):
+        self.should_paint = False  # Set the flag to False
+        self.update()  # Request a repaint, which will now skip drawing
+
+    def activate_painting(self):
+        self.should_paint = True
+        self.update()
 
 
     def update_state(self, new_state):

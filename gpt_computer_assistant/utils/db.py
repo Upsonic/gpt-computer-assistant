@@ -60,6 +60,21 @@ def load_api_key():
         
 
 
+model_settings_db = os.path.join(artifacts_dir, "model_settings.db")
+
+def save_model_settings(model):
+    with open(model_settings_db, 'w') as f:
+        f.write(model)
+
+def load_model_settings():
+    if not os.path.exists(model_settings_db):
+        return "gpt-4o"
+    with open(model_settings_db, 'r') as f:
+        return f.read()
+
+
+
+
 just_text_model = os.path.join(artifacts_dir, "just_text_model.db")
 
 def activate_just_text_model():
@@ -83,3 +98,8 @@ icon_24_path = os.path.join(media_dir, "icon_24.png")
 icon_32_path = os.path.join(media_dir, "icon_32.png")
 icon_48_path = os.path.join(media_dir, "icon_48.png")
 icon_256_path = os.path.join(media_dir, "icon_256.png")
+
+
+screenshot_icon_path = os.path.join(media_dir, "Screenshot.png")
+audio_icon_path = os.path.join(media_dir, "Audio.png")
+microphone_icon_path = os.path.join(media_dir, "Microphone.png")
