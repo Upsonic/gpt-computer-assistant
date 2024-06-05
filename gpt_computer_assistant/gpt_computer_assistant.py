@@ -292,7 +292,6 @@ class MainWindow(QMainWindow):
         self.state = new_state
         print(f"State updated: {new_state}")
         if new_state == 'talking':
-            self.remove_painting()
             self.pulse_frame = 0
             if self.pulse_timer:
                 self.pulse_timer.stop()
