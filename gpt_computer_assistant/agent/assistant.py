@@ -75,7 +75,7 @@ def agentic(llm_input, llm_history, client, screenshot_path=None, dont_save_imag
 
     
 
-    task = Task(description=llm_input, expected_output="Answer", agent=agents[0])
+    task = Task(description=llm_input, expected_output="Answer", agent=agents[0], tools=tools)
 
     the_crew = Crew(
         llm=get_model(),

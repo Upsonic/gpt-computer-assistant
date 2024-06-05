@@ -67,6 +67,30 @@ pip3 install gpt-computer-assistant
 computerassistant
 ```
 
+#### Agent Infrastructure
+
+With this way you can create `crewai` agents and using it into gpt-computer-assistant gui and tools.
+
+
+```python
+from gpt_computer_assistant import Agent, start
+
+manager = Agent(
+  role='Project Manager',
+  goal='understands project needs and assist coder',
+  backstory="""You're a manager at a large company.""",
+)
+
+coder = Agent(
+  role='Senior Python Coder',
+  goal='writing python scripts and copying to clipboard',
+  backstory="""You're a python developer at a large company.""",
+)
+
+
+start()
+```
+
 
 
 ### Demo Video (1 min)
@@ -113,21 +137,7 @@ https://github.com/onuratakan/gpt-computer-assistant/assets/41792982/26ae3624-e6
 | **DeepFace Integration (Facial Recognition)**                    | Planned  | Q2 2024        |
 
 
-#### Agent Infrastructure | Coming Soon
 
-```python
-from gpt_computer_assistant import crew, agent
-
-coder = agent("You are an senior python developer")
-
-manager = agent("You are senior project manager")
-
-assistant = crew(
- [coder, manager]
-)
-
-assistant.gui()
-```
 
 
 
