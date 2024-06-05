@@ -38,6 +38,7 @@
 
   <p align="center">
    <a href="https://discord.gg/qApFmWMt8x"><img alt="Static Badge" src="https://img.shields.io/badge/Discord-Join?style=social&logo=discord" width=150></a>
+   <a href="https://x.com/GPTCompAsst"><img alt="Static Badge" src="https://img.shields.io/badge/X-Join?style=social&logo=x" width=100></a>
 
   </p>
 
@@ -62,14 +63,23 @@ computerassistant
 
 ### 演示视频（1 分钟）
 
-
-
-https://github.com/onuratakan/gpt-computer-assistant/assets/41792982/082a4ee7-e09f-4426-9059-e49b353976a0
-
+https://github.com/onuratakan/gpt-computer-assistant/assets/41792982/26ae3624-e619-44d6-9b04-f39cf1ac1f8f
 
 
 
+## 使用案例
 
+<table>
+  <tr>
+    <td><img src="https://github.com/onuratakan/gpt-computer-assistant/assets/41792982/b4a4f11e-5588-4656-b5d7-b612a9a2855b" alt="Take Meeting Notes" width="500"/></td>
+    <td><img src="https://github.com/onuratakan/gpt-computer-assistant/assets/41792982/49eeac70-b33a-4ec4-8125-64127621ed62" alt="Daily Assistant" width="500"/></td>
+  </tr>
+  <tr>
+    <td><img src="https://github.com/onuratakan/gpt-computer-assistant/assets/41792982/10b69a18-033c-4d81-8ac9-f4e3c65b59c3" alt="Read Docs" width="500"/></td>
+    <td><img src="https://github.com/onuratakan/gpt-computer-assistant/assets/41792982/0f483bae-ffaf-4311-8653-c0dc64fb5ebe" alt="Coding Assistant" width="500"/></td>   
+
+  </tr>
+</table>
 
 
 
@@ -130,19 +140,7 @@ assistant.gui()
 
 
 
-## 使用案例
 
-<table>
-  <tr>
-    <td><img src="https://github.com/onuratakan/gpt-computer-assistant/assets/41792982/b4a4f11e-5588-4656-b5d7-b612a9a2855b" alt="记录会议笔记" width="500"/></td>
-    <td><img src="https://github.com/onuratakan/gpt-computer-assistant/assets/41792982/49eeac70-b33a-4ec4-8125-64127621ed62" alt="日常助手" width="500"/></td>
-  </tr>
-  <tr>
-    <td><img src="https://github.com/onuratakan/gpt-computer-assistant/assets/41792982/10b69a18-033c-4d81-8ac9-f4e3c65b59c3" alt="阅读文档" width="500"/></td>
-    <td><img src="https://github.com/onuratakan/gpt-computer-assistant/assets/41792982/0f483bae-ffaf-4311-8653-c0dc64fb5ebe" alt="编码助手" width="500"/></td>   
-
-  </tr>
-</table>
 
 
 ## 用法
