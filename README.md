@@ -1,4 +1,4 @@
-*teste*
+#teste
 
 <p align="center">
   <a href="#">
