@@ -20,7 +20,7 @@ def take_screenshot():
     try:
         screenshot_path = get_screenshot_path()
         screenshot = pyautogui.screenshot()
-        screenshot.save(screenshot_path)
+        screenshot.save(just_screenshot_path)
         signal_handler.assistant_thinking.emit()
     except Exception as e:
         print(f"An error occurred while taking the screenshot: {e}")
