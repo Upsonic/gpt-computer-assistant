@@ -1,6 +1,8 @@
+
+
 <p align="center">
   <a href="#">
-    <img src="https://github.com/onuratakan/gpt-computer-assistant/assets/41792982/176c8ddb-219e-444e-8782-1f8c37a92678" alt="Logo" width="250" >
+    <img src="https://github.com/onuratakan/gpt-computer-assistant/assets/41792982/df0fe23b-da03-42ad-965e-8858eef73263" alt="Logo"  >
   </a>
 
   <h3 align="center">GPT Computer Assistant</h3>
@@ -44,8 +46,6 @@
 </p>
 
 
-
-
 |ENGLISH|[简体中文](README.zh_CN.md)|
 
 # GPT Computer Assistant
@@ -53,7 +53,9 @@ Hi, this is an alternative work for providing ChatGPT MacOS app to Windows and L
 
 Powered by <a href="https://github.com/Upsonic/Tiger"><strong>Upsonic Tiger 🐅</strong></a> A function hub for llm agents.
 
- <a href="https://github.com/onuratakan/gpt-computer-assistant/wiki/Usage"><img alt="Static Badge" src="https://img.shields.io/badge/Local_Models-Available-blue" width=200></a>
+ <a href="https://github.com/onuratakan/gpt-computer-assistant/wiki/Usage"><img alt="Static Badge" src="https://img.shields.io/badge/Local_Models-Available-blue" width=150></a>
+ <br>
+ <a href="https://github.com/onuratakan/gpt-computer-assistant/wiki/Usage"><img alt="Static Badge" src="https://img.shields.io/badge/Groq-Available-blue" width=100></a>
 
 
 
@@ -66,6 +68,18 @@ pip3 install gpt-computer-assistant
 ```console
 computerassistant
 ```
+
+
+
+https://github.com/onuratakan/gpt-computer-assistant/assets/41792982/26ae3624-e619-44d6-9b04-f39cf1ac1f8f
+
+<p align="center">
+  <a href="#">
+    <img src="https://github.com/onuratakan/gpt-computer-assistant/assets/41792982/94ac619c-1f29-4fe6-b3cb-85a03932646b" alt="Logo"  >
+  </a>
+</p>
+
+
 
 #### Agent Infrastructure
 
@@ -93,9 +107,6 @@ start()
 
 
 
-### Demo Video (1 min)
-
-https://github.com/onuratakan/gpt-computer-assistant/assets/41792982/26ae3624-e619-44d6-9b04-f39cf1ac1f8f
 
 ## Usage
 ![Options](https://github.com/onuratakan/gpt-computer-assistant/assets/41792982/54b39347-98e0-4ee4-a715-9128c40dbcd4)
@@ -131,7 +142,7 @@ https://github.com/onuratakan/gpt-computer-assistant/assets/41792982/26ae3624-e6
 | More Feedback About Assistant Status                  | Completed    | Q2 2024        |
 | Local Model Vision and Text (With Ollama, and vision models)  | Completed  | Q2 2024        |
 | **Our Customizable Agent Infrastructure**              | Completed      | Q2 2024        |
-| Supporting Groq Models  | Complated  | Q2 2024        |
+| Supporting Groq Models  | Completed  | Q2 2024        |
 | **Native Applications, exe, dmg, appimage**              | Planned      | Q2 2024        |
 | **New UI**              | Planned      | Q2 2024        |
 | **DeepFace Integration (Facial Recognition)**                    | Planned  | Q2 2024        |

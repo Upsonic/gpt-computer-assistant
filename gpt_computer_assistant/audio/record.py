@@ -1,5 +1,11 @@
-from ..gui.signal import *
-
+try: 
+    from ..gui.signal import *
+    from ..utils.db import mic_record_location, system_sound_location, load_user_id
+    from ..utils.telemetry import my_tracer
+except ImportError:
+    from gui.signal import *
+    from utils.db import mic_record_location, system_sound_location, load_user_id
+    from utils.telemetry import my_tracer
 import numpy as np
 import sounddevice as sd
 import soundfile as sf
@@ -11,9 +17,6 @@ import soundcard as sc
 
 import threading
 
-
-from ..utils.db import mic_record_location, system_sound_location, load_user_id
-from ..utils.telemetry import my_tracer
 
 
 samplerate = 48000  # Updated samplerate for better quality

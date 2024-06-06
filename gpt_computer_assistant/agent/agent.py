@@ -1,4 +1,7 @@
-from ..llm import *
+try:
+    from ..llm import get_model
+except ImportError:
+    from llm import get_model
 from ..utils.db import load_model_settings
 
 
@@ -13,7 +16,6 @@ from langgraph.prebuilt import chat_agent_executor
 
 try:
     from upsonic import Tiger
-    raise Exception("Use the other one")
     tools = Tiger()
     tools.enable_auto_requirements = True
     tools = tools.langchain()
