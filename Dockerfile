@@ -13,7 +13,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy the current directory contents into the container at /usr/src/app
 COPY . .
 
-# Expose port 8080 to the outside world (if needed)
+# Expose port 8080 
 EXPOSE 8080
 
 # Run the application
