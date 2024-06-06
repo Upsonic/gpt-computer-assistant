@@ -16,7 +16,6 @@ from langgraph.prebuilt import chat_agent_executor
 
 try:
     from upsonic import Tiger
-    raise Exception("Use the other one")
     tools = Tiger()
     tools.enable_auto_requirements = True
     tools = tools.langchain()
@@ -65,6 +64,9 @@ def get_agent_executor():
         return AgentExecutor(
             agent=the_agent, tools=tools, verbose=True, handle_parsing_errors=True
         )
+
+    elif model == "mixtral-8x7b-groq":
+        return chat_agent_executor.create_tool_calling_executor(get_model(), tools)
 
 
 

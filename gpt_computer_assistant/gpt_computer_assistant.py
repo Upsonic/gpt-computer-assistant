@@ -101,6 +101,7 @@ class MainWindow(QMainWindow):
     def initUI(self):
         self.setWindowTitle('GPT')
         self.setGeometry(100, 100, 200, 200)
+        self.setFixedSize(self.width(), self.height())
         
 
         app_icon = QtGui.QIcon()
@@ -165,13 +166,13 @@ class MainWindow(QMainWindow):
         def input_box_send():
             if input_box.text() != "":
                 self.button_handler.input_text(input_box.text())
-                input_box.setText("")
+                
                 
 
         def input_box_send_screenshot():
             if input_box.text() != "":
                 self.button_handler.input_text_screenshot(input_box.text())
-                input_box.setText("")
+                
                 
 
 
@@ -185,12 +186,12 @@ class MainWindow(QMainWindow):
         send_button.clicked.connect(input_box_send)
 
         # Create the screenshot button
-        screenshot_button = QPushButton("+Screenshot", self)
-        screenshot_button.clicked.connect(input_box_send_screenshot)
+        self.screenshot_button = QPushButton("+Screenshot", self)
+        self.screenshot_button.clicked.connect(input_box_send_screenshot)
 
         # Add the buttons to the horizontal layout
         button_layout.addWidget(send_button)
-        button_layout.addWidget(screenshot_button)
+        button_layout.addWidget(self.screenshot_button)
 
 
 
@@ -251,7 +252,6 @@ class MainWindow(QMainWindow):
             radius = 70 + radius_variation
             painter.drawEllipse(int(center_x - radius / 2), int(center_y - radius / 2), int(radius), int(radius))
         elif self.state == 'thinking':
-            the_input_box.setText("Thinking...")
             # more slow pulsating circle with smooth easing animation
             radius_variation = 5 * (1 + math.sin(self.pulse_frame * math.pi / 100))
             radius = 70 + radius_variation
@@ -266,8 +266,8 @@ class MainWindow(QMainWindow):
         
 
 
-        small_center_x = self.width() - 30
-        small_center_y = self.height() - 150
+        small_center_x = 170
+        small_center_y = 25
         small_radius = 30
         painter.drawEllipse(int(small_center_x - small_radius / 2), int(small_center_y - small_radius / 2), int(small_radius), int(small_radius))
         
@@ -282,7 +282,7 @@ class MainWindow(QMainWindow):
 
         
         small_center_x = 30 
-        small_center_y = self.height() - 125
+        small_center_y = 65
         small_radius = 30
         painter.drawEllipse(int(small_center_x - small_radius / 2), int(small_center_y - small_radius / 2), int(small_radius), int(small_radius))
 
@@ -320,6 +320,12 @@ class MainWindow(QMainWindow):
         self.update()
 
 
+    def remove_screenshot_button(self):
+        self.screenshot_button.hide()
+    def add_screenshot_button(self):
+        self.screenshot_button.show()
+
+
     def update_state(self, new_state):
         self.state = new_state
         print(f"State updated: {new_state}")
@@ -332,6 +338,7 @@ class MainWindow(QMainWindow):
             self.pulse_timer.timeout.connect(self.pulse_circle)
             self.pulse_timer.start(5)
         elif new_state == 'thinking':
+            the_input_box.setText("Thinking...")
             self.pulse_frame = 0
             if self.pulse_timer:
                 self.pulse_timer.stop()

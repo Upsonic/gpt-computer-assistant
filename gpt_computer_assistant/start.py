@@ -15,11 +15,11 @@ def start():
         from .utils.db import set_profile
         set_profile(profile)
     
-
     try:
         from .gpt_computer_assistant import QApplication, MainWindow, sys
     except ImportError:
         from gpt_computer_assistant import QApplication, MainWindow, sys
+    os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
 
     app = QApplication(sys.argv)
     ex = MainWindow()
