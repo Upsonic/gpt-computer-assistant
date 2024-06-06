@@ -211,10 +211,6 @@ class MainWindow(QMainWindow):
 
         self.show()
 
-    def mousePressEvent(self, event: QMouseEvent):
-        if event.button() == Qt.LeftButton:
-            self.old_position = event.globalPos()
-
     def mouseMoveEvent(self, event: QMouseEvent):
         delta = QPoint(event.globalPos() - self.old_position)
         if event.buttons() == Qt.LeftButton and self.title_bar.underMouse():
