@@ -230,13 +230,10 @@ class MainWindow(QMainWindow):
         self.show()
 
     def mouseMoveEvent(self, event: QMouseEvent):
-        with my_tracer.start_span("mouse_move_event") as span:
-            span.set_attribute("user_id", user_id)
-
-            delta = QPoint(event.globalPos() - self.old_position)
-            if event.buttons() == Qt.LeftButton and self.title_bar.underMouse():
-                self.move(self.x() + delta.x(), self.y() + delta.y())
-                self.old_position = event.globalPos()
+        delta = QPoint(event.globalPos() - self.old_position)
+        if event.buttons() == Qt.LeftButton and self.title_bar.underMouse():
+            self.move(self.x() + delta.x(), self.y() + delta.y())
+            self.old_position = event.globalPos()
 
     def paintEvent(self, event):
         if not self.should_paint:
