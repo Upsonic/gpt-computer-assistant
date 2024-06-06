@@ -1,5 +1,5 @@
 
-
+import os
 
 def start():
 
@@ -25,4 +25,3 @@ def start():
     ex = MainWindow()
     sys.exit(app.exec_())
 
-start()
