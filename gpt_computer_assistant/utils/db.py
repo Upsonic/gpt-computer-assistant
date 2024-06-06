@@ -134,9 +134,9 @@ user_id_db = os.path.join(artifacts_dir, "user_id.db")
 
 def save_user_id():
     with open(user_id_db, "w") as f:
-        uuid4 = uuid.uuid4()
+        uuid4 = str(uuid.uuid4())
         f.write(uuid4)
-        return str(uuid4)
+        return uuid4
 
 
 def load_user_id():
