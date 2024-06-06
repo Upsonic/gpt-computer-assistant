@@ -8,6 +8,7 @@ from .gui.signal import *
 from .gui.button import *
 
 from .utils.db import *
+from .utils.telemetry import my_tracer
 
 import hashlib
 import sys
@@ -63,6 +64,9 @@ the_input_box = None
 
 
 the_main_window = None
+
+
+user_id = load_user_id()
 
 
 class MainWindow(QMainWindow):
@@ -212,10 +216,13 @@ class MainWindow(QMainWindow):
         self.show()
 
     def mouseMoveEvent(self, event: QMouseEvent):
-        delta = QPoint(event.globalPos() - self.old_position)
-        if event.buttons() == Qt.LeftButton and self.title_bar.underMouse():
-            self.move(self.x() + delta.x(), self.y() + delta.y())
-            self.old_position = event.globalPos()
+        with my_tracer.start_span("mouse_move_event") as span:
+            span.set_attribute("user_id", user_id)
+
+            delta = QPoint(event.globalPos() - self.old_position)
+            if event.buttons() == Qt.LeftButton and self.title_bar.underMouse():
+                self.move(self.x() + delta.x(), self.y() + delta.y())
+                self.old_position = event.globalPos()
 
     def paintEvent(self, event):
         if not self.should_paint:
@@ -335,15 +342,17 @@ class MainWindow(QMainWindow):
         self.update()
 
     def mousePressEvent(self, event: QMouseEvent):
-        if self.state == 'idle' or self.state == 'talking':
-            if self.circle_rect.contains(event.pos()):
-                self.button_handler.toggle_recording(dont_save_image=True)
-            elif self.small_circle_rect.contains(event.pos()):
-                self.button_handler.toggle_recording(no_screenshot=True)
-            elif self.small_circle_left.contains(event.pos()):
-                self.button_handler.toggle_recording(take_system_audio=True)
-            elif self.small_circle_left_top.contains(event.pos()):
-                self.button_handler.just_screenshot()
+        with my_tracer.start_span("mouse_press_event") as span:
+            span.set_attribute("user_id", user_id)
+            if self.state == 'idle' or self.state == 'talking':
+                if self.circle_rect.contains(event.pos()):
+                    self.button_handler.toggle_recording(dont_save_image=True)
+                elif self.small_circle_rect.contains(event.pos()):
+                    self.button_handler.toggle_recording(no_screenshot=True)
+                elif self.small_circle_left.contains(event.pos()):
+                    self.button_handler.toggle_recording(take_system_audio=True)
+                elif self.small_circle_left_top.contains(event.pos()):
+                    self.button_handler.just_screenshot()
 
 
 
