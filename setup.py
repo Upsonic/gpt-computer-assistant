@@ -2,8 +2,6 @@
 # -*- coding: utf-8 -*-
 
 from setuptools import setup
-import os
-
 
 with open("requirements.txt") as fp:
     install_requires = fp.read()
