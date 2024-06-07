@@ -1,6 +1,8 @@
+
+
 <p align="center">
   <a href="#">
-    <img src="https://github.com/onuratakan/gpt-computer-assistant/assets/41792982/176c8ddb-219e-444e-8782-1f8c37a92678" alt="Logo" width="250" >
+    <img src="https://github.com/onuratakan/gpt-computer-assistant/assets/41792982/df0fe23b-da03-42ad-965e-8858eef73263" alt="Logo"  >
   </a>
 
   <h3 align="center">GPT Computer Assistant</h3>
@@ -44,20 +46,20 @@
 </p>
 
 
-
-
-|ENGLISH|[简体中文](README.zh_CN.md)|
+|ENGLISH|[简体中文](README.zh_CN.md)|[正體中文](README.zh_TW.md)
 
 # GPT Computer Assistant
 Hi, this is an alternative work for providing ChatGPT MacOS app to Windows and Linux. In this way this is a fresh and stable work. You can easily install as Python library for this time but we will prepare a pipeline for providing native install scripts (.exe).
 
 Powered by <a href="https://github.com/Upsonic/Tiger"><strong>Upsonic Tiger 🐅</strong></a> A function hub for llm agents.
 
- <a href="https://github.com/onuratakan/gpt-computer-assistant/wiki/Usage"><img alt="Static Badge" src="https://img.shields.io/badge/Local_Models-Available-blue" width=200></a>
+ <a href="https://github.com/onuratakan/gpt-computer-assistant/wiki/Usage"><img alt="Static Badge" src="https://img.shields.io/badge/Local_Models-Available-blue" width=150></a>
+ <br>
+ <a href="https://github.com/onuratakan/gpt-computer-assistant/wiki/Usage"><img alt="Static Badge" src="https://img.shields.io/badge/Groq-Available-blue" width=100></a>
 
 
 
-## Installation && Run
+## Assistant Installation and Run
 Needed >= Python 3.9
 ```console
 pip3 install gpt-computer-assistant
@@ -67,11 +69,65 @@ pip3 install gpt-computer-assistant
 computerassistant
 ```
 
+### Agent Infrastructure | NEW
+
+With this way you can create `crewai` agents and using it into gpt-computer-assistant gui and tools.
 
 
-### Demo Video (1 min)
+```console
+pip3 install gpt-computer-assistant[agentic]
+```
+
+```python
+from gpt_computer_assistant import Agent, start
+
+manager = Agent(
+  role='Project Manager',
+  goal='understands project needs and assist coder',
+  backstory="""You're a manager at a large company.""",
+)
+
+coder = Agent(
+  role='Senior Python Coder',
+  goal='writing python scripts and copying to clipboard',
+  backstory="""You're a python developer at a large company.""",
+)
+
+
+start()
+```
+
+
+### Adding Custom Tools | NEW
+
+Now you are able to add custom tools that run in the agentic infra and assistant procceses. 
+
+
+```python
+from gpt_computer_assistant import Tool, start
+
+@Tool
+def sum_tool(first_number: int, second_number: int) -> str:
+    """Useful for when you need to sum two numbers together."""
+    return first_number + second_number
+
+start()
+```
+
 
 https://github.com/onuratakan/gpt-computer-assistant/assets/41792982/26ae3624-e619-44d6-9b04-f39cf1ac1f8f
+
+<p align="center">
+  <a href="#">
+    <img src="https://github.com/onuratakan/gpt-computer-assistant/assets/41792982/94ac619c-1f29-4fe6-b3cb-85a03932646b" alt="Logo"  >
+  </a>
+</p>
+
+
+
+
+
+
 
 ## Usage
 ![Options](https://github.com/onuratakan/gpt-computer-assistant/assets/41792982/54b39347-98e0-4ee4-a715-9128c40dbcd4)
@@ -106,28 +162,15 @@ https://github.com/onuratakan/gpt-computer-assistant/assets/41792982/26ae3624-e6
 | Added profiles (Different Chats)          | Completed    | Q2 2024        |
 | More Feedback About Assistant Status                  | Completed    | Q2 2024        |
 | Local Model Vision and Text (With Ollama, and vision models)  | Completed  | Q2 2024        |
-| **Supporting Groq Models**  | Ongoing  | Q2 2024        |
-| **Our Customizable Agent Infrastructure**              | Planned      | Q2 2024        |
+| **Our Customizable Agent Infrastructure**              | Completed      | Q2 2024        |
+| Supporting Groq Models  | Completed  | Q2 2024        |
+| **Adding Custom Tools**  | Completed  | Q2 2024        |
 | **Native Applications, exe, dmg, appimage**              | Planned      | Q2 2024        |
 | **New UI**              | Planned      | Q2 2024        |
 | **DeepFace Integration (Facial Recognition)**                    | Planned  | Q2 2024        |
 
 
-#### Agent Infrastructure | Coming Soon
 
-```python
-from gpt_computer_assistant import crew, agent
-
-coder = agent("You are an senior python developer")
-
-manager = agent("You are senior project manager")
-
-assistant = crew(
- [coder, manager]
-)
-
-assistant.gui()
-```
 
 
 

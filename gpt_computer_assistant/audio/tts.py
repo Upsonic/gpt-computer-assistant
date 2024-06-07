@@ -33,5 +33,3 @@ def text_to_speech(text):
 
         response.stream_to_file(location)
         return location
-
-
