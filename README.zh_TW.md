@@ -1,9 +1,14 @@
+
+
 <p align="center">
   <a href="#">
     <img src="https://github.com/onuratakan/gpt-computer-assistant/assets/41792982/176c8ddb-219e-444e-8782-1f8c37a92678" alt="Logo" width="250" >
   </a>
 
   <h3 align="center">GPT 電腦助手</h3>
+  <p align="center">
+  <a href="https://discord.gg/qApFmWMt8x"><img alt="Static Badge" src="https://img.shields.io/discord/1148697961639968859.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2" width=100></a>
+  </p>
 
   <p align="center">
     適用於 Windows、MacOS 和 Ubuntu 的 gpt-4o
@@ -37,16 +42,22 @@
 
 
   <p align="center">
-   <a href="https://discord.gg/qApFmWMt8x"><img alt="Static Badge" src="https://img.shields.io/badge/Discord-Join?style=social&logo=discord" width=150></a>
-   <a href="https://x.com/GPTCompAsst"><img alt="Static Badge" src="https://img.shields.io/badge/X-Join?style=social&logo=x" width=100></a>
+   <a href="https://x.com/GPTCompAsst"><img alt="Static Badge" src="https://img.shields.io/twitter/follow/GPTCompAsst?style=social" width=160></a>
+</p>
 
-  </p>
 
 |[ENGLISH](README.md)|[簡體中文](README.zh_CN.md)|正體中文
 
 # GPT 電腦助手
-你好，這是一個將 ChatGPT MacOS 應用程式提供給 Windows 和 Linux 的替代工作。因此，這是一個全新且穩定的項目。您可以輕鬆安裝為 Python 庫，但我們將準備一個管道，以提供本機安裝腳本（.exe）。
+嗨，這是為了將 ChatGPT MacOS 應用程式提供給 Windows 和 Linux 的替代方案。這樣做可以提供一個新鮮且穩定的解決方案。這次您可以輕鬆地安裝為 Python 庫，但我們將準備一個流程，提供本機安裝腳本（.exe）。
+
 由 <a href="https://github.com/Upsonic/Tiger"><strong>Upsonic Tiger 🐅</strong></a> 提供支持的功能集成中心。
+
+ <a href="https://github.com/onuratakan/gpt-computer-assistant/wiki/Usage"><img alt="Static Badge" src="https://img.shields.io/badge/Local_Models-Available-blue" width=150></a>
+ <br>
+ <a href="https://github.com/onuratakan/gpt-computer-assistant/wiki/Usage"><img alt="Static Badge" src="https://img.shields.io/badge/Groq-Available-blue" width=100></a>
+
+
 
 ## 安裝 && 運行
 需要 >= Python 3.9
@@ -58,12 +69,68 @@ pip3 install gpt-computer-assistant
 computerassistant
 ```
 
+### 代理基礎設施
+
+這樣一來，您可以創建 `crewai` 代理，並將其用於 gpt-computer-assistant 圖形用戶界面和工具中。
 
 
-### 示範影片（1 分鐘）
+```console
+pip3 install gpt-computer-assistant[agentic]
+```
+
+```python
+from gpt_computer_assistant import Agent, start
+
+manager = Agent(
+  role='Project Manager',
+  goal='understands project needs and assist coder',
+  backstory="""You're a manager at a large company.""",
+)
+
+coder = Agent(
+  role='Senior Python Coder',
+  goal='writing python scripts and copying to clipboard',
+  backstory="""You're a python developer at a large company.""",
+)
+
+
+start()
+```
+
+
+### 新增自訂工具
+
+現在您可以添加在代理基礎設施和助理進程中運行的自訂工具。
+
+
+```python
+from gpt_computer_assistant import Tool, start
+
+@Tool
+def sum_tool(first_number: int, second_number: int) -> str:
+    """Useful for when you need to sum two numbers together."""
+    return first_number + second_number
+
+start()
+```
+
 
 https://github.com/onuratakan/gpt-computer-assistant/assets/41792982/26ae3624-e619-44d6-9b04-f39cf1ac1f8f
 
+<p align="center">
+  <a href="#">
+    <img src="https://github.com/onuratakan/gpt-computer-assistant/assets/41792982/94ac619c-1f29-4fe6-b3cb-85a03932646b" alt="Logo"  >
+  </a>
+</p>
+
+
+
+
+
+
+
+## 使用方式
+![選項](https://github.com/onuratakan/gpt-computer-assistant/assets/41792982/54b39347-98e0-4ee4-a715-9128c40dbcd4)
 
 
 ## 使用案例
@@ -79,6 +146,9 @@ https://github.com/onuratakan/gpt-computer-assistant/assets/41792982/26ae3624-e6
 
   </tr>
 </table>
+
+
+
 
 
 
@@ -99,21 +169,8 @@ https://github.com/onuratakan/gpt-computer-assistant/assets/41792982/26ae3624-e6
 | **本地模式（使用 Ollama，語音和視覺模型）** | 計劃中       | 2024 年第二季度|
 
 
-#### 代理基礎設施 | 即將推出
 
-```python
-from gpt-comptuer-assistant import crew, agent
 
-coder = agent("你是一名高級 Python 開發者")
-
-manager = agent("你是一名高級項目經理")
-
-assistant = crew(
- [coder, manager]
-)
-
-assistant.gui()
-```
 
 
 
@@ -142,13 +199,6 @@ assistant.gui()
 
 
 
-## 用法
-
-![options](https://github.com/onuratakan/gpt-computer-assistant/assets/41792982/20972b1e-6d4f-4314-8470-f2fcf79b6e6d)
-
-
-
-** 第一次單擊包含麥克風或系統音訊的選項後，需要再次單擊相同選項以停止。
 
 
 
