@@ -29,9 +29,12 @@ def get_model():
     
     model_class, args = model_mapping[the_model] 
     return model_class(**args) if model_class else None 
-    
+
 
 def get_client():
     the_api_key = load_api_key()
     the_openai_url = load_openai_url()
-    return OpenAI(api_key=the_api_key, base_url=the_openai_url)
+    if the_openai_url == "default":
+        return OpenAI(api_key=the_api_key)
+    else:
+        return OpenAI(api_key=the_api_key, base_url=the_openai_url)
