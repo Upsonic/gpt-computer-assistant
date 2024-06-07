@@ -4,8 +4,6 @@
 from setuptools import setup
 import os
 
-if os.path.exists('requirements.txt'):
-    os.system('pip install -r requirements.txt')
 
 with open("requirements.txt") as fp:
     install_requires = fp.read()
