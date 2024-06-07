@@ -1,8 +1,9 @@
 try:
     from ..llm import get_model
+    from ..utils.db import load_model_settings
 except ImportError:
     from llm import get_model
-from ..utils.db import load_model_settings
+    from utils.db import load_model_settings
 
 
 
