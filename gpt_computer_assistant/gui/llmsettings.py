@@ -71,7 +71,10 @@ def llmsettings_popup(self):
     def hide_openai():
         api_key_label.hide()
         api_key_input.hide()
+        openai_url_label.hide()
+        openai_url_input.hide()
         save_button.hide()
+        openai_url_save_button.hide()
 
     def hide_groq():
         groq_api_key_label.hide()
@@ -81,7 +84,10 @@ def llmsettings_popup(self):
     def show_openai():
         api_key_label.show()
         api_key_input.show()
+        openai_url_label.show()
+        openai_url_input.show()
         save_button.show()
+        openai_url_save_button.show()
 
     def show_groq():
         groq_api_key_label.show()
@@ -119,9 +125,7 @@ def llmsettings_popup(self):
 
     if model_select.currentText() == "gpt-4o (OpenAI)":
         show_openai()
-        openai_url_label.show()
-        openai_url_input.show()
-        openai_url_save_button.show()
+
 
     if model_select.currentText() == "Mixtral 8x7b (Groq)":
         show_groq()
