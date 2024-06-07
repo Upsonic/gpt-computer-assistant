@@ -227,10 +227,10 @@ class MainWindow(QMainWindow):
         self.show()
 
     def mouseMoveEvent(self, event: QMouseEvent):
-        delta = QPoint(event.globalPos() - self.old_position)
-        if event.buttons() == Qt.LeftButton and self.title_bar.underMouse():
-            self.move(self.x() + delta.x(), self.y() + delta.y())
-            self.old_position = event.globalPos()
+        delta = event.globalPos() - self.mapToGlobal(QPoint(0, 0))
+        if event.buttons() & Qt.LeftButton and self.title_bar.underMouse():
+            self.move(self.pos() + delta)
+
 
     def paintEvent(self, event):
         if not self.should_paint:
