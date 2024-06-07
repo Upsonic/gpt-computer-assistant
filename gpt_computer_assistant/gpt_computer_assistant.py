@@ -94,7 +94,6 @@ class MainWindow(QMainWindow):
 
         self.state = "idle"
         self.pulse_timer = None
-        self.should_paint = False # handle not selected paint ability model for paintEvent handler
 
         self.button_handler = ButtonHandler(self)
         self.initUI()

@@ -23,9 +23,6 @@ def start():
         from gpt_computer_assistant import QApplication, MainWindow, sys
     os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
 
-
     app = QApplication(sys.argv)
     ex = MainWindow()
     sys.exit(app.exec_())
-
-start()
