@@ -110,15 +110,11 @@ class Worker(QThread):
     def run(self):
         while True:
             self.msleep(500)  # Simulate a time-consuming task
-            print("Worker running", self.the_input_text)
+
             if self.the_input_text:
                 last_text = self.commited_text[-1] if len(self.commited_text) > 0 else ""
                 if self.the_input_text != last_text:
                     self.commited_text.append(self.the_input_text)
-
-
-
-                    # self.text_to_set.emit(self.the_input_text)
 
                     for i in range(len(self.the_input_text)):
                         self.text_to_set.emit(self.the_input_text[:i + 1])
