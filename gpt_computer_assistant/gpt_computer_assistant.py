@@ -4,10 +4,11 @@ try:
     from .llm import *
     from .agent.agent import *
     from .agent.background import *
-    from .utils.db import *
     from .gui.signal import *
     from .gui.button import *
-    from .utils.db import load_api_key
+    from .gui.settings import settings_popup
+    from .gui.llmsettings import llmsettings_popup
+    from .utils.db import load_api_key, load_model_settings, screenshot_icon_path, microphone_icon_path, audio_icon_path
 except ImportError:
     # This is for running the script directly
     # in order to test the GUI without rebuilding the package
@@ -16,9 +17,11 @@ except ImportError:
     from llm import *
     from agent.agent import *
     from agent.background import *
-    from utils.db import *
+    from utils.db import load_api_key, load_model_settings, screenshot_icon_path, microphone_icon_path, audio_icon_path
     from gui.signal import *
     from gui.button import *
+    from gui.settings import settings_popup
+    from gui.llmsettings import llmsettings_popup
 
 
 import hashlib
@@ -30,7 +33,6 @@ import random
 import numpy as np
 import sounddevice as sd
 import soundfile as sf
-from .utils.db import load_api_key, load_model_settings, screenshot_icon_path, microphone_icon_path, audio_icon_path
 
 from pygame import mixer
 import math
@@ -48,11 +50,6 @@ from PyQt5.QtCore import Qt, QPoint
 from PyQt5.QtWidgets import QDialog, QVBoxLayout, QLabel, QLineEdit, QPushButton
 from PyQt5 import QtWidgets, QtGui
 from PyQt5.QtGui import QIcon
-
-
-from .gui.settings import settings_popup
-from .gui.llmsettings import llmsettings_popup
-
 
 print("Imported all libraries")
 
@@ -84,6 +81,7 @@ class MainWindow(QMainWindow):
         
         self.state = 'idle'
         self.pulse_timer = None
+        self.should_paint = False # handle not selected paint ability model for paintEvent handler
         
         self.button_handler = ButtonHandler(self)
         self.initUI()
