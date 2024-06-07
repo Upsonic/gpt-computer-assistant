@@ -31,6 +31,25 @@ def llmsettings_popup(self):
     save_button.clicked.connect(lambda: save_api_key_(api_key_input.text()))
     settings_dialog.layout().addWidget(save_button)
 
+    # Start of new OpenAI Base URL settings
+    openai_url_label = QLabel("OpenAI Base URL")
+    settings_dialog.layout().addWidget(openai_url_label)
+    openai_url_input = QLineEdit()
+    openai_url = load_openai_url()
+    openai_url_input.setText(openai_url)
+    settings_dialog.layout().addWidget(openai_url_input)
+
+    def save_openai_url_():
+        openai_url = openai_url_input.text()
+        save_openai_url(openai_url)
+        the_input_box.setText("Saved OpenAI Base URL")
+        settings_dialog.close()
+
+    openai_url_save_button = QPushButton("Save URL")
+    openai_url_save_button.clicked.connect(save_openai_url_)
+    settings_dialog.layout().addWidget(openai_url_save_button)
+    # End of new OpenAI Base URL settings
+
     groq_api_key_label = QLabel("Groq API Key")
     settings_dialog.layout().addWidget(groq_api_key_label)
     groq_api_key_input = QLineEdit()
@@ -100,6 +119,9 @@ def llmsettings_popup(self):
 
     if model_select.currentText() == "gpt-4o (OpenAI)":
         show_openai()
+        openai_url_label.show()
+        openai_url_input.show()
+        openai_url_save_button.show()
 
     if model_select.currentText() == "Mixtral 8x7b (Groq)":
         show_groq()
@@ -135,6 +157,9 @@ def llmsettings_popup(self):
             the_main_window.add_screenshot_button()
         elif model_select.currentText() == "gpt-4o (OpenAI)":
             show_openai()
+            openai_url_label.show()
+            openai_url_input.show()
+            openai_url_save_button.show()
             save_model_settings("gpt-4o")
             from ..gpt_computer_assistant import the_main_window
 
