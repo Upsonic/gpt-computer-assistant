@@ -1,12 +1,8 @@
-from crewai import Agent as crewai_Agent
-
 from .utils.db import agents
 
-class Agent(crewai_Agent):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+
+class Agent:
+    def __init__(self, role, goal, backstory):
+
         global agents
-        agents.append(self)
-
-
-
+        agents.append({"role": role, "goal": goal, "backstory": backstory})
