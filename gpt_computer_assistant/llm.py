@@ -29,6 +29,7 @@ def get_model():
     model_mapping = {
         "gpt-4o": (ChatOpenAI, args_mapping[ChatOpenAI]),
         "gpt-4-turbo": (ChatOpenAI, args_mapping[ChatOpenAI]),
+        "gpt-3.5": (ChatOpenAI, args_mapping[ChatOpenAI]),
         "gpt-3.5-turbo": (ChatOpenAI, args_mapping[ChatOpenAI]),
         "llava": (ChatOllama, args_mapping[ChatOllama]),
         "llama3": (ChatOllama, args_mapping[ChatOllama]),
