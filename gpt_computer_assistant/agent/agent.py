@@ -1,8 +1,11 @@
 try:
     from ..llm import get_model
+    from ..utils.db import load_model_settings
+    from ..llm_settings import llm_settings
 except ImportError:
     from llm import get_model
-from ..utils.db import load_model_settings
+    from utils.db import load_model_settings
+    from llm_settings import llm_settings
 
 
 from langgraph.checkpoint.sqlite import SqliteSaver
@@ -18,7 +21,6 @@ custom_tools = []
 
 try:
     from upsonic import Tiger
-
     tools = Tiger()
     tools.enable_auto_requirements = True
     tools = tools.langchain()
@@ -55,9 +57,14 @@ def get_agent_executor():
     global custom_tools, tools
     tools += custom_tools
     model = load_model_settings()
-    if model == "gpt-4o":
+
+
+    if llm_settings[model]["provider"] == "openai" or llm_settings[model]["provider"] == "groq":
         return chat_agent_executor.create_tool_calling_executor(get_model(), tools)
-    elif model == "llava":
+
+
+
+    if llm_settings[model]["provider"] == "ollama":
         from langchain import hub
 
         prompt = get_prompt("hwchase17/react-chat-json")
@@ -66,15 +73,8 @@ def get_agent_executor():
             agent=the_agent, tools=tools, verbose=True, handle_parsing_errors=True
         )
 
-    elif model == "bakllava":
-        prompt = get_prompt("hwchase17/react-chat-json")
-        the_agent = create_json_chat_agent(get_model(), tools, prompt)
-        return AgentExecutor(
-            agent=the_agent, tools=tools, verbose=True, handle_parsing_errors=True
-        )
 
-    elif model == "mixtral-8x7b-groq":
-        return chat_agent_executor.create_tool_calling_executor(get_model(), tools)
+
 
 
 """
