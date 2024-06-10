@@ -1,5 +1,6 @@
 import os
 import uuid
+import getpass
 from dotenv import load_dotenv
 
 load_dotenv(".env")
@@ -50,6 +51,10 @@ def load_api_key(model: str):
     """Load the OpenAI API key from a file or environment variables."""
     if model == "mixtral-8x7b-groq":
         return load_groq_api_key()
+    if model == "gemini-pro":
+        if "GOOGLE_API_KEY" not in os.environ:
+            os.environ["GOOGLE_API_KEY"] = getpass.getpass("Provide your Google API Key")
+        return os.getenv("GOOGLE_API_KEY")
     if not os.path.exists(openaikey):
         env = os.getenv("OPENAI_API_KEY")
         if env:
