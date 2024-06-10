@@ -1,9 +1,9 @@
 try:
-    from ..utils.db import screenshot_path, save_api_key, load_api_key, activate_just_text_model, deactivate_just_text_model, is_just_text_model_active, set_profile, get_profile, load_model_settings, save_model_settings, load_openai_url, load_groq_api_key
+    from ..utils.db import *
     from ..agent.chat_history import clear_chat_history
     from ..llm_settings import llm_show_name, llm_settings
 except ImportError:
-    from utils.db import screenshot_path, save_api_key, load_api_key, activate_just_text_model, deactivate_just_text_model, is_just_text_model_active, set_profile, get_profile, load_model_settings, save_model_settings, load_openai_url, load_groq_api_key
+    from utils.db import *
     from agent.chat_history import clear_chat_history
     from llm_settings import llm_show_name, llm_settings
     
@@ -154,7 +154,9 @@ def llmsettings_popup(self):
     current_model = load_model_settings()
     # lets set index of current model
     for i, model in enumerate(llm_show_name.keys()):
-        if model == current_model:
+        print("MODEL", model, current_model)
+        the_save_string = llm_show_name[model]
+        if the_save_string == current_model:
             model_select.setCurrentIndex(i)
 
 

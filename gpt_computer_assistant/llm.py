@@ -26,7 +26,7 @@ def get_model():
         ChatOpenAI: open_ai_base(),
         ChatOllama: {"model": the_model},
         ChatGroq: {"temperature": 0, "model_name": the_model.replace("-groq", ""), "groq_api_key": the_openai_url},
-        ChatGoogleGenerativeAI:{"model": the_model, "api_key": the_google_api_key}
+        ChatGoogleGenerativeAI:{"model": the_model, "google_api_key": the_google_api_key}
     }
     
     model_mapping = {

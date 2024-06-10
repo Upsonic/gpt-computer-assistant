@@ -3,7 +3,7 @@ llm_settings = {
     "gpt-4-turbo": {"vision":False, "transcription":True, "provider":"openai"},
     "gpt-3.5": {"vision":False, "transcription":True, "provider":"openai"},
     "gpt-3.5-turbo": {"vision":False, "transcription":True, "provider":"openai"},
-    "llama3": {"vision":True, "transcription":False, "provider":"ollama"},
+    "llama3": {"vision":False, "transcription":False, "provider":"ollama"},
     "llava": {"vision":True, "transcription":False, "provider":"ollama"},
     "bakllava": {"vision":True, "transcription":False, "provider":"ollama"},
     "gemini-pro": {"vision":True, "transcription":False, "provider":"google"},
