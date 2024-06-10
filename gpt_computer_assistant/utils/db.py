@@ -46,8 +46,10 @@ def save_api_key(api_key):
         f.write(api_key)
 
 
-def load_api_key():
+def load_api_key(model: str):
     """Load the OpenAI API key from a file or environment variables."""
+    if model == "mixtral-8x7b-groq":
+        return load_groq_api_key()
     if not os.path.exists(openaikey):
         env = os.getenv("OPENAI_API_KEY")
         if env:
