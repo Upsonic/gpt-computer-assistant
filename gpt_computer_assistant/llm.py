@@ -1,7 +1,7 @@
 from openai import OpenAI
 from langchain_openai import ChatOpenAI
-
 from langchain_community.chat_models import ChatOllama
+from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_groq import ChatGroq
 
 try:
@@ -23,17 +23,26 @@ def get_model():
     args_mapping = {
         ChatOpenAI: open_ai_base(),
         ChatOllama: {"model": the_model},
-        ChatGroq: {"temperature": 0, "model_name": the_model.replace("-groq", ""), "groq_api_key": the_api_key}
+        ChatGroq: {"temperature": 0, "model_name": the_model.replace("-groq", ""), "groq_api_key": the_api_key},
+        ChatGoogleGenerativeAI:{"model": the_model, "api_key": the_api_key}
     }
     
     model_mapping = {
+        # OpenAI
         "gpt-4o": (ChatOpenAI, args_mapping[ChatOpenAI]),
         "gpt-4-turbo": (ChatOpenAI, args_mapping[ChatOpenAI]),
         "gpt-3.5": (ChatOpenAI, args_mapping[ChatOpenAI]),
         "gpt-3.5-turbo": (ChatOpenAI, args_mapping[ChatOpenAI]),
+        
+        # Google Generative AI - Llama
         "llava": (ChatOllama, args_mapping[ChatOllama]),
         "llama3": (ChatOllama, args_mapping[ChatOllama]),
         "bakllava": (ChatOllama, args_mapping[ChatOllama]),
+
+        # Google Generative AI - Gemini
+        "gemini-pro": (ChatGoogleGenerativeAI, args_mapping[ChatGoogleGenerativeAI]),
+        
+        # Groq
         "mixtral-8x7b-groq": (ChatGroq, args_mapping[ChatGroq])
     }
     
