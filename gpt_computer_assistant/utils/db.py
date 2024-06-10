@@ -47,14 +47,8 @@ def save_api_key(api_key):
         f.write(api_key)
 
 
-def load_api_key(model: str):
+def load_api_key():
     """Load the OpenAI API key from a file or environment variables."""
-    if model == "mixtral-8x7b-groq":
-        return load_groq_api_key()
-    if model == "gemini-pro":
-        if "GOOGLE_API_KEY" not in os.environ:
-            os.environ["GOOGLE_API_KEY"] = getpass.getpass("Provide your Google API Key")
-        return os.getenv("GOOGLE_API_KEY")
     if not os.path.exists(openaikey):
         env = os.getenv("OPENAI_API_KEY")
         if env:
@@ -227,3 +221,27 @@ def is_dark_mode_active():
         return True
     with open(style_setting, "r") as f:
         return f.read() == "1"
+
+
+
+
+googlekey = os.path.join(artifacts_dir, "googlekey.db")
+
+
+def save_google_api_key(api_key):
+    """Save the Google Generative AI API key to a file."""
+    with open(googlekey, "w") as f:
+        f.write(api_key)
+
+
+def load_google_api_key():
+    """Load the Google Generative AI API key from a file or environment variables."""
+    if not os.path.exists(googlekey):
+        env = os.getenv("GOOGLE_API_KEY")
+        if env:
+            save_api_key(env)
+            return env
+        else:
+            return "CHANGE_ME"
+    with open(googlekey, "r") as f:
+        return f.read()

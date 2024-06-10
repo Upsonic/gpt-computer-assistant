@@ -5,13 +5,15 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_groq import ChatGroq
 
 try:
-    from .utils.db import load_api_key, load_openai_url, load_model_settings, load_groq_api_key
+    from .utils.db import load_api_key, load_openai_url, load_model_settings, load_groq_api_key, load_google_api_key
 except ImportError:
-    from utils.db import load_api_key, load_openai_url, load_model_settings, load_groq_api_key
+    from utils.db import load_api_key, load_openai_url, load_model_settings, load_groq_api_key, load_google_api_key
 
 def get_model():
     the_model = load_model_settings()
     the_api_key = load_api_key()
+    the_groq_api_key = load_groq_api_key()
+    the_google_api_key = load_google_api_key()
     the_openai_url = load_openai_url()
     
     def open_ai_base():
@@ -23,8 +25,8 @@ def get_model():
     args_mapping = {
         ChatOpenAI: open_ai_base(),
         ChatOllama: {"model": the_model},
-        ChatGroq: {"temperature": 0, "model_name": the_model.replace("-groq", ""), "groq_api_key": the_api_key},
-        ChatGoogleGenerativeAI:{"model": the_model, "api_key": the_api_key}
+        ChatGroq: {"temperature": 0, "model_name": the_model.replace("-groq", ""), "groq_api_key": the_openai_url},
+        ChatGoogleGenerativeAI:{"model": the_model, "api_key": the_google_api_key}
     }
     
     model_mapping = {
