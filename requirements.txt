@@ -13,7 +13,7 @@ sounddevice==0.4.6
 soundfile==0.12.1
 pydub==0.25.1
 pyscreeze==0.1.30
-requests==2.28.2
+requests==2.32.2
 pyperclip==1.8.2
 pydantic==2.7.2
 pillow==10.3.0
