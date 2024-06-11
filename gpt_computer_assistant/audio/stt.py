@@ -6,6 +6,8 @@ except ImportError:
 import os
 from pydub import AudioSegment
 import pvporcupine
+import pyaudio
+import struct
 
 def wake_word(access_key:str):
     porcupine = pvporcupine.create(access_key=access_key,
