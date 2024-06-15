@@ -35,6 +35,27 @@ user_id = load_user_id()
 os_name_ = os_name()
 
 
+
+def tts_if_you_can(text:str):
+    try:
+        if not is_just_text_model_active():
+            response_path = text_to_speech(text)
+
+            def play_audio():
+                    mixer.init()
+                    mixer.music.load(response_path)
+                    mixer.music.play()
+                    while mixer.music.get_busy():
+                        time.sleep(0.1)
+
+            playback_thread = threading.Thread(target=play_audio)
+            playback_thread.start()
+    except Exception as e:
+        pass
+        
+
+
+
 def process_audio(take_screenshot=True, take_system_audio=False, dont_save_image=False):
     with my_tracer.start_span("process_audio") as span:
         span.set_attribute("user_id", user_id)
@@ -71,6 +92,7 @@ def process_audio(take_screenshot=True, take_system_audio=False, dont_save_image
                 screenshot_path=screenshot_path if take_screenshot else None,
                 dont_save_image=dont_save_image,
             )
+            last_ai_response = llm_output
 
             if not is_just_text_model_active():
                 response_path = text_to_speech(llm_output)
@@ -86,18 +108,27 @@ def process_audio(take_screenshot=True, take_system_audio=False, dont_save_image
                         or the_input_box.toPlainText() == last_ai_response
                     ):
                         the_main_window.update_from_thread(llm_output)
-                        last_ai_response = llm_output
+   
 
                 def play_audio():
+                    from ..gpt_computer_assistant import the_input_box, the_main_window
                     with my_tracer.start_span("play_audio") as span:
                         span.set_attribute("user_id", user_id)
                         span.set_attribute("os_name", os_name_)
                         play_text()
-                        mixer.init()
-                        mixer.music.load(response_path)
-                        mixer.music.play()
-                        while mixer.music.get_busy():
-                            time.sleep(0.1)
+                        stop_talking = False
+                        for each_r in response_path:
+                            if not stop_talking:
+                                mixer.init()
+                                mixer.music.load(each_r)
+                                mixer.music.play()
+                                while mixer.music.get_busy():
+                                    if the_main_window.stop_talking:
+                                        mixer.music.stop()
+                                        the_main_window.stop_talking = False
+                                        stop_talking = True
+                                        break
+                                    time.sleep(0.1)
                         signal_handler.assistant_response_stopped.emit()
 
                 playback_thread = threading.Thread(target=play_audio)
@@ -118,6 +149,7 @@ def process_audio(take_screenshot=True, take_system_audio=False, dont_save_image
             traceback.print_exc()
             from ..gpt_computer_assistant import the_input_box, the_main_window
             the_main_window.update_from_thread("EXCEPTION: " + str(e))
+            tts_if_you_can("Exception occurred. Please check the logs.")
             signal_handler.assistant_response_stopped.emit()
 
 
@@ -153,6 +185,7 @@ def process_screenshot():
                 screenshot_path=just_screenshot_path,
                 dont_save_image=True,
             )
+            last_ai_response = llm_output
 
             if not is_just_text_model_active():
                 response_path = text_to_speech(llm_output)
@@ -168,18 +201,29 @@ def process_screenshot():
                         or the_input_box.toPlainText() == last_ai_response
                     ):
                         the_main_window.update_from_thread(llm_output)
-                        last_ai_response = llm_output
+                        
 
                 def play_audio():
+                    from ..gpt_computer_assistant import the_input_box, the_main_window
                     with my_tracer.start_span("play_audio") as span:
                         span.set_attribute("user_id", user_id)
                         span.set_attribute("os_name", os_name_)
                         play_text()
-                        mixer.init()
-                        mixer.music.load(response_path)
-                        mixer.music.play()
-                        while mixer.music.get_busy():
-                            time.sleep(0.1)
+
+                        stop_talking = False
+                        for each_r in response_path:
+                            if not stop_talking:
+                                mixer.init()
+                                mixer.music.load(each_r)
+                                mixer.music.play()
+                                while mixer.music.get_busy():
+                                    if the_main_window.stop_talking:
+                                        mixer.music.stop()
+                                        the_main_window.stop_talking = False
+                                        stop_talking = True
+                                        break
+                                    time.sleep(0.1)
+
                         signal_handler.assistant_response_stopped.emit()
 
                 playback_thread = threading.Thread(target=play_audio)
@@ -203,6 +247,7 @@ def process_screenshot():
             traceback.print_exc()
             from ..gpt_computer_assistant import the_input_box, the_main_window
             the_main_window.update_from_thread("EXCEPTION: " + str(e))
+            tts_if_you_can("Exception occurred. Please check the logs.")
             signal_handler.assistant_response_stopped.emit()
 
 
@@ -224,13 +269,14 @@ def process_text(text, screenshot_path=None):
                 screenshot_path=screenshot_path,
                 dont_save_image=True,
             )
+            last_ai_response = llm_output
 
             if not is_just_text_model_active():
 
                 def play_text():
                     from ..gpt_computer_assistant import the_input_box, the_main_window
-
                     global last_ai_response
+                    
                     if (
                         the_input_box.toPlainText() == ""
                         or the_input_box.toPlainText() == "Thinking..."
@@ -238,22 +284,33 @@ def process_text(text, screenshot_path=None):
                     ):
 
                         the_main_window.update_from_thread(llm_output)
-                        last_ai_response = llm_output
+                        
 
                 if load_api_key() != "CHANGE_ME":
                     response_path = text_to_speech(llm_output)
                     signal_handler.assistant_response_ready.emit()
 
                     def play_audio():
+                        from ..gpt_computer_assistant import the_input_box, the_main_window
                         with my_tracer.start_span("play_audio") as span:
                             span.set_attribute("user_id", user_id)
                             span.set_attribute("os_name", os_name_)
                             play_text()
-                            mixer.init()
-                            mixer.music.load(response_path)
-                            mixer.music.play()
-                            while mixer.music.get_busy():
-                                time.sleep(0.1)
+
+                            stop_talking = False
+                            for each_r in response_path:
+                                if not stop_talking:
+                                    mixer.init()
+                                    mixer.music.load(each_r)
+                                    mixer.music.play()
+                                    while mixer.music.get_busy():
+                                        if the_main_window.stop_talking:
+                                            mixer.music.stop()
+                                            the_main_window.stop_talking = False
+                                            stop_talking = True
+                                            break
+                                        time.sleep(0.1)
+
                             signal_handler.assistant_response_stopped.emit()
 
                     playback_thread = threading.Thread(target=play_audio)
@@ -282,6 +339,7 @@ def process_text(text, screenshot_path=None):
             traceback.print_exc()
             from ..gpt_computer_assistant import the_input_box, the_main_window
             the_main_window.update_from_thread("EXCEPTION: " + str(e))
+            tts_if_you_can("Exception occurred. Please check the logs.")
             signal_handler.assistant_response_stopped.emit()
 
 

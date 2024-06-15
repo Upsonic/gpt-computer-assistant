@@ -38,7 +38,8 @@ jobs:
           TAG=${{ steps.tag_extractor.outputs.latest_tag }}   
           echo "latest_tag_2=${TAG:1} " >> "$GITHUB_OUTPUT"
       
-
+    outputs:
+      tag: ${{ steps.tag_extractor.outputs.latest_tag }}
 
   pypi:
     needs: tagext
@@ -68,5 +69,4 @@ jobs:
         pip install setuptools wheel twine      
         python setup.py sdist
         twine upload dist/*
-
 

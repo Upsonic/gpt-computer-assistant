@@ -262,6 +262,4 @@ def settings_popup(self):
 
 
 
-
-
     settings_dialog.exec_()

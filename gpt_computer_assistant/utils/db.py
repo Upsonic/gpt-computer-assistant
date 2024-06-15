@@ -328,7 +328,6 @@ def is_auto_stop_recording_setting_active():
 
 
 
-
 pvporcupine_api_key = os.path.join(artifacts_dir, "pvporcupine_api_key.db")
 
 
@@ -344,4 +343,4 @@ def load_pvporcupine_api_key():
         return "CHANGE_ME"
     with open(pvporcupine_api_key, "r") as f:
         return f.read()
-    
+

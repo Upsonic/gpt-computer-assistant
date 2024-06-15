@@ -35,7 +35,7 @@ def agentic(
                 role=each["role"],
                 goal=each["goal"],
                 backstory=each["backstory"],
-                llm=get_model(),
+                llm=get_model(high_context=True),
             )
         )
 
@@ -96,11 +96,10 @@ def agentic(
 
 
     task = Task(
-        description=llm_input, expected_output="Answer", agent=agents[0], tools=tools
+        description=llm_input, expected_output="Answer", agent=agents[0], tools=get_tools()
     )
 
     the_crew = Crew(
-        llm=get_model(),
         agents=agents,
         tasks=[task],
         full_output=True,
