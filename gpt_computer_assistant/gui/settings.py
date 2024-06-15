@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QDialog, QVBoxLayout, QLabel, QLineEdit, QPushButton
 from PyQt5.QtCore import Qt, pyqtSignal, QObject
-from ..utils.db import screenshot_path, save_api_key, load_api_key, activate_just_text_model, deactivate_just_text_model, is_just_text_model_active, set_profile, get_profile, activate_dark_mode, deactivate_dark_mode, is_dark_mode_active
+from ..utils.db import *
 from ..agent.chat_history import clear_chat_history
 
 def settings_popup(self):
@@ -47,7 +47,7 @@ def settings_popup(self):
     settings_dialog.layout().addWidget(just_text_button)
 
     if is_just_text_model_active():
-        just_text_button.setText("Disabled Just Text Model")
+        just_text_button.setText("Disable Just Text Model")
 
         def deactivate_just_text_model_():
             """
@@ -112,7 +112,7 @@ def settings_popup(self):
     settings_dialog.layout().addWidget(dark_mode_button)
 
     if is_dark_mode_active():
-        dark_mode_button.setText("Disabled Dark Mode")
+        dark_mode_button.setText("Disable Dark Mode")
 
         def deactivate_dark_mode_():
             """
@@ -130,7 +130,7 @@ def settings_popup(self):
 
         dark_mode_button.clicked.connect(deactivate_dark_mode_)
     else:
-            
+
             def activate_dark_mode_():
                 """
                 Activate dark mode and update the main window.
@@ -146,6 +146,120 @@ def settings_popup(self):
                 settings_dialog.close()
     
             dark_mode_button.clicked.connect(activate_dark_mode_)
+
+
+
+
+    predefined_agents_button = QPushButton("Enable Predefined Agents (Good Results, Long Response Time)")
+
+    settings_dialog.layout().addWidget(predefined_agents_button)
+
+    try:
+        import crewai
+        if is_predefined_agents_setting_active():
+            predefined_agents_button.setText("Disable Predefined Agents (Bad Results, Short Response Time)")
+
+            def deactivate_predefined_agents_():
+                deactivate_predefined_agents_setting()
+                the_main_window.update_from_thread("Disabled Predefined Agents (Bad Results, Short Response Time)")
+                settings_dialog.close()
+
+            predefined_agents_button.clicked.connect(deactivate_predefined_agents_)
+        else:
+                
+                def activate_predefined_agents_():
+                    activate_predefined_agents_setting()
+                    the_main_window.update_from_thread("Enabled Predefined Agents (Good Results, Long Response Time)")
+                    settings_dialog.close()
+        
+                predefined_agents_button.clicked.connect(activate_predefined_agents_)
+
+    except:
+         predefined_agents_button.setText("Install gpt-computer-assistant[agentic]")
+
+
+
+
+
+
+    online_tools_button = QPushButton("Enable Upsonic Tiger Tools - More Capability (Recommended)")
+
+    settings_dialog.layout().addWidget(online_tools_button)
+
+    if is_online_tools_setting_active():
+        online_tools_button.setText("Disable Upsonic Tiger Tools - Low Capability (Not Recommended)")
+
+        def deactivate_online_tools_():
+            deactivate_online_tools_setting()
+            the_main_window.update_from_thread("Disabled Upsonic Tiger Tools - Low Capability (Not Recommended)")
+            settings_dialog.close()
+
+        online_tools_button.clicked.connect(deactivate_online_tools_)
+    else:
+            
+            def activate_online_tools_():
+                activate_online_tools_setting()
+                the_main_window.update_from_thread("Enabled Upsonic Tiger Tools - More Capability (Recommended)")
+                settings_dialog.close()
+    
+            online_tools_button.clicked.connect(activate_online_tools_)
+
+
+
+
+
+    auto_stop_recording_button = QPushButton("Enable Auto Stop Recording")
+
+    settings_dialog.layout().addWidget(auto_stop_recording_button)
+
+    if is_auto_stop_recording_setting_active():
+        auto_stop_recording_button.setText("Disable Auto Stop Recording")
+
+        def deactivate_auto_stop_recording_():
+            deactivate_auto_stop_recording_setting()
+            the_main_window.update_from_thread("Disabled Auto Stop Recording")
+            settings_dialog.close()
+
+        auto_stop_recording_button.clicked.connect(deactivate_auto_stop_recording_)
+    else:
+            
+            def activate_auto_stop_recording_():
+                activate_auto_stop_recording_setting()
+                the_main_window.update_from_thread("Enabled Auto Stop Recording")
+                settings_dialog.close()
+    
+            auto_stop_recording_button.clicked.connect(activate_auto_stop_recording_)
+
+
+
+
+
+    api_key_label = QLabel("Wakeword - Pvporcupine API Key")
+    settings_dialog.layout().addWidget(api_key_label)
+    api_key_input = QLineEdit()
+    api_key = load_pvporcupine_api_key()
+    api_key_input.setText(api_key)
+    settings_dialog.layout().addWidget(api_key_input)
+    save_button = QPushButton("Save")
+
+    def save_api_key_(api_key):
+        first_time = True
+        if api_key != "CHANGE_ME":
+            first_time = False
+        save_pvporcupine_api_key(api_key)
+
+        the_main_window.update_from_thread("Wake word activated, just say 'Her Computer' or jarvis to activate the assistant")
+        if first_time:
+            the_main_window.wake_word_trigger()
+        settings_dialog.close()
+
+    save_button.clicked.connect(lambda: save_api_key_(api_key_input.text()))
+    settings_dialog.layout().addWidget(save_button)
+
+
+
+
+
 
 
 

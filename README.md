@@ -1,8 +1,9 @@
 
 
+
 <p align="center">
   <a href="#">
-    <img src="https://github.com/onuratakan/gpt-computer-assistant/assets/41792982/df0fe23b-da03-42ad-965e-8858eef73263" alt="Logo"  >
+    <img src="https://github.com/onuratakan/gpt-computer-assistant/assets/41792982/deeeb463-c161-4fc6-8407-71c3d8b7defe" alt="Logo"  >
   </a>
 
   <h3 align="center">GPT Computer Assistant</h3>
@@ -19,19 +20,7 @@
     <br />
     </p>
     <br>
-    <p align="center">
-     <a href="https://github.com/onuratakan/gpt-computer-assistant/wiki/Installation">
-   <img src="https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white" alt="windows">
-   </a>
-   <a href="https://github.com/onuratakan/gpt-computer-assistant/wiki/Installation">
-   <img src="https://img.shields.io/badge/mac%20os-000000?style=for-the-badge&logo=apple&logoColor=white" alt="macos">
-   </a>
-    <a href="https://github.com/onuratakan/gpt-computer-assistant/wiki/Installation">
-   <img src="https://img.shields.io/badge/Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black" alt="linux">
-   </a>
-  <br> 
 
-  </p>
   <p align="center">
   <a href="https://www.python.org/">
   <img src="https://img.shields.io/badge/Made%20with-Python-1f425f.svg" alt="Made_with_python">
@@ -53,16 +42,13 @@ Hi, this is an alternative work for providing ChatGPT MacOS app to Windows and L
 
 Powered by <a href="https://github.com/Upsonic/Tiger"><strong>Upsonic Tiger 🐅</strong></a> A function hub for llm agents.
 
- <a href="https://github.com/onuratakan/gpt-computer-assistant/wiki/Usage"><img alt="Static Badge" src="https://img.shields.io/badge/Local_Models-Available-blue" width=150></a>
- <br>
- <a href="https://github.com/onuratakan/gpt-computer-assistant/wiki/Usage"><img alt="Static Badge" src="https://img.shields.io/badge/Groq-Available-blue" width=100></a>
 
 
 
-## Assistant Installation and Run
+## Installation and Run
 Needed >= Python 3.9
 ```console
-pip3 install gpt-computer-assistant
+pip3 install gpt-computer-assistant[default]
 ```
 
 ```console
@@ -75,6 +61,7 @@ With this way you can create `crewai` agents and using it into gpt-computer-assi
 
 
 ```console
+pip3 install gpt-computer-assistant[default]
 pip3 install gpt-computer-assistant[agentic]
 ```
 
@@ -100,7 +87,7 @@ start()
 
 ### Adding Custom Tools | NEW
 
-Now you are able to add custom tools that run in the agentic infra and assistant procceses. 
+Now you are able to add custom tools that run in the agentic infra and assistant processes. 
 
 
 ```python
@@ -130,7 +117,8 @@ https://github.com/onuratakan/gpt-computer-assistant/assets/41792982/26ae3624-e6
 
 
 ## Usage
-![Options](https://github.com/onuratakan/gpt-computer-assistant/assets/41792982/54b39347-98e0-4ee4-a715-9128c40dbcd4)
+![options](https://github.com/onuratakan/gpt-computer-assistant/assets/41792982/37d34745-ae4b-4b37-9bfa-aec070c97897)
+
 
 
 ### Use cases
@@ -165,10 +153,14 @@ https://github.com/onuratakan/gpt-computer-assistant/assets/41792982/26ae3624-e6
 | **Our Customizable Agent Infrastructure**              | Completed      | Q2 2024        |
 | Supporting Groq Models  | Completed  | Q2 2024        |
 | **Adding Custom Tools**  | Completed  | Q2 2024        |
-| **Click on something on the screen**              | Planned      | Q2 2024        |
-| **Native Applications, exe, dmg, appimage**              | Planned      | Q2 2024        |
-| **New UI**              | Planned      | Q2 2024        |
-| **DeepFace Integration (Facial Recognition)**                    | Planned  | Q2 2024        |
+| Click on something on the screen (text and icon)              | Completed      | Q2 2024        |
+| New UI              | Completed      | Q2 2024        |
+| Native Applications, exe, dmg              | Failed (Agentic Infra libraries not supported for now)     | Q2 2024        |
+| **Collaborated Speaking Different Voice Models on long responses.**              | Completed     | Q2 2024        |
+| **Auto Stop Recording, when you complate talking**              | Completed     | Q2 2024        |
+| **Wakeup Word**              | Completed     | Q2 2024        |
+| **Adding more capability on device**              | Planned     | Q2 2024        |
+| DeepFace Integration (Facial Recognition)                    | Planned  | Q2 2024        |
 
 
 
@@ -182,6 +174,7 @@ At this time we have many infrastructure elements. We just aim to provide whole 
 | Capability                         | Description                      |
 |------------------------------------|----------------------------------|
 | **Screen Read**                    |            OK                    |
+| **Click to and Text or Icon in the screen**                    |            OK                    |
 | **Microphone**                     |            OK                    |
 | **System Audio**                  |            OK                    |
 | **Memory**                         |            OK                    |
