@@ -138,6 +138,44 @@ start()
 ```
 
 
+
+
+
+
+<p align="center">
+<a href="#">
+    <img src="https://github.com/onuratakan/gpt-computer-assistant/assets/41792982/5c6b7063-3d9b-4ea6-befa-ce15d69fcd43" alt="Logo"  >
+  </a>
+</p>
+
+
+### API | NEW
+
+Now you can use your GPT Computer Assistant remotely! GUI still active, for this there is few steps:
+
+```console
+pip3 install 'gpt-computer-assistant[base]'
+pip3 install 'gpt-computer-assistant[api]'
+```
+
+```console
+computerassistant --api
+```
+
+
+```python
+from gpt_computer_assistant.remote import remote
+
+output = remote.input("Hi, how are you today?")
+
+print(output)
+```
+
+
+
+
+
+
 <p align="center">
 <br>
   <br>
