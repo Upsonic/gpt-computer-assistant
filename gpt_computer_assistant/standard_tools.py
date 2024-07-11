@@ -200,6 +200,17 @@ def app_close(app_name: str) -> bool:
 
 
 
+@register_tool
+@wrapper
+def get_current_time() -> str:
+    """
+    Get the current time in ISO format.
+    """
+    return datetime.datetime.now().isoformat()
+
+
+
+
 def get_standard_tools():
     print("Tool len", len(_standard_tools_))
     last_list = [_standard_tools_[each] for each in _standard_tools_]
