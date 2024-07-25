@@ -17,6 +17,7 @@ try:
     from .audio.tts import text_to_speech
     from .character import name, developer
 
+
 except ImportError:
     # This is for running the script directly
     # in order to test the GUI without rebuilding the package
@@ -34,8 +35,10 @@ except ImportError:
     from utils.telemetry import my_tracer, os_name
     from audio.wake_word import wake_word
     from audio.tts import text_to_speech
+
 import threading
 import time
+import agentops
 import random
 import math
 from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget
@@ -84,6 +87,7 @@ the_main_window = None
 user_id = load_user_id()
 os_name_ = os_name()
 
+agentops.init(os.getenv('AGENTOPS_API_KEY'))
 
 
 readed_sentences = []
@@ -550,6 +554,7 @@ class DrawingWidget(QWidget):
 
 from PyQt5.QtCore import QVariantAnimation
 
+@agentops.record_function('MainWindow')
 class MainWindow(QMainWindow):
     api_enabled = False
     def __init__(self):
