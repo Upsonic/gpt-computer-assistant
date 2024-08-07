@@ -6,8 +6,8 @@ python -m pip install pyinstaller==6.9.0
 
 
 # Pyinstaller
-pip3 uninstall -r requirements.ini -y
-pip3 install -r requirements.ini
+pip3 uninstall -r requirements.in -y
+pip3 install -r requirements.in
 
 pip3 uninstall numpy -y
 pip3 install numpy
