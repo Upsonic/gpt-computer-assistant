@@ -6,4 +6,4 @@ python -m pip install pyinstaller==6.9.0
 
 
 # Pyinstaller
-pyinstaller build_scripts/openai/app.spec
+pyinstaller app.spec
