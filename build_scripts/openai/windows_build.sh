@@ -6,5 +6,4 @@ python -m pip install pyinstaller==6.9.0
 
 
 # Pyinstaller
-pyinstaller  --windowed  --recursive-copy-metadata gpt_computer_assistant run.py --add-data="gpt_computer_assistant/utils/media/*":"gpt_computer_assistant/utils/media" --icon="gpt_computer_assistant/utils/media/icon.ico" --name="GPT Computer Assistant" --onefile
-
+pyinstaller app.spec
