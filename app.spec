@@ -1,17 +1,14 @@
 # -*- mode: python ; coding: utf-8 -*-
-
 import site
 import os
 site_pkgs_dir = site.getsitepackages()[0]  # Get the path to site-packages directory
-
 block_cipher = None
-
 a = Analysis(
     ['run.py'],
     pathex=[],
     binaries=[],
     datas=[('gpt_computer_assistant/utils/media/*', 'gpt_computer_assistant/utils/media')],
-    hiddenimports=[],
+    hiddenimports=['PyQt5'],
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],
@@ -21,12 +18,9 @@ a = Analysis(
     cipher=block_cipher,
     noarchive=False,
 )
-
 # Adding manually all the libraries installed in site-packages
 a.binaries += [("ext_libs", name, 'BINARY') for name in os.listdir(site_pkgs_dir) if not os.path.isdir(os.path.join(site_pkgs_dir, name))]
-
 pyz = PYZ(a.pure, a.zipped_data, cipher=block_cipher)
-
 exe = EXE(
     pyz,
     a.scripts,
