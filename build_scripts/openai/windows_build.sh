@@ -6,11 +6,14 @@ python -m pip install pyinstaller==6.9.0
 
 
 # Pyinstaller
+pip3 install .
+
+
 
 pip3 install crewai==0.30.11
 
 pip3 install langgraph==0.0.51
-pip3 install pyqt5==5.15.10
+pip3 install pyqt5==5.15.10m
 pip3 install scipy==1.13.1
 pip3 install pygame==2.5.2
 pip3 install soundcard==0.4.3
