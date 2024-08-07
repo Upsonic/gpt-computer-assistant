@@ -18,4 +18,8 @@ pip3 install langchain-google-genai==1.0.4
 pip3 uninstall langchain-groq -y
 pip3 install langchain-groq==0.1.5
 
+
+pip3 uninstall numpy -y
+pip3 install numpy
+
 pyinstaller --recursive-copy-metadata gpt_computer_assistant run.py --windowed --add-data="gpt_computer_assistant/utils/media/*":"gpt_computer_assistant/utils/media" --icon="gpt_computer_assistant/utils/media/icon.ico" --name="GPT Computer Assistant"
