@@ -25,4 +25,4 @@ pip3 install langgraph==0.0.51
 pip3 uninstall numpy -y
 pip3 install numpy
 
-pyinstaller --recursive-copy-metadata gpt_computer_assistant run.py --windowed --add-data="gpt_computer_assistant/utils/media/*":"gpt_computer_assistant/utils/media" --icon="gpt_computer_assistant/utils/media/icon.ico" --name="GPT Computer Assistant"
+pyinstaller --recursive-copy-metadata gpt_computer_assistant run.py --windowed --onefile --add-data="gpt_computer_assistant/utils/media/*":"gpt_computer_assistant/utils/media" --icon="gpt_computer_assistant/utils/media/icon.ico" --name="GPT Computer Assistant"
