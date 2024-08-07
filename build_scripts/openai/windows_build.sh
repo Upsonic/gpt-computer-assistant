@@ -18,6 +18,9 @@ pip3 install langchain-google-genai==1.0.4
 pip3 uninstall langchain-groq -y
 pip3 install langchain-groq==0.1.5
 
+pip3 uninstall langgraph -y
+pip3 install langgraph==0.0.51
+
 
 pip3 uninstall numpy -y
 pip3 install numpy
