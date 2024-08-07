@@ -6,23 +6,8 @@ python -m pip install pyinstaller==6.9.0
 
 
 # Pyinstaller
-pip3 uninstall pyqt5 -y
-pip3 install pyqt5==5.15.10
-
-pip3 uninstall pynput -y
-pip3 install pynput==1.7.3
-
-pip3 uninstall langchain-google-genai -y
-pip3 install langchain-google-genai==1.0.4
-
-pip3 uninstall langchain-groq -y
-pip3 install langchain-groq==0.1.5
-
-pip3 uninstall langgraph -y
-pip3 install langgraph==0.0.51
-
-pip3 uninstall pyautogui -y
-pip3 install pyautogui==0.9.54
+pip3 uninstall -r requirements.ini -y
+pip3 install -r requirements.ini
 
 pip3 uninstall numpy -y
 pip3 install numpy
