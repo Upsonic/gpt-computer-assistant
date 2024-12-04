@@ -154,8 +154,8 @@ from gpt_computer_assistant import local
 instance = local.instance()
 
 # Connecting to OpenAI
-instance.save_models("gpt-4o")
-instance.save_openai_api_key("sk-**")
+instance.client.save_models("gpt-4o")
+instance.client.save_openai_api_key("sk-**")
 
 # Asking and getting result
 result = instance.request("Extract the tech stacks of gpt-computer-assitant Company", "i want a list")
