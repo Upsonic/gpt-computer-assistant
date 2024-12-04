@@ -137,12 +137,6 @@ pip install 'gpt-computer-assistant[base]'
 pip install 'gpt-computer-assistant[api]'
 ```
 
-To run gpt-computer-assistant, simply type
-
-```console
-computerassistant --api
-```
-
 <b>LLM Settings</b>
 
 ```python
