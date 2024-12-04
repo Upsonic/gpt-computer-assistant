@@ -97,6 +97,15 @@ Beyond of Human (GCA Capable: Yes) - With Model Context Protocol (MCP)
 </p>
 
 
+## Prequisites
+- Python 3.10
+
+<p align="center">
+<br>
+  <br>
+
+</p>
+
 ## Using GCA.dev Cloud
 
 <b>Installation</b>
@@ -130,8 +139,7 @@ print(result)
 ## Self-Hosted GCA Server
 
 ### Local
-**Python 3.10 or 3.11 is required**
-
+<b>Installation</b>
 ```console
 pip install 'gpt-computer-assistant[base]'
 pip install 'gpt-computer-assistant[api]'
