@@ -51,9 +51,10 @@
 </p>
 
 # GPT Computer Assistant(GCA)
-GCA is an AI agent that Control Windows, Macos, Ubuntu. With this you can give human tasks to an AI agent and getting results.
+GCA is an innovative AI agent designed to seamlessly control systems across Windows, macOS, and Ubuntu. With its advanced capabilities, GCA enables you to delegate repetitive, logic-based tasks to an AI, drastically improving efficiency and productivity. Whether you’re a developer, analyst, or IT professional, GCA can empower you to accomplish more in less time.
 
-<b>like what?</b>
+
+<b>Imagine this:</b>
 
 | Task                         | Human       | Time | GCA Can | GCA Time | Optimization |
 |---------------------------------|--------------|----------------|---|---|---|
@@ -62,7 +63,9 @@ GCA is an AI agent that Control Windows, Macos, Ubuntu. With this you can give h
 | Check the logs to find core cause of this incident         | Technical Support Engineer    | Human: 20 Minute        | Yes | GCA: 3 Minute| %80 Faster|
 | Making CloudFlare Security Settings         | Security Specialist   | Human: 1 Day       | Yes | GCA: 10 Minute| %80 Faster|
 
-these concepts are <b>"Vertical AI Agents"</b>.
+
+
+These examples illustrate how GCA is revolutionizing the concept of <b>Vertical AI Agents</b>—tailored solutions that not only replicate human tasks but perform them at unparalleled speed and precision.
 
 
 <p align="center">
@@ -73,7 +76,28 @@ these concepts are <b>"Vertical AI Agents"</b>.
 
 
 # How GCA Works?
-GCA is an Python project that can run in many os ([Supported OS List](https://github.com/user-attachments/assets/27778034-29f5-4a71-b696-4e3f70760b26)). After the installation GCA support Model context Protocol (MCP). GCA uses this protocol and i its own modules to use computer <b>like you and beyond</b>. 
+
+
+GCA is a Python-based project that runs on multiple operating systems, including Windows, macOS, and Ubuntu. It integrates external concepts, like the Model Context Protocol (MCP), along with its own modules, to interact with and control a computer efficiently. The system performs both routine and advanced tasks by mimicking human-like actions and applying computational precision.
+
+Core Functionalities:
+
+## 1.	Human-like Actions:
+GCA can replicate common user actions, such as:
+-	<b>Clicking</b>: Interact with buttons or other UI elements.
+-	<b>Reading</b>: Recognize and interpret text on the screen.
+-	<b>Scrolling</b>: Navigate through documents or web pages.
+-	<b>Typing</b>: Enter text into forms or other input fields.
+## 2.	Advanced Capabilities:
+Through MCP and GCA’s own modules, it achieves tasks that go beyond standard human interaction, such as:
+
+-	<b>Updating dependencies</b> of a project in seconds.
+-	<b>Analyzing entire database</b> tables to locate specific data almost instantly.
+- <b>Automating cloud security</b> configurations with minimal input.
+
+
+
+GCA is a Python-based project that runs on multiple operating systems, including Windows, macOS, and Ubuntu. It integrates external concepts, like the Model Context Protocol (MCP), along with its own modules, to interact with and control a computer efficiently. The system performs both routine and advanced tasks by mimicking human-like actions and applying computational precision.
 
 
 Human Things (GCA Capable: Yes)
@@ -125,6 +149,8 @@ instance = cloud.instance()
 result = instance.request("Extract the tech stacks of gpt-computer-assitant Company", "i want a list")
 print(result)
 
+
+instance.close()
 ```
 
 <p align="center">
@@ -160,6 +186,8 @@ instance.client.save_openai_api_key("sk-**")
 # Asking and getting result
 result = instance.request("Extract the tech stacks of gpt-computer-assitant Company", "i want a list")
 print(result)
+
+instance.close()
 ```
 
 
