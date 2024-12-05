@@ -97,20 +97,6 @@ Through MCP and GCA’s own modules, it achieves tasks that go beyond standard h
 
 
 
-GCA is a Python-based project that runs on multiple operating systems, including Windows, macOS, and Ubuntu. It integrates external concepts, like the Model Context Protocol (MCP), along with its own modules, to interact with and control a computer efficiently. The system performs both routine and advanced tasks by mimicking human-like actions and applying computational precision.
-
-
-Human Things (GCA Capable: Yes)
-- Click Something
-- Read Something
-- Scrolling
-- Typing
-
-
-Beyond of Human (GCA Capable: Yes) - With Model Context Protocol (MCP)
-- Upgrade dependencies of the repository in 1s
-- Analyze whole tables in db to find xxx in 1s
-- Make whole cloudflare security settings in 1s
 
 <p align="center">
 <br>
