@@ -58,7 +58,7 @@ With [playground.gca.dev](https://playground.gca.dev/) you are ready to test and
 </p>
 
 # GPT Computer Assistant(GCA)
-GCA is an AI agent framework designed to make computer use across Windows, macOS, and Ubuntu. GCA enables you to replace repetitive, small-logic-based tasks worker to an AI. There is an really important potential that we believe. Whether you're a developer, analyst, or IT professional, GCA can empower you to accomplish more in less time.
+GCA is an AI agent framework designed to make computer use across Windows, macOS, and Ubuntu. GCA enables you to replace repetitive, small-logic-based tasks worker to an AI. There is an really important potential that we believe. Whether you’re a developer, analyst, or IT professional, GCA can empower you to accomplish more in less time.
 
 
 Imagine this:
@@ -95,7 +95,7 @@ GCA can replicate common user actions, such as:
 -	<b>Scrolling</b>: Navigate through documents or web pages.
 -	<b>Typing</b>: Enter text into forms or other input fields.
 ### 2.	Advanced Capabilities:
-Through MCP and GCA's own modules, it achieves tasks that go beyond standard human interaction, such as:
+Through MCP and GCA’s own modules, it achieves tasks that go beyond standard human interaction, such as:
 
 -	<b>Updating dependencies</b> of a project in seconds.
 -	<b>Analyzing entire database</b> tables to locate specific data almost instantly.
