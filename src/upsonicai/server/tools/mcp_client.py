@@ -39,7 +39,7 @@ class MCPToolManager:
     def list_tools(self) -> Dict[str, Any]:
         """List all available tools."""
         # Create a fresh client for each call
-        with httpx.Client(timeout=60.0) as session:
+        with httpx.Client(timeout=600.0) as session:
             response = session.post(
                 f"{self.base_url}/mcp/tools",
                 json={"command": self.command, "args": self.args, "env": self.env},
@@ -59,7 +59,7 @@ class MCPToolManager:
             Tool execution results
         """
         # Create a fresh client for each call
-        with httpx.Client(timeout=60.0) as session:
+        with httpx.Client(timeout=600.0) as session:
             response = session.post(
                 f"{self.base_url}/mcp/call_tool",
                 json={

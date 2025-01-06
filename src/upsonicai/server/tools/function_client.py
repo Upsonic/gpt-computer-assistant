@@ -25,7 +25,7 @@ class FunctionToolManager:
 
     def list_tools(self) -> Dict[str, Any]:
         """List all available tools."""
-        with httpx.Client(timeout=60.0) as session:
+        with httpx.Client(timeout=600.0) as session:
             response = session.post(f"{self.base_url}/functions/tools")
             response.raise_for_status()
             return response.json()
@@ -41,7 +41,7 @@ class FunctionToolManager:
         Returns:
             Tool execution results
         """
-        with httpx.Client(timeout=60.0) as session:
+        with httpx.Client(timeout=600.0) as session:
             response = session.post(
                 f"{self.base_url}/functions/call_tool",
                 json={"tool_name": tool_name, "arguments": arguments},
