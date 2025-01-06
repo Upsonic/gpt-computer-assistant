@@ -26,14 +26,13 @@ class ListToolsRequest(BaseRequestMCP):
     pass
 
 
+# Global variable to store the session
+session_store = None
+
 async def get_session(command: str, args: list, env: dict):
     print("env", env)
     print("args", args)
     print("command", command)
-
-    if env:
-        env = get_default_environment()
-        env.update(env) if env else None
 
     server_params = StdioServerParameters(
         command=command,  # Executable
@@ -42,9 +41,16 @@ async def get_session(command: str, args: list, env: dict):
     )
     async with stdio_client(server_params) as (read, write):
         async with ClientSession(read, write) as session:
-            await session.initialize()
-            yield session
-            await session.close()
+            try:
+                print("Initializing session...")
+                await session.initialize()
+                print("Session initialized.")
+                yield session
+            except Exception as e:
+                print(f"Error in session: {e}")
+                raise
+            finally:
+                print("Session cleanup.")
 
 
 @app.post(f"{prefix}/tools")
