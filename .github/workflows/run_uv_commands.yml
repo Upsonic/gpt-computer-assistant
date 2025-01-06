@@ -30,14 +30,8 @@ jobs:
     - name: Set Environment Variables
       run: echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" >> $GITHUB_ENV 
 
-    - name: Run Tools Server
-      run: |
-        uv run run_tools_server.py &
 
-    - name: Run Main Server
-      run: |
-        uv run run_main_server.py &
 
     - name: Run Pre-commit
       run: |
-        uvx pre-commit run 
+        uv run run_tools_server.py & uv run run_main_server.py & uvx pre-commit run 
