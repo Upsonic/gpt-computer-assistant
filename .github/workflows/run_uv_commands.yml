@@ -7,7 +7,7 @@ on:
 
 jobs:
   run-uv-commands:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
 
     steps:
     - name: Checkout repository
@@ -34,4 +34,4 @@ jobs:
 
     - name: Run Pre-commit
       run: |
-        uv run run_tools_server.py & uv run run_main_server.py & uvx pre-commit run 
+        uv run run_tools_server.py & uv run run_main_server.py & sleep 10 && uvx pre-commit run 

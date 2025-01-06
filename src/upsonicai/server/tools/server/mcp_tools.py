@@ -71,6 +71,7 @@ async def managed_session(command: str, args: list, env: dict | None = None):
 
 
 @app.post(f"{prefix}/tools")
+@timeout(30.0)
 async def list_tools(request: ListToolsRequest):
     print("Listing tools...")
     
@@ -87,6 +88,7 @@ async def list_tools(request: ListToolsRequest):
 
 
 @app.post(f"{prefix}/call_tool")
+@timeout(30.0)
 async def call_tool(request: ToolRequest):
     print(f"Received tool call request: {request}")
     
