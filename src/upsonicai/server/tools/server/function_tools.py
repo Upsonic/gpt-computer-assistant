@@ -80,7 +80,7 @@ class ToolRequest(BaseModel):
 
 
 @app.post(f"{prefix}/tools")
-@timeout(10.0)
+@timeout(30.0)
 async def list_tools():
     print("Listing tools...")
 
@@ -102,7 +102,7 @@ async def list_tools():
 
 
 @app.post(f"{prefix}/call_tool")
-@timeout(10.0)
+@timeout(30.0)
 async def call_tool(request: ToolRequest):
     print(f"Received tool call request: {request}")
 
