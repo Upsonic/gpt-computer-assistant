@@ -39,18 +39,20 @@ async def get_session(command: str, args: list, env: dict):
         args=args,  # Optional command line arguments
         env=env,  # Environment variables
     )
-    async with stdio_client(server_params) as (read, write):
-        async with ClientSession(read, write) as session:
-            try:
+    try:
+        async with stdio_client(server_params) as (read, write):
+            async with ClientSession(read, write) as session:
                 print("Initializing session...")
                 await session.initialize()
                 print("Session initialized.")
                 yield session
-            except Exception as e:
-                print(f"Error in session: {e}")
-                raise
-            finally:
-                print("Session cleanup.")
+    except GeneratorExit:
+        print("GeneratorExit occurred, session closed.")
+    except Exception as e:
+        print(f"Error in session: {e}")
+        raise
+    finally:
+        print("Session cleanup.")
 
 
 @app.post(f"{prefix}/tools")
