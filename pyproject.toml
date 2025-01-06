@@ -1,0 +1,37 @@
+[project]
+name = "upsonicai"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Onur ULUSOY", email = "onur@upsonic.co" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "cloudpickle>=3.1.0",
+    "pydantic>=2.10.4",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+
+[tool.uv]
+default-groups = ["dev", "server"]
+
+[dependency-groups]
+dev = [
+    "mypy>=1.14.1",
+    "pre-commit>=4.0.1",
+    "pytest>=8.3.4",
+    "pytest-asyncio>=0.25.1",
+]
+server = [
+    "fastapi>=0.115.6",
+    "mcp[cli]>=1.2.0",
+    "pickledb>=0.9.2",
+    "pydantic-ai>=0.0.17",
+    "python-dotenv>=1.0.1",
+    "uvicorn>=0.34.0",
+]

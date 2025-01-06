@@ -1,0 +1,39 @@
+name: Run UV Commands on Commit
+
+on:
+  push:
+    branches:
+      - '**'
+
+jobs:
+  run-uv-commands:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.12'
+
+    - name: Install UV
+      run: |
+        pip install uv
+
+    - name: Run UV Sync
+      run: |
+        uv sync
+
+    - name: Run Tools Server
+      run: |
+        uv run run_tools_server.py
+
+    - name: Run Main Server
+      run: |
+        uv run run_main_server.py
+
+    - name: Run Pre-commit
+      run: |
+        uvx pre-commit run 
