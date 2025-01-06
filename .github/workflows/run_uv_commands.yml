@@ -28,11 +28,11 @@ jobs:
 
     - name: Run Tools Server
       run: |
-        uv run run_tools_server.py
+        uv run run_tools_server.py &
 
     - name: Run Main Server
       run: |
-        uv run run_main_server.py
+        uv run run_main_server.py &
 
     - name: Run Pre-commit
       run: |
