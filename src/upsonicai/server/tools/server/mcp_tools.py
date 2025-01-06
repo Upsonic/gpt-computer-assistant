@@ -44,6 +44,7 @@ async def get_session(command: str, args: list, env: dict):
         async with ClientSession(read, write) as session:
             await session.initialize()
             yield session
+            await session.close()
 
 
 @app.post(f"{prefix}/tools")
