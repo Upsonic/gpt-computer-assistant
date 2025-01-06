@@ -26,6 +26,10 @@ jobs:
       run: |
         uv sync
 
+
+    - name: Set Environment Variables
+      run: echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" >> $GITHUB_ENV 
+
     - name: Run Tools Server
       run: |
         uv run run_tools_server.py &
