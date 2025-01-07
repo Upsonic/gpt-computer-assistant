@@ -1,26 +1,42 @@
 name: "Test Publish"
 
 on:
-
   workflow_dispatch:
 
 jobs:
   run:
-    name: "Build and publish test release"
+    name: "Build and Publish Test Release"
     runs-on: ubuntu-latest
 
     steps:
+      # Step 1: Check out the repository
       - uses: actions/checkout@v4
 
-      - name: Install uv
+      # Step 2: Install uv with dev dependencies
+      - name: Install uv and Dependencies
         uses: astral-sh/setup-uv@v3
         with:
           enable-cache: true
           cache-dependency-glob: uv.lock
 
+      - name: Build
+        run: uv install --dev
 
+      # Step 3: Generate Randomized Alpha Version with Poetry
+      - name: Generate Randomized Alpha Version
+        run: |
+          # Retrieve the current version
+          BASE_VERSION=$(poetry version | awk '{print $2}')
+          # Create a unique alpha version
+          RANDOM_VERSION="${BASE_VERSION}a$(date +%s)"
+          echo "Generated Version: $RANDOM_VERSION"
+          # Set the new version using Poetry
+          poetry version $RANDOM_VERSION
+
+      # Step 4: Build the package
       - name: Build
         run: uv build
 
+      # Step 5: Publish to TestPyPI using uv
       - name: Publish to TestPyPI
-        run: uv publish --index testpypi -t ${{ secrets.TEST_THE_PYPI_TOKEN }} 
+        run: uv publish --index testpypi -t ${{ secrets.TEST_THE_PYPI_TOKEN }}
