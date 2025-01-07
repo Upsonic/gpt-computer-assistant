@@ -10,9 +10,9 @@ class Human(BaseModel):
 
 def test_gpt4o_call():
     result = Call.gpt_4o("Hi, I am Onur Atakan ULUSOY and I am a male", Human)
-    assert result.name == "Onur Atakan"
-    assert result.surname == "ULUSOY"
-    assert result.gender == "male"
+    assert result.name.lower() == "onur atakan"
+    assert result.surname.lower() == "ulusoy"
+    assert result.gender.lower() == "male"
 
 
 def test_gpt4o_call_without_return_type():

@@ -1,5 +1,5 @@
 from upsonicai.server.tools.mcp_client import MCPToolManager
-
+import time
 
 
 def test_get_tools_by_name():
@@ -11,6 +11,7 @@ def test_get_tools_by_name():
     # Check if we got the tool
     assert len(tools) == 1
     assert tools[0].__name__ == "fetch"
+    time.sleep(5)
 
     # Test the tool
     result = tools[0](url="https://google.com")
