@@ -94,11 +94,13 @@ async def call_tool(request: ToolRequest):
     
     try:
         async with managed_session(request.command, request.args, request.env) as session:
+            print(f"Session initialized with command: {request.command}, args: {request.args}, env: {request.env}")
             print(f"Calling tool: {request.tool_name} with arguments: {request.arguments}")
             result = await session.call_tool(request.tool_name, arguments=request.arguments)
             print(f"Tool call result: {result}")
             return {"result": result}
     except asyncio.CancelledError:
+        print("Request was cancelled due to timeout.")
         raise HTTPException(status_code=408, detail="Request timeout")
     except Exception as e:
         print(f"Error calling tool: {e}")
