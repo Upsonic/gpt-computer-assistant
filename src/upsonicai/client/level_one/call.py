@@ -1,18 +1,19 @@
 import cloudpickle
+import dill
 import base64
 import httpx
-from typing import Any, List, Dict, Optional, Type
+from typing import Any, List, Dict, Optional, Type, Union
 from pydantic import BaseModel
 
 
 class Call:
 
-    def gpt_4o(
+    def call(
         self,
         prompt: str,
         response_format: Any = None,
-        tools: Optional[List[str]] = None,
-        mcp_servers: Optional[List[Dict[str, str]]] = None,
+        tools: list[str] = [],
+        mcp_servers: list[dict[str, Union[str, dict[str, str], dict[str, str], dict[str, str]]]] = [],
     ) -> Any:
         """
         Call GPT-4 with optional tools and MCP servers.
@@ -31,10 +32,15 @@ class Call:
             response_format_str = "str"
         elif isinstance(response_format, (type, BaseModel)):
             # If it's a Pydantic model or other type, cloudpickle and base64 encode it
+            the_module = dill.detect.getmodule(response_format)
+            if the_module is not None:
+                cloudpickle.register_pickle_by_value(the_module)
             pickled_format = cloudpickle.dumps(response_format)
             response_format_str = base64.b64encode(pickled_format).decode("utf-8")
         else:
             response_format_str = "str"
+
+        print("Client side response format: ", response_format_str)
 
         # Prepare the request data
         data = {
@@ -44,12 +50,20 @@ class Call:
             "mcp_servers": mcp_servers or [],
         }
 
+     
+
+
+        # Print the data
         print(data)
 
         # Use the send_request method from the Base class
         result = self.send_request("/level_one/gpt4o", data)
 
         # Deserialize the result
-        decoded_result = base64.b64decode(result["result"])
-        deserialized_result = cloudpickle.loads(decoded_result)
+        if response_format_str != "str":
+            decoded_result = base64.b64decode(result["result"])
+            deserialized_result = cloudpickle.loads(decoded_result)
+        else:
+            deserialized_result = result["result"]
+
         return deserialized_result

@@ -7,7 +7,7 @@ from .level_one.call import Call
 
 
 # Create a base class with url
-class UpsonicClient(Call):
+class UpsonicServer(Call):
 
 
     def __init__(self, url: str):

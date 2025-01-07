@@ -1,6 +1,6 @@
 from fastapi import HTTPException
 from pydantic import BaseModel
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Any, Optional, Union
 import traceback
 from ...api import app, timeout
 from ..call import Call
@@ -15,9 +15,9 @@ prefix = "/level_one"
 
 class GPT4ORequest(BaseModel):
     prompt: str
-    response_format: Optional[str] = "str"
-    tools: Optional[List[str]] = []
-    mcp_servers: Optional[List[Dict[str, str]]] = []
+    response_format: Optional[Any] = []
+    tools: Optional[Any] = []
+    mcp_servers: Optional[Any] = []
 
 
 def run_sync_gpt4o(prompt, response_format, tools, mcp_servers):
@@ -69,7 +69,7 @@ async def call_gpt4o(request: GPT4ORequest):
         else:
             response_format = str
 
-        print(response_format)
+        print(request.mcp_servers)
 
         loop = asyncio.get_running_loop()
         with ThreadPoolExecutor() as pool:
@@ -82,8 +82,9 @@ async def call_gpt4o(request: GPT4ORequest):
                 request.mcp_servers,
             )
 
-        result = cloudpickle.dumps(result)
-        result = base64.b64encode(result).decode('utf-8')
+        if request.response_format != "str":
+            result = cloudpickle.dumps(result)
+            result = base64.b64encode(result).decode('utf-8')
         return {"result": result}
     except Exception as e:
         traceback.print_exc()

@@ -1,8 +1,8 @@
-from .client.base import UpsonicClient
+from .client.base import UpsonicServer
 
 
 def hello() -> str:
     return "Hello from upsonicai!"
 
 
-__all__ = ["hello", "UpsonicClient"]
+__all__ = ["hello", "UpsonicServer"]

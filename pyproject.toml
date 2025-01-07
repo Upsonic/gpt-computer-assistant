@@ -9,6 +9,7 @@ authors = [
 requires-python = ">=3.12"
 dependencies = [
     "cloudpickle>=3.1.0",
+    "dill>=0.3.9",
     "pydantic>=2.10.4",
 ]
 
