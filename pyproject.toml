@@ -19,7 +19,7 @@ build-backend = "hatchling.build"
 
 
 [tool.uv]
-default-groups = ["dev", "server"]
+default-groups = ["dev"]
 
 [dependency-groups]
 dev = [
