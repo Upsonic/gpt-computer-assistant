@@ -52,6 +52,6 @@ def test_call_with_mcp_server():
 
 
 def test_call_with_env_variable():
-    result = server.call(prompt="What are your tools?", tools=["add_numbers", "fetch"], mcp_servers=[{"command": "uvx", "args": ["mcp-server-fetch"]}], env={"EXAMPLE_API_KEY": "dsadasda"})
+    result = server.call(prompt="What are your tools?", tools=["add_numbers", "fetch"], mcp_servers=[{"command": "uvx", "args": ["mcp-server-fetch"], "env": {"test": "test"}}],)
     print(result)
     assert "add_numbers" in result and "fetch" in result
