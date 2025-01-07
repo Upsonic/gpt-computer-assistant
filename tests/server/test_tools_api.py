@@ -84,7 +84,7 @@ async def test_call_tool():
                 "args": ["mcp-server-fetch"],
                 "env": None,
                 "tool_name": "fetch",
-                "arguments": {"url": "https://google.com"},
+                "arguments": {"url": "http://localhost:8086/status"},
             },
         )
         assert response.status_code == 200
@@ -107,4 +107,4 @@ async def test_call_tool():
         assert content["type"] == "text"
         assert "text" in content
         assert isinstance(content["text"], str)
-        assert "Contents of https://google.com/:" in content["text"]
+        assert "Server is running" in content["text"]
