@@ -1,16 +1,13 @@
-# publish.yml
-
-name: "Publish"
+name: "Test Publish"
 
 on:
-  release:
-    types: ["published"]
+
+  workflow_dispatch:
 
 jobs:
   run:
-    name: "Build and publish release"
+    name: "Build and publish test release"
     runs-on: ubuntu-latest
-    environment: pypi
 
     steps:
       - uses: actions/checkout@v4
@@ -28,5 +25,5 @@ jobs:
       - name: Build
         run: uv build
 
-      - name: Publish
-        run: uv publish -t ${{ secrets.THE_PYPI_TOKEN }}
+      - name: Publish to TestPyPI
+        run: uv publish --index testpypi -t ${{ secrets.TEST_THE_PYPI_TOKEN }} 
