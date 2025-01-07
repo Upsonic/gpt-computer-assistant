@@ -36,3 +36,8 @@ def timeout(duration: float):
         return wrapper
 
     return decorator
+
+
+@app.get("/status")
+async def get_status():
+    return {"status": "Server is running"}
