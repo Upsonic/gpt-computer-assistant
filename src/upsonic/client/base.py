@@ -4,10 +4,11 @@ import httpx
 
 
 from .level_one.call import Call
+from .storage.storage import Storage
 
 
 # Create a base class with url
-class UpsonicServer(Call):
+class UpsonicServer(Call, Storage):
 
 
     def __init__(self, url: str):
