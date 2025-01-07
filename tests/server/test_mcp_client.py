@@ -14,7 +14,7 @@ def test_get_tools_by_name():
     time.sleep(5)
 
     # Test the tool
-    result = tools[0](url="https://google.com")
+    result = tools[0](url="http://localhost:8086")
     assert isinstance(result, dict)
     assert "result" in result
     assert not result["result"].get("isError", True)
