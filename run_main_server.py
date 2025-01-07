@@ -1,9 +1,4 @@
-import uvicorn
-
-
-def main():
-    uvicorn.run("upsonic.server.api:app", host="0.0.0.0", port=8087, reload=True)
-
+from upsonic.server import run_server
 
 if __name__ == "__main__":
-    main()
+    run_server()
