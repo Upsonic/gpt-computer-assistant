@@ -7,12 +7,27 @@ from .level_one.call import Call
 from .storage.storage import Storage
 
 
+class ServerStatusException(Exception):
+    """Custom exception for server status check failures."""
+    pass
+
 # Create a base class with url
 class UpsonicServer(Call, Storage):
 
 
     def __init__(self, url: str):
         self.url = url
+        if not self.status():
+            raise ServerStatusException("Failed to connect to the server at initialization.")
+
+    def status(self) -> bool:
+        """Check the server status."""
+        try:
+            with httpx.Client() as client:
+                response = client.get(self.url + "/status")
+                return response.status_code == 200
+        except httpx.RequestError:
+            return False
 
     def send_request(self, endpoint: str, data: Dict[str, Any]) -> Any:
         """
