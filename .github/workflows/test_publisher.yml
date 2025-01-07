@@ -20,7 +20,7 @@ jobs:
           cache-dependency-glob: uv.lock
 
       - name: dev
-        run: uv venv && uv pip install -r pyproject.toml --extra dev
+        run: pip install poetry>=2.0.0
 
       # Step 3: Generate Randomized Alpha Version with Poetry
       - name: Generate Randomized Alpha Version
