@@ -1,6 +1,6 @@
 [project]
-name = "upsonicai"
-version = "0.1.0"
+name = "upsonic"
+version = "0.35.0"
 description = "Add your description here"
 readme = "README.md"
 authors = [
@@ -36,6 +36,8 @@ server = [
     "python-dotenv>=1.0.1",
     "uvicorn>=0.34.0",
 ]
+
+
 
 [[tool.uv.index]]
 name = "pypi"

@@ -1,5 +1,5 @@
 import os
-from upsonicai.server.storage.configuration import ConfigManager
+from upsonic.server.storage.configuration import ConfigManager
 
 
 def test_initialize(monkeypatch):

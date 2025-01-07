@@ -1,6 +1,6 @@
 import pytest
 from fastapi.testclient import TestClient
-from upsonicai.server.tools.server.api import (
+from upsonic.server.tools.server.api import (
     app,
     timeout,
     timeout_handler,
