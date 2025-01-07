@@ -33,7 +33,7 @@ jobs:
 
     - name: Run Server Tests
       run: |
-        uv run run_tools_server.py & uv run run_main_server.py & sleep 10 && uv run tests/server/
+        uv run run_tools_server.py & uv run run_main_server.py & sleep 10 && uv run pytest tests/server/
 
 
   client-tests:
@@ -63,4 +63,4 @@ jobs:
       
     - name: Run Server Tests
       run: |
-        uv run run_tools_server.py & uv run run_main_server.py & sleep 10 && uv run tests/client/
+        uv run run_tools_server.py & uv run run_main_server.py & sleep 10 && uv run pytest tests/client/
