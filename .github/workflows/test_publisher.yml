@@ -18,9 +18,6 @@ jobs:
           enable-cache: true
           cache-dependency-glob: uv.lock
 
-      - name: Run UV Sync
-        run: |
-          uv sync
 
       - name: Build
         run: uv build
