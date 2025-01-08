@@ -54,7 +54,7 @@ jobs:
 
     - name: Run UV Sync
       run: |
-        uv sync
+        uv sync --all-groups --all-extras
 
 
     - name: Set Environment Variables
