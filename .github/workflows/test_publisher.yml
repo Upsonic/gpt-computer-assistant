@@ -53,7 +53,7 @@ jobs:
         run: uv publish --index testpypi -t ${{ secrets.TEST_THE_PYPI_TOKEN }}
 
   build_docker:
-    name: "Build and Publish for ARM and AMD"
+    name: "Build and Publish for AMD"
     needs: generate_version
     runs-on: ubuntu-latest
 
