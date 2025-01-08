@@ -6,7 +6,7 @@ from typing import Any, List, Dict, Optional, Type, Union
 from pydantic import BaseModel
 
 
-from ..trace import sentry_sdk
+
 
 
 class Call:
@@ -18,6 +18,7 @@ class Call:
         tools: list[str] = [],
         mcp_servers: list[dict[str, Union[str, dict[str, str], dict[str, str], dict[str, str]]]] = [],
     ) -> Any:
+        from ..trace import sentry_sdk
         """
         Call GPT-4 with optional tools and MCP servers.
 
