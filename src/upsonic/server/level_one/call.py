@@ -4,7 +4,7 @@ from pydantic_ai.models.openai import OpenAIModel
 from pydantic import BaseModel
 from pydantic_ai.result import ResultData
 
-from ..storage.configuration import Configuration
+from ...storage.configuration import Configuration
 
 from ..tools.mcp_client import MCPToolManager
 from ..tools.function_client import FunctionToolManager

@@ -1,4 +1,4 @@
-from .storage.configuration import Configuration
+from ..storage.configuration import Configuration
 from .level_one.call import Call
 
 

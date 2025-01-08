@@ -961,6 +961,15 @@ wheels = [
 ]
 
 [[package]]
+name = "toml"
+version = "0.10.2"
+source = { registry = "https://pypi.org/simple/" }
+sdist = { url = "https://files.pythonhosted.org/packages/be/ba/1f744cdc819428fc6b5084ec34d9b30660f6f9daaf70eead706e3203ec3c/toml-0.10.2.tar.gz", hash = "sha256:b3bda1d108d5dd99f4a20d24d9c348e91c4db7ab1b749200bded2f839ccbe68f", size = 22253 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/44/6f/7120676b6d73228c96e17f1f794d8ab046fc910d781c8d151120c3f1569e/toml-0.10.2-py2.py3-none-any.whl", hash = "sha256:806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b", size = 16588 },
+]
+
+[[package]]
 name = "tqdm"
 version = "4.67.1"
 source = { registry = "https://pypi.org/simple/" }
@@ -1016,15 +1025,16 @@ source = { editable = "." }
 dependencies = [
     { name = "cloudpickle" },
     { name = "dill" },
+    { name = "pickledb" },
     { name = "pydantic" },
     { name = "sentry-sdk", extra = ["opentelemetry"] },
+    { name = "toml" },
 ]
 
 [package.optional-dependencies]
 server = [
     { name = "fastapi" },
     { name = "mcp", extra = ["cli"] },
-    { name = "pickledb" },
     { name = "pydantic-ai" },
     { name = "python-dotenv" },
     { name = "uvicorn" },
@@ -1044,11 +1054,12 @@ requires-dist = [
     { name = "dill", specifier = ">=0.3.9" },
     { name = "fastapi", marker = "extra == 'server'", specifier = ">=0.115.6" },
     { name = "mcp", extras = ["cli"], marker = "extra == 'server'", specifier = ">=1.2.0" },
-    { name = "pickledb", marker = "extra == 'server'", specifier = ">=0.9.2" },
+    { name = "pickledb", specifier = ">=0.9.2" },
     { name = "pydantic", specifier = ">=2.10.4" },
     { name = "pydantic-ai", marker = "extra == 'server'", specifier = ">=0.0.17" },
     { name = "python-dotenv", marker = "extra == 'server'", specifier = ">=1.0.1" },
     { name = "sentry-sdk", extras = ["opentelemetry"], specifier = ">=2.19.2" },
+    { name = "toml", specifier = ">=0.10.2" },
     { name = "uvicorn", marker = "extra == 'server'", specifier = ">=0.34.0" },
 ]
 

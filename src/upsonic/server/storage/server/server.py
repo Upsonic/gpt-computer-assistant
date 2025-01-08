@@ -8,7 +8,7 @@ import asyncio
 from concurrent.futures import ThreadPoolExecutor
 import cloudpickle
 import base64
-from ..configuration import Configuration
+from ....storage.configuration import Configuration
 
 
 prefix = "/storage"
@@ -40,7 +40,7 @@ async def get_config(request: ConfigGetRequest):
     return {"key": request.key, "value": value}
 
 
-@app.post(f"{prefix}/config")
+@app.post(f"{prefix}/config/set")
 async def set_config(request: ConfigSetRequest):
     """
     Endpoint to set a configuration value.

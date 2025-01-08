@@ -4,6 +4,7 @@ import base64
 import httpx
 from typing import Any, List, Dict, Optional, Type, Union
 from pydantic import BaseModel
+import sentry_sdk
 
 
 class Storage:
@@ -20,9 +21,11 @@ class Storage:
         Returns:
             The configuration value
         """
-        data = {"key": key}
-        response = self.send_request("/storage/config/get", data=data)
-        return response.get("value")
+        with sentry_sdk.start_transaction(op="task", name="Storage.get_config") as transaction:
+            with sentry_sdk.start_span(op="send_request", description="Send request to get config"):
+                data = {"key": key}
+                response = self.send_request("/storage/config/get", data=data)
+            return response.get("value")
 
     def set_config(self, key: str, value: str) -> str:
         """
@@ -35,6 +38,8 @@ class Storage:
         Returns:
             A success message
         """
-        data = {"key": key, "value": value}
-        response = self.send_request("/storage/config", data=data)
-        return response.get("message")
+        with sentry_sdk.start_transaction(op="task", name="Storage.set_config") as transaction:
+            with sentry_sdk.start_span(op="send_request", description="Send request to set config"):
+                data = {"key": key, "value": value}
+                response = self.send_request("/storage/config/set", data=data)
+            return response.get("message")
