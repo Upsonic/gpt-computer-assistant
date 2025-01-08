@@ -81,7 +81,9 @@ jobs:
 
           cd ..
 
-          docker buildx build --platform linux/amd64 -f gpt-computer-assistant//Dockerfile --push -t upsonic/server:$VERSION \
+          mv gpt-computer-assistant Upsonic
+
+          docker buildx build --platform linux/amd64 -f Upsonic/Dockerfile --push -t upsonic/server:$VERSION \
           --cache-to type=gha,mode=max \
           --cache-from type=gha .
 
@@ -113,8 +115,8 @@ jobs:
         run: |
 
           cd ..
+          mv gpt-computer-assistant Upsonic
 
-
-          docker buildx build --platform linux/arm64 -f gpt-computer-assistant/Dockerfile --push -t upsonic/server:$VERSION-ARM64 \
+          docker buildx build --platform linux/arm64 -f Upsonic/Dockerfile --push -t upsonic/server:$VERSION-ARM64 \
           --cache-to type=gha,mode=max \
           --cache-from type=gha .
