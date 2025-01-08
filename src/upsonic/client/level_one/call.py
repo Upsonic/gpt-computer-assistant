@@ -6,7 +6,12 @@ from typing import Any, List, Dict, Optional, Type, Union
 from pydantic import BaseModel
 
 
+class NoAPIKeyException(Exception):
+    pass
 
+
+class UnsupportedLLMModelException(Exception):
+    pass
 
 
 class Call:
@@ -17,6 +22,7 @@ class Call:
         response_format: Any = None,
         tools: list[str] = [],
         mcp_servers: list[dict[str, Union[str, dict[str, str], dict[str, str], dict[str, str]]]] = [],
+        llm_model: str = "gpt-4o",
     ) -> Any:
         from ..trace import sentry_sdk
         """
@@ -55,6 +61,7 @@ class Call:
                     "response_format": response_format_str,
                     "tools": tools or [],
                     "mcp_servers": mcp_servers or [],
+                    "llm_model": llm_model,
                 }
 
 
@@ -62,6 +69,13 @@ class Call:
             with sentry_sdk.start_span(op="send_request", description="Send request to server"):
                 # Use the send_request method from the Base class
                 result = self.send_request("/level_one/gpt4o", data)
+            
+                
+                if result["status_code"] == 401:
+                    raise NoAPIKeyException(result["result"]["detail"])
+                
+                if result["status_code"] == 400:
+                    raise UnsupportedLLMModelException(result["result"]["detail"])
 
             with sentry_sdk.start_span(op="deserialize", description="Deserialize the result"):
                 # Deserialize the result

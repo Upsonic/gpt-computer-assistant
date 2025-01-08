@@ -18,9 +18,10 @@ class GPT4ORequest(BaseModel):
     response_format: Optional[Any] = []
     tools: Optional[Any] = []
     mcp_servers: Optional[Any] = []
+    llm_model: Optional[Any] = "gpt-4o"
 
 
-def run_sync_gpt4o(prompt, response_format, tools, mcp_servers):
+def run_sync_gpt4o(prompt, response_format, tools, mcp_servers, llm_model):
     # Create a new event loop for this thread
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
@@ -30,6 +31,7 @@ def run_sync_gpt4o(prompt, response_format, tools, mcp_servers):
             response_format=response_format,
             tools=tools,
             mcp_servers=mcp_servers,
+            llm_model=llm_model,
         )
     finally:
         loop.close()
@@ -80,12 +82,13 @@ async def call_gpt4o(request: GPT4ORequest):
                 response_format,
                 request.tools,
                 request.mcp_servers,
+                request.llm_model,
             )
 
         if request.response_format != "str":
             result = cloudpickle.dumps(result)
             result = base64.b64encode(result).decode('utf-8')
-        return {"result": result}
+        return {"result": result, "status_code": 200}
     except Exception as e:
         traceback.print_exc()
         raise HTTPException(
