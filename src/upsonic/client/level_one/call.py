@@ -46,7 +46,7 @@ class Call:
                 else:
                     response_format_str = "str"
 
-                print("Client side response format: ", response_format_str)
+
 
             with sentry_sdk.start_span(op="prepare_request", description="Prepare request data"):
                 # Prepare the request data
@@ -57,8 +57,7 @@ class Call:
                     "mcp_servers": mcp_servers or [],
                 }
 
-                # Print the data
-                print(data)
+
 
             with sentry_sdk.start_span(op="send_request", description="Send request to server"):
                 # Use the send_request method from the Base class

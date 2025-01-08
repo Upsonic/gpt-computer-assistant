@@ -12,7 +12,7 @@ class ServerStatusException(Exception):
     pass
 
 # Create a base class with url
-class UpsonicServer(Call, Storage):
+class UpsonicClient(Call, Storage):
 
 
     def __init__(self, url: str):

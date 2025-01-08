@@ -1,8 +1,8 @@
-from upsonic import UpsonicServer
+from upsonic import UpsonicClient
 from pydantic import BaseModel
 
 
-server = UpsonicServer("http://localhost:7541")
+server = UpsonicClient("http://localhost:7541")
 
 
 class Human(BaseModel):
