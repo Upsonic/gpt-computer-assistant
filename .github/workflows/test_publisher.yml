@@ -78,12 +78,6 @@ jobs:
         env:
           VERSION: ${{ needs.generate_version.outputs.random_version }}
         run: |
-          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
-          git fetch
-          cd ..
-
-          if [ -d models ]; then rm -r models; fi
-          mkdir models
 
           docker buildx build --platform linux/amd64,linux/arm64 -f Upsonic/Dockerfile --push -t upsonic/server:$VERSION \
           --cache-to type=gha,mode=max \
@@ -115,12 +109,7 @@ jobs:
         env:
           VERSION: ${{ needs.generate_version.outputs.random_version }}
         run: |
-          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
-          git fetch
-          cd ..
 
-          if [ -d models ]; then rm -r models; fi
-          mkdir models
 
           docker buildx build --platform linux/arm64 -f Upsonic/Dockerfile --push -t upsonic/server:$VERSION-ARM64 \
           --cache-to type=gha,mode=max \
