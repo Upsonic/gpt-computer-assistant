@@ -11,6 +11,7 @@ dependencies = [
     "cloudpickle>=3.1.0",
     "dill>=0.3.9",
     "pydantic>=2.10.4",
+    "sentry-sdk[opentelemetry]>=2.19.2",
 ]
 
 [build-system]
