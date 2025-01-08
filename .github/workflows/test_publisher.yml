@@ -79,6 +79,8 @@ jobs:
           VERSION: ${{ needs.generate_version.outputs.random_version }}
         run: |
 
+          cd ..
+
           docker buildx build --platform linux/amd64 -f Upsonic/Dockerfile --push -t upsonic/server:$VERSION \
           --cache-to type=gha,mode=max \
           --cache-from type=gha .
@@ -109,6 +111,8 @@ jobs:
         env:
           VERSION: ${{ needs.generate_version.outputs.random_version }}
         run: |
+
+          cd ..
 
 
           docker buildx build --platform linux/arm64 -f Upsonic/Dockerfile --push -t upsonic/server:$VERSION-ARM64 \
