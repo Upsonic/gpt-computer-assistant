@@ -35,8 +35,6 @@ async def get_config(request: ConfigGetRequest):
         The configuration value or a default message if not found
     """
     value = Configuration.get(request.key)
-    if value is None:
-        raise HTTPException(status_code=404, detail="Key not found")
     return {"key": request.key, "value": value}
 
 

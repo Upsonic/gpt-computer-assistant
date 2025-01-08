@@ -41,8 +41,7 @@ class UpsonicServer(Call, Storage):
             The response from the API.
         """
         with httpx.Client() as client:
-            print(self.url + endpoint)
-            print(data)
+
             response = client.post(self.url + endpoint, json=data)
             response.raise_for_status()
             return response.json()
