@@ -7,7 +7,7 @@ class FunctionToolManager:
 
     def __init__(self):
         """Initialize the Upsonic Function client."""
-        self.base_url = "http://127.0.0.1:8086"
+        self.base_url = "http://localhost:8086"
 
     def get_tools_by_name(self, name: list[str]):
         """Get tools by name"""

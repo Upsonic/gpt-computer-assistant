@@ -10,13 +10,13 @@ app = FastAPI()
 @app.get("/status")
 async def get_status():
     async with httpx.AsyncClient() as client:
-        response = await client.get("http://127.0.0.1:8086/status")
+        response = await client.get("http://localhost:8086/status")
         if response.status_code == 200:
             return {"status": "Server is running"}
         else:
             raise HTTPException(
                 status_code=response.status_code,
-                detail="Failed to reach the server at 127.0.0.1:8086"
+                detail="Failed to reach the server at localhost:8086"
             )
 
 def timeout(duration: float):

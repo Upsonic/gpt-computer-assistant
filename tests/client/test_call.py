@@ -2,7 +2,7 @@ from upsonic import UpsonicServer
 from pydantic import BaseModel
 
 
-server = UpsonicServer("http://localhost:8087")
+server = UpsonicServer("http://localhost:7541")
 
 
 class Human(BaseModel):

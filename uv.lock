@@ -1025,6 +1025,7 @@ source = { editable = "." }
 dependencies = [
     { name = "cloudpickle" },
     { name = "dill" },
+    { name = "httpx" },
     { name = "pickledb" },
     { name = "pydantic" },
     { name = "sentry-sdk", extra = ["opentelemetry"] },
@@ -1053,6 +1054,7 @@ requires-dist = [
     { name = "cloudpickle", specifier = ">=3.1.0" },
     { name = "dill", specifier = ">=0.3.9" },
     { name = "fastapi", marker = "extra == 'server'", specifier = ">=0.115.6" },
+    { name = "httpx", specifier = ">=0.27.2" },
     { name = "mcp", extras = ["cli"], marker = "extra == 'server'", specifier = ">=1.2.0" },
     { name = "pickledb", specifier = ">=0.9.2" },
     { name = "pydantic", specifier = ">=2.10.4" },

@@ -15,10 +15,10 @@ warnings.filterwarnings("ignore", category=UserWarning)
 import uvicorn
 
 def run_main_server():
-    uvicorn.run("upsonic.server.api:app", host="0.0.0.0", port=8087, reload=True)
+    uvicorn.run("upsonic.server.api:app", host="0.0.0.0", port=7541, reload=True)
 
 def run_tools_server():
-    uvicorn.run("upsonic.server.tools.server.api:app", host="0.0.0.0", port=8086, reload=True)
+    uvicorn.run("upsonic.server.tools.server.api:app", host="localhost", port=8086, reload=True)
 
 
 __all__ = ["hello", "Configuration", "Call", "app"]

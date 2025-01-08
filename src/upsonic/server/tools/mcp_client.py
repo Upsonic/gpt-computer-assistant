@@ -15,7 +15,7 @@ class MCPToolManager:
             command: The command to execute
             args: List of command arguments
         """
-        self.base_url = "http://127.0.0.1:8086"
+        self.base_url = "http://localhost:8086"
         self.command = command
         self.args = args
         self.env = env
