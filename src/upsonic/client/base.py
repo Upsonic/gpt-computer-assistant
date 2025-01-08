@@ -11,6 +11,10 @@ class ServerStatusException(Exception):
     """Custom exception for server status check failures."""
     pass
 
+class TimeoutException(Exception):
+    """Custom exception for request timeout."""
+    pass
+
 # Create a base class with url
 class UpsonicClient(Call, Storage):
 
@@ -43,5 +47,7 @@ class UpsonicClient(Call, Storage):
         with httpx.Client() as client:
 
             response = client.post(self.url + endpoint, json=data)
+            if response.status_code == 408:
+                raise TimeoutException("Request timed out")
             response.raise_for_status()
             return response.json()
