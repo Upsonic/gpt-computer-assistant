@@ -25,13 +25,12 @@ def _get_json_type(python_type: Type) -> str:
     return type_mapping.get(python_type, "string")
 
 
-def tool(description: str = "", required_params: List[str] = None):
+def tool(description: str = ""):
     """
     Decorator to register a function as a tool.
 
     Args:
         description: Optional description of the tool. If not provided, function's docstring will be used.
-        required_params: List of required parameter names
     """
 
     def decorator(func: Callable):
@@ -39,7 +38,7 @@ def tool(description: str = "", required_params: List[str] = None):
 
         # Get parameter info
         properties = {}
-        required = required_params or []
+        required = []
 
         # Extract description from docstring if not provided
         tool_description = description
@@ -62,6 +61,10 @@ def tool(description: str = "", required_params: List[str] = None):
 
             if param_default is not None:
                 properties[param_name]["default"] = param_default
+            
+            # If parameter has no default value, it's required
+            if param.default == inspect.Parameter.empty:
+                required.append(param_name)
 
         # Register the function with the extracted description
         registered_functions[func.__name__] = {
@@ -143,13 +146,13 @@ async def call_tool(request: ToolRequest):
 
 
 # Example decorated functions
-@tool(required_params=["a", "b"])
-async def add_numbers(a: int, b: int) -> int:
+@tool()
+async def add_numbers(a: int, b: int, c: int=0) -> int:
     "Add two numbers together"
-    return a + b
+    return a + b + c
 
 
-@tool(required_params=["str1", "str2"])
+@tool()
 def concat_strings(str1: str, str2: str) -> str:
     "Concatenate two strings"
     return str1 + str2
