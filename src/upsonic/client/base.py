@@ -5,6 +5,7 @@ import httpx
 
 from .level_one.call import Call
 from .storage.storage import Storage
+from .tools.tools import Tools
 
 
 class ServerStatusException(Exception):
@@ -16,7 +17,7 @@ class TimeoutException(Exception):
     pass
 
 # Create a base class with url
-class UpsonicClient(Call, Storage):
+class UpsonicClient(Call, Storage, Tools):
 
 
     def __init__(self, url: str):
