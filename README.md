@@ -1,4 +1,3 @@
-
   <a href="#">
     <img src="https://github.com/user-attachments/assets/27778034-29f5-4a71-b696-4e3f70760b26" >
   </a>
@@ -11,8 +10,6 @@ Hi, this is an open source framework to build vertical AI agent. We just support
 
 <p>
 
-
-
   <p >
     <a href="https://www.producthunt.com/posts/gpt-computer-assistant?embed=true&utm_source=badge-top-post-badge&utm_medium=badge&utm_souce=badge-gpt&#0045;computer&#0045;assistant" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/top-post-badge.svg?post_id=465468&theme=dark&period=daily" alt="GPT&#0032;Computer&#0032;Assistant - Create&#0032;intelligence&#0032;for&#0032;your&#0032;products | Product Hunt" width="200"  /></a>
     .
@@ -23,13 +20,12 @@ Hi, this is an open source framework to build vertical AI agent. We just support
 
 
 
-
   <p>
   <a href="https://www.python.org/">
   <img src="https://img.shields.io/badge/Made%20with-Python-1f425f.svg" alt="Made_with_python">
   </a>
-  .
   <img src="https://static.pepy.tech/personalized-badge/gpt-computer-assistant?period=total&units=international_system&left_color=grey&right_color=blue&left_text=PyPI%20Downloads" alt="pypi_downloads">
+  <a href="https://smithery.ai/server/gpt-computer-assistant"><img alt="Smithery Badge" src="https://smithery.ai/badge/gpt-computer-assistant"></a>
   </p>
 
 
@@ -124,6 +120,16 @@ Through MCP and GCA’s own modules, it achieves tasks that go beyond standard h
 </p>
 
 ## Using GCA.dev Cloud
+
+### Installing via Smithery
+
+To install GPT Computer Assistant for Claude Desktop automatically via [Smithery](https://smithery.ai/server/gpt-computer-assistant):
+
+```bash
+npx -y @smithery/cli install gpt-computer-assistant --client claude
+```
+
+### Installing via pip
 
 <b>Installation</b>
 ```console
