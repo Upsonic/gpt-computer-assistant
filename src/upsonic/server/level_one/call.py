@@ -8,8 +8,8 @@ from fastapi import HTTPException, status
 
 from ...storage.configuration import Configuration
 
-from ..tools.mcp_client import MCPToolManager
-from ..tools.function_client import FunctionToolManager
+from ...tools_server.mcp_client import MCPToolManager
+from ...tools_server.function_client import FunctionToolManager
 
 
 

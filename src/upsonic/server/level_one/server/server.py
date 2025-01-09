@@ -50,7 +50,7 @@ async def call_gpt4o(request: GPT4ORequest):
         The response from the AI model
     """
 
-    print("request.response_format", request.response_format)
+
     try:
         # Handle pickled response format
         if request.response_format != "str":

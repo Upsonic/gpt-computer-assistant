@@ -6,7 +6,7 @@ import os
 # Add the src directory to the Python path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../../src")))
 
-from upsonic.server.tools.server.function_tools import app, _get_json_type
+from upsonic.tools_server.server.function_tools import app, _get_json_type
 
 client = TestClient(app)
 

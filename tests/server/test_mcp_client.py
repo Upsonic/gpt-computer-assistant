@@ -1,4 +1,4 @@
-from upsonic.server.tools.mcp_client import MCPToolManager
+from upsonic.tools_server.mcp_client import MCPToolManager
 import time
 
 
