@@ -30,7 +30,7 @@ def tool(description: str = "", required_params: List[str] = None):
     Decorator to register a function as a tool.
 
     Args:
-        description: Description of the tool
+        description: Optional description of the tool. If not provided, function's docstring will be used.
         required_params: List of required parameter names
     """
 
@@ -40,6 +40,12 @@ def tool(description: str = "", required_params: List[str] = None):
         # Get parameter info
         properties = {}
         required = required_params or []
+
+        # Extract description from docstring if not provided
+        tool_description = description
+        if not tool_description and func.__doc__:
+            # Get the first line of the docstring as description
+            tool_description = func.__doc__.strip().split('\n')[0].strip()
 
         for param_name, param in sig.parameters.items():
             param_type = (
@@ -57,17 +63,25 @@ def tool(description: str = "", required_params: List[str] = None):
             if param_default is not None:
                 properties[param_name]["default"] = param_default
 
-        # Register the function
+        # Register the function with the extracted description
         registered_functions[func.__name__] = {
             "function": func,
-            "description": description or func.__doc__ or "",
+            "description": tool_description,
             "properties": properties,
             "required": required,
         }
 
-        @wraps(func)
-        async def wrapper(*args, **kwargs):
-            return await func(*args, **kwargs)
+        # Check if the function is async
+        is_async = inspect.iscoroutinefunction(func)
+
+        if is_async:
+            @wraps(func)
+            async def wrapper(*args, **kwargs):
+                return await func(*args, **kwargs)
+        else:
+            @wraps(func)
+            def wrapper(*args, **kwargs):
+                return func(*args, **kwargs)
 
         return wrapper
 
@@ -113,7 +127,14 @@ async def call_tool(request: ToolRequest):
 
     try:
         func = registered_functions[request.tool_name]["function"]
-        result = await func(**request.arguments)
+        # Check if the function is async
+        is_async = inspect.iscoroutinefunction(func)
+        
+        if is_async:
+            result = await func(**request.arguments)
+        else:
+            result = func(**request.arguments)
+            
         print(f"Tool call result: {result}")
         return {"result": result}
     except Exception as e:
@@ -122,11 +143,13 @@ async def call_tool(request: ToolRequest):
 
 
 # Example decorated functions
-@tool(description="Add two numbers together", required_params=["a", "b"])
+@tool(required_params=["a", "b"])
 async def add_numbers(a: int, b: int) -> int:
+    "Add two numbers together"
     return a + b
 
 
-@tool(description="Concatenate two strings", required_params=["str1", "str2"])
-async def concat_strings(str1: str, str2: str) -> str:
+@tool(required_params=["str1", "str2"])
+def concat_strings(str1: str, str2: str) -> str:
+    "Concatenate two strings"
     return str1 + str2
