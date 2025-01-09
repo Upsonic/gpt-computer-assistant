@@ -5,6 +5,7 @@ import httpx
 from typing import Any, List, Dict, Optional, Type, Union
 from pydantic import BaseModel
 
+from ..tasks.tasks import Task
 
 class NoAPIKeyException(Exception):
     pass
@@ -18,8 +19,7 @@ class Call:
 
     def call(
         self,
-        prompt: str,
-        response_format: Any = None,
+        task: Task,
         tools: list[str] = [],
         mcp_servers: list[dict[str, Union[str, dict[str, str], dict[str, str], dict[str, str]]]] = [],
         llm_model: str = "gpt-4o",
@@ -37,6 +37,9 @@ class Call:
         Returns:
             The response in the specified format
         """
+
+
+        response_format = task.response_format
         with sentry_sdk.start_transaction(op="task", name="Call.call") as transaction:
             with sentry_sdk.start_span(op="serialize", description="Serialize response format"):
                 # Serialize the response format if it's a type or BaseModel
@@ -57,7 +60,7 @@ class Call:
             with sentry_sdk.start_span(op="prepare_request", description="Prepare request data"):
                 # Prepare the request data
                 data = {
-                    "prompt": prompt,
+                    "prompt": task.description,
                     "response_format": response_format_str,
                     "tools": tools or [],
                     "mcp_servers": mcp_servers or [],
@@ -85,4 +88,6 @@ class Call:
                 else:
                     deserialized_result = result["result"]
 
-        return deserialized_result
+        task._response = deserialized_result
+
+        return True

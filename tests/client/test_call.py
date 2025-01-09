@@ -1,64 +1,79 @@
 from upsonic import UpsonicClient
 from pydantic import BaseModel
+from upsonic import Task
+from upsonic import StrResponse, IntResponse, FloatResponse, BoolResponse, ObjectResponse, StrInListResponse
 
 
 server = UpsonicClient("http://localhost:7541")
 
 
-class Human(BaseModel):
+class Human(ObjectResponse):
     name: str
     surname: str
     gender: str
 
 
-class City(BaseModel):
+class City(ObjectResponse):
     name: str
     country: str
     population: int
 
 
-class ToolList(BaseModel):
-    tools: list[str]
+class Tool(ObjectResponse):
+    raw_name: str
+
+
+class ToolList(ObjectResponse):
+    tools: list[Tool]
 
 def test_gpt4o_call():
-    result = server.call(prompt="Hi, I am Onur Atakan ULUSOY and I am a male", response_format=Human)
-    print(result)
-    assert result.name.lower() == "onur atakan"
-    assert result.surname.lower() == "ulusoy"
-    assert result.gender.lower() == "male"
+    task = Task(description="Hi, I am Onur Atakan ULUSOY and I am a male", response_format=Human)
+    server.call(task)
+    print(task.response)
+    assert task.response.name.lower() == "onur atakan"
+    assert task.response.surname.lower() == "ulusoy"
+    assert task.response.gender.lower() == "male"
 
 
 def test_gpt4o_call_without_return_type():
-    result = server.call("Say hi to me")
+    task = Task(description="Say hi to me")
+    server.call(task)
     potential_keywords = ["hi", "hello", "hey"]
-    assert any(keyword in result.lower() for keyword in potential_keywords)
+    assert any(keyword in task.response.lower() for keyword in potential_keywords)
 
 
 def test_call_with_response_format():
-    result = server.call(prompt="What is capital of Turkey?", response_format=City)
-    print(result)
-    assert result.name.lower() == "ankara"
-    assert result.country.lower() == "turkey"
-    assert result.population > 0
+    task = Task(description="What is capital of Turkey?", response_format=City)
+    server.call(task)
+    print(task.response)
+    assert task.response.name.lower() == "ankara"
+    assert task.response.country.lower() == "turkey"
+    assert task.response.population > 0
 
 
 def test_call_with_tools():
-    result = server.call(prompt="What are your tools?", tools=["add_numbers"])
-    print(result)
-    assert "add_numbers" in result
+    task = Task(description="What are your tools?", response_format=StrInListResponse("tool_name"))
+    server.call(task, tools=["add_numbers"])
+
+    any_found_add_numbers = False
+    for tool in task.response:
+        if "add_numbers" in tool.lower():
+            any_found_add_numbers = True
+    assert any_found_add_numbers
 
 
 def test_call_with_mcp_server():
-    result = server.call(prompt="What are your tools?", response_format=ToolList, tools=["add_numbers", "fetch"], mcp_servers=[{"command": "uvx", "args": ["mcp-server-fetch"]}])
-    print(result)
+    task = Task(description="What are your tools?", response_format=ToolList)
+    server.call(task, tools=["add_numbers", "fetch"], mcp_servers=[{"command": "uvx", "args": ["mcp-server-fetch"]}])
+    print(task.response)
 
     any_found_add_numbers = False
     any_found_fetch = False
-    for tool in result.tools:
-        if "add_numbers" in tool.lower():
+    for tool in task.response.tools:
+        if "add_numbers" in tool.raw_name.lower():
             any_found_add_numbers = True
             
-        if "fetch" in tool.lower():
+        if "fetch" in tool.raw_name.lower():
             any_found_fetch = True
             
 
@@ -67,16 +82,17 @@ def test_call_with_mcp_server():
 
 
 def test_call_with_env_variable():
-    result = server.call(prompt="What are your tools?", response_format=ToolList, tools=["add_numbers", "fetch"], mcp_servers=[{"command": "uvx", "args": ["mcp-server-fetch"], "env": {"test": "test"}}],)
-    print(result)
+    task = Task(description="What are your tools?", response_format=ToolList)
+    server.call(task, tools=["add_numbers", "fetch"], mcp_servers=[{"command": "uvx", "args": ["mcp-server-fetch"], "env": {"test": "test"}}])
+    print(task.response)
 
     any_found_add_numbers = False
     any_found_fetch = False
-    for tool in result.tools:
-        if "add_numbers" in tool.lower():
+    for tool in task.response.tools:
+        if "add_numbers" in tool.raw_name.lower():
             any_found_add_numbers = True
             
-        if "fetch" in tool.lower():
+        if "fetch" in tool.raw_name.lower():
             any_found_fetch = True
             
 
