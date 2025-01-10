@@ -85,6 +85,8 @@ class Call:
 
 
                 result = result["result"]
+
+                print(result)
                 
                 if result["status_code"] == 401:
                     raise NoAPIKeyException(result["detail"])
