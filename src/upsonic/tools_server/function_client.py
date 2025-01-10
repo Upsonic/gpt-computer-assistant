@@ -96,10 +96,7 @@ class FunctionToolManager:
                         defaults[param_name] = param_info.get("default", None)
 
                 def tool_function(*args: Any, **kwargs: Any) -> Dict[str, Any]:
-                    if len(args) > len(required):
-                        raise TypeError(
-                            f"{tool_name}() takes {len(required)} positional arguments but {len(args)} were given"
-                        )
+
 
                     all_kwargs = kwargs.copy()
                     for i, arg in enumerate(args):
@@ -109,9 +106,7 @@ class FunctionToolManager:
 
                     print("all_kwargs", all_kwargs)
                     print("required", required)
-                    for req in required:
-                        if req not in all_kwargs:
-                            raise ValueError(f"Missing required parameter: {req}")
+
 
                     for param, default in defaults.items():
                         if param not in all_kwargs:

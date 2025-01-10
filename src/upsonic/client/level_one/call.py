@@ -17,12 +17,13 @@ class UnsupportedLLMModelException(Exception):
 
 class Call:
 
+
     def call(
         self,
         task: Task,
         tools: list[str] = [],
 
-        llm_model: str = "gpt-4o",
+        llm_model: str = None,
     ) -> Any:
         from ..trace import sentry_sdk
         """
@@ -37,6 +38,9 @@ class Call:
         Returns:
             The response in the specified format
         """
+
+        if llm_model is None:
+            llm_model = self.default_llm_model
 
 
         response_format = task.response_format
@@ -87,6 +91,8 @@ class Call:
                     deserialized_result = cloudpickle.loads(decoded_result)
                 else:
                     deserialized_result = result["result"]
+
+
 
         task._response = deserialized_result
 

@@ -79,4 +79,4 @@ async def test_error_handling():
         "/functions/call_tool",
         json={"tool_name": "add_numbers", "arguments": {"a": "not_a_number", "b": 3}},
     )
-    assert response.status_code == 500
+    assert response.json()["status_code"] == 500

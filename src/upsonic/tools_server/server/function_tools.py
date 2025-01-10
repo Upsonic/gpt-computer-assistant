@@ -26,7 +26,7 @@ def _get_json_type(python_type: Type) -> str:
     return type_mapping.get(python_type, "string")
 
 
-def tool(description: str = "", custom_properties: Dict[str, Any] = {}, custom_required: List[str] = []):
+def tool(description: str = "", custom_properties: Dict[str, Any] = None, custom_required: List[str] = None):
     """
     Decorator to register a function as a tool.
 
@@ -70,10 +70,10 @@ def tool(description: str = "", custom_properties: Dict[str, Any] = {}, custom_r
                 required.append(param_name)
 
 
-        if custom_properties:
+        if custom_properties is not None:
             properties = custom_properties
 
-        if custom_required:
+        if custom_required is not None:
             required = custom_required
 
         # Register the function with the extracted description
@@ -107,7 +107,7 @@ class ToolRequest(BaseModel):
 
 
 @app.post(f"{prefix}/tools")
-@timeout(300.0)
+@timeout(30.0)
 async def list_tools():
     print("Listing tools...")
 
@@ -129,7 +129,7 @@ async def list_tools():
 
 
 @app.post(f"{prefix}/call_tool")
-@timeout(300.0)
+@timeout(30.0)
 async def call_tool(request: ToolRequest):
     print(f"Received tool call request: {request}")
 
@@ -152,7 +152,7 @@ async def call_tool(request: ToolRequest):
         return {"result": result}
     except Exception as e:
         traceback.print_exc()
-        raise HTTPException(status_code=500, detail=f"Failed to call tool: {str(e)}")
+        return {"status_code": 500, "detail": f"Failed to call tool: {str(e)}"}
 
 
 # Example decorated functions

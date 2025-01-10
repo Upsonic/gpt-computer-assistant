@@ -22,8 +22,14 @@ class UpsonicClient(Call, Storage, Tools):
 
     def __init__(self, url: str):
         self.url = url
+        self.default_llm_model = "gpt-4o"
         if not self.status():
             raise ServerStatusException("Failed to connect to the server at initialization.")
+
+
+    def set_default_llm_model(self, llm_model: str):
+        self.default_llm_model = llm_model
+
 
     def status(self) -> bool:
         """Check the server status."""

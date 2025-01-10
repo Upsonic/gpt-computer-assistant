@@ -27,21 +27,29 @@ async def managed_session(command: str, args: list, env: dict | None = None):
         default_env.update(env)
         env = default_env
 
+    print("aaaaaaaaa")
     server_params = StdioServerParameters(
         command=command,
         args=args,
         env=env,
     )
+
+    print("bbbbbbbb")
     
     client = None
     session = None
     
     try:
         client = stdio_client(server_params)
+        print("cccccccc")
         read, write = await client.__aenter__()
+        print("dddddddd")
         session = ClientSession(read, write)
+        print("eeeeeeee")
         await session.__aenter__()
+        print("ffffff")
         await session.initialize()
+        print("ggggggg")
         yield session
     finally:
         if session:
@@ -273,8 +281,12 @@ async def add_mcp_tool_(command: str, args: List[str], env: Dict[str, str]):
                     # Create a new session for each call using the function's stored parameters
                     print("Creating new session...")
                     async with managed_session(command=tool_function.command, args=tool_function.args, env=tool_function.env) as new_session:
-                        print("Calling tool...")
+                        print("Calling tool...", tool_function.command, tool_function.args, tool_function.env, tool_name)
                         print("all_kwargs", all_kwargs)
+
+                        # Remove None kwargs
+                        all_kwargs = {k: v for k, v in all_kwargs.items() if v is not None}
+
                         result = await new_session.call_tool(name=tool_name, arguments=all_kwargs)
                         print(f"Tool result: {result}")
                         print("=== End Tool Function Debug ===\n")

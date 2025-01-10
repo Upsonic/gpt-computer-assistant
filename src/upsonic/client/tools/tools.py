@@ -73,3 +73,25 @@ class Tools:
     def uninstall_library(self, library: str) -> Dict[str, Any]:
         result = self.send_request("/tools/uninstall_library", {"library": library})
         return result
+
+    def mcp(self):
+        """
+        Decorator to register a class as an MCP tool.
+        Usage:
+        @client.mcp()
+        class ToolName:
+            command = "command-name"
+            args = ["arg1", "arg2"]
+            env = {"key": "value"}
+        """
+        def decorator(cls):
+            command = getattr(cls, "command", None)
+            args = getattr(cls, "args", [])
+            env = getattr(cls, "env", {})
+            
+            if not command:
+                raise ValueError("MCP tool class must have a 'command' attribute")
+                
+            self.add_mcp_tool(command, args, env)
+            return cls
+        return decorator

@@ -5,7 +5,7 @@ from upsonic import StrResponse, IntResponse, FloatResponse, BoolResponse, Objec
 
 
 server = UpsonicClient("http://localhost:7541")
-
+server.set_default_llm_model("gpt-4o-azure")
 
 class Human(ObjectResponse):
     name: str
