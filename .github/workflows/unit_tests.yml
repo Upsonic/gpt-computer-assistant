@@ -26,10 +26,11 @@ jobs:
       run: |
         uv sync --all-groups --all-extras
 
-
     - name: Set Environment Variables
-      run: echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" >> $GITHUB_ENV 
-
+      run: |
+        echo "AZURE_OPENAI_ENDPOINT=${{ secrets.AZURE_OPENAI_ENDPOINT }}" >> $GITHUB_ENV
+        echo "AZURE_OPENAI_API_VERSION=${{ secrets.AZURE_OPENAI_API_VERSION }}" >> $GITHUB_ENV
+        echo "AZURE_OPENAI_API_KEY=${{ secrets.AZURE_OPENAI_API_KEY }}" >> $GITHUB_ENV
 
     - name: Run Server Tests
       run: |
@@ -56,11 +57,12 @@ jobs:
       run: |
         uv sync --all-groups --all-extras
 
-
     - name: Set Environment Variables
-      run: echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" >> $GITHUB_ENV 
+      run: |
+        echo "AZURE_OPENAI_ENDPOINT=${{ secrets.AZURE_OPENAI_ENDPOINT }}" >> $GITHUB_ENV
+        echo "AZURE_OPENAI_API_VERSION=${{ secrets.AZURE_OPENAI_API_VERSION }}" >> $GITHUB_ENV
+        echo "AZURE_OPENAI_API_KEY=${{ secrets.AZURE_OPENAI_API_KEY }}" >> $GITHUB_ENV
 
-      
-    - name: Run Server Tests
+    - name: Run Client Tests
       run: |
         uv run run_tools_server.py & uv run run_main_server.py & sleep 10 && uv run pytest tests/client/
