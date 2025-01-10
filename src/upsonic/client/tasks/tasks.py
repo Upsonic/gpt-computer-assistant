@@ -21,7 +21,7 @@ class Task(BaseModel):
         if type(self._response) == str:
             return self._response
 
-        print(self._response._upsonic_response_type)
+        print(self._response)
 
         if self._response._upsonic_response_type == "custom":
             return self._response.output()
