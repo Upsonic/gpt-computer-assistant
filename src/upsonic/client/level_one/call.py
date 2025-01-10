@@ -81,16 +81,19 @@ class Call:
             with sentry_sdk.start_span(op="send_request", description="Send request to server"):
                 # Use the send_request method from the Base class
                 result = self.send_request("/level_one/gpt4o", data)
-            
+
+
+
+                result = result["result"]
                 
                 if result["status_code"] == 401:
-                    raise NoAPIKeyException(result["result"]["detail"])
+                    raise NoAPIKeyException(result["detail"])
                 
                 if result["status_code"] == 400:
-                    raise UnsupportedLLMModelException(result["result"]["detail"])
+                    raise UnsupportedLLMModelException(result["detail"])
 
                 if result["status_code"] == 500:
-                    raise CallErrorException(result["result"])
+                    raise CallErrorException(result)
 
             with sentry_sdk.start_span(op="deserialize", description="Deserialize the result"):
                 # Deserialize the result

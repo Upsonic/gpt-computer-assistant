@@ -86,8 +86,8 @@ async def call_gpt4o(request: GPT4ORequest):
             )
 
         if request.response_format != "str":
-            result = cloudpickle.dumps(result)
-            result = base64.b64encode(result).decode('utf-8')
+            result["result"] = cloudpickle.dumps(result["result"])
+            result["result"] = base64.b64encode(result["result"]).decode('utf-8')
         return {"result": result, "status_code": 200}
     except Exception as e:
         traceback.print_exc()

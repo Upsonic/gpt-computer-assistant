@@ -27,6 +27,7 @@ class CallManager:
 
         llm_model: str = "gpt-4o",
     ) -> ResultData:
+
         if llm_model == "gpt-4o":
             openai_api_key = Configuration.get("OPENAI_API_KEY")
             if not openai_api_key:
@@ -51,10 +52,8 @@ class CallManager:
             model = OpenAIModel('gpt-4o', openai_client=model)
 
         else:
-            return HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail=f"Unsupported LLM model: {llm_model}"
-            )
+
+            return {"status_code": 400, "detail": f"Unsupported LLM model: {llm_model}"}
 
         roulette_agent = Agent(
             model,
@@ -69,7 +68,7 @@ class CallManager:
 
         result = roulette_agent.run_sync(prompt)
 
-        return result.data
+        return {"status_code": 200, "result": result.data}
 
 
 Call = CallManager()

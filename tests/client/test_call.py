@@ -52,13 +52,14 @@ def test_call_with_response_format():
 
 
 def test_call_with_tools():
-    task = Task(description="What are your tools?", response_format=StrInListResponse("tool_name"))
-    server.call(task, tools=["add_numbers"])
+    task = Task(description="What are your tools?", tools=["add_numbers"])
+    server.call(task)
+
 
     any_found_add_numbers = False
-    for tool in task.response:
-        if "add_numbers" in tool.lower():
-            any_found_add_numbers = True
+
+    if "add_numbers" in task.response.lower():
+        any_found_add_numbers = True
     assert any_found_add_numbers
 
 
