@@ -92,4 +92,4 @@ async def call_gpt4o(request: GPT4ORequest):
     except Exception as e:
         traceback.print_exc()
 
-        return {"result": f"Error processing GPT-4 request: {str(e)}", "status_code": 500}
+        return {"result": {"status_code": 500, "detail": f"Error processing GPT-4 request: {str(e)}"}, "status_code": 500}
