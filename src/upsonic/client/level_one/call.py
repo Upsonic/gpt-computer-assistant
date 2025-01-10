@@ -15,6 +15,10 @@ class UnsupportedLLMModelException(Exception):
     pass
 
 
+class CallErrorException(Exception):
+    pass
+
+
 class Call:
 
 
@@ -84,6 +88,9 @@ class Call:
                 
                 if result["status_code"] == 400:
                     raise UnsupportedLLMModelException(result["result"]["detail"])
+
+                if result["status_code"] == 500:
+                    raise CallErrorException(result["result"])
 
             with sentry_sdk.start_span(op="deserialize", description="Deserialize the result"):
                 # Deserialize the result

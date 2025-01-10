@@ -91,6 +91,5 @@ async def call_gpt4o(request: GPT4ORequest):
         return {"result": result, "status_code": 200}
     except Exception as e:
         traceback.print_exc()
-        raise HTTPException(
-            status_code=500, detail=f"Error processing GPT-4 request: {str(e)}"
-        )
+
+        return {"result": f"Error processing GPT-4 request: {str(e)}", "status_code": 500}
