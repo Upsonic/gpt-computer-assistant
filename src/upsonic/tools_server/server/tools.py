@@ -27,29 +27,24 @@ async def managed_session(command: str, args: list, env: dict | None = None):
         default_env.update(env)
         env = default_env
 
-    print("aaaaaaaaa")
+
     server_params = StdioServerParameters(
         command=command,
         args=args,
         env=env,
     )
 
-    print("bbbbbbbb")
     
     client = None
     session = None
     
     try:
         client = stdio_client(server_params)
-        print("cccccccc")
+
         read, write = await client.__aenter__()
-        print("dddddddd")
         session = ClientSession(read, write)
-        print("eeeeeeee")
         await session.__aenter__()
-        print("ffffff")
         await session.initialize()
-        print("ggggggg")
         yield session
     finally:
         if session:
