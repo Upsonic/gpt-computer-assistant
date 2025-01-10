@@ -85,7 +85,7 @@ async def call_gpt4o(request: GPT4ORequest):
                 request.llm_model,
             )
 
-        if request.response_format != "str":
+        if request.response_format != "str" and result["status_code"] == 200:
             print("pickling")
             print(result)
             result["result"] = cloudpickle.dumps(result["result"])
