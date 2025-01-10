@@ -1,3 +1,4 @@
+import base64
 import subprocess
 import traceback
 
@@ -5,7 +6,7 @@ import traceback
 def install_library_(library):
     try:
         result = subprocess.run(
-            ["pip", "install", library],
+            ["uv", "pip", "install", library],
             check=True,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
@@ -19,7 +20,7 @@ def install_library_(library):
 def uninstall_library_(library):
     try:
         result = subprocess.run(
-            ["pip", "uninstall", "-y", library],
+            ["uv", "pip", "uninstall", "-y", library],
             check=True,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
@@ -30,6 +31,26 @@ def uninstall_library_(library):
         return False
     
 
+def add_tool_(function):
+    """
+    Add a tool to the registered functions.
+    
+    Args:
+        function: The function to be registered as a tool
+    """
+    from ..server.function_tools import tool
+    # Apply the tool decorator with empty description
+    decorated_function = tool()(function)
+    return decorated_function
+
+    
+
+
+
+
+
+
+import cloudpickle
 from fastapi import HTTPException
 from pydantic import BaseModel
 from mcp import ClientSession, StdioServerParameters
@@ -75,3 +96,22 @@ async def uninstall_library(request: InstallLibraryRequest):
     """
     uninstall_library_(request.library)
     return {"message": "Library uninstalled successfully"}
+
+
+
+
+
+class AddToolRequest(BaseModel):
+    function: str
+
+@app.post(f"{prefix}/add_tool")
+async def add_tool(request: AddToolRequest):
+    """
+    Endpoint to add a tool.
+    """
+    # Cloudpickle the function
+    decoded_function = base64.b64decode(request.function)
+    deserialized_function = cloudpickle.loads(decoded_function)
+
+    add_tool_(deserialized_function)
+    return {"message": "Tool added successfully"}

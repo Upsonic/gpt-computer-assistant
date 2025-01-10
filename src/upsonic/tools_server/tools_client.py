@@ -1,3 +1,4 @@
+import base64
 import httpx
 from typing import Dict, List, Any, Callable, Optional
 
@@ -53,3 +54,17 @@ class ToolManager:
             response.raise_for_status()
             return response.json()
 
+
+
+
+    def add_tool(self, function) -> Dict[str, Any]:
+        """
+        Add a tool.
+        """
+        with httpx.Client(timeout=600.0) as session:
+            response = session.post(
+                f"{self.base_url}/tools/add_tool",
+                json={"function": function},
+            )
+            response.raise_for_status()
+            return response.json()

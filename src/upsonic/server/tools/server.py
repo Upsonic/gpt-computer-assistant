@@ -17,6 +17,9 @@ class InstallLibraryRequest(BaseModel):
     library: str
 
 
+class CustomToolRequest(BaseModel):
+    function: str
+
 
 @app.post(f"{prefix}/install_library")
 async def install_library(request: InstallLibraryRequest):
@@ -43,3 +46,16 @@ async def uninstall_library(request: InstallLibraryRequest):
     with ToolManager() as tool_client:
         tool_client.uninstall_library(request.library)
     return {"message": "Library uninstalled successfully"}
+
+
+class AddToolRequest(BaseModel):
+    function: Any
+
+@app.post(f"{prefix}/add_tool")
+async def add_tool(request: AddToolRequest):
+    """
+    Endpoint to add a tool.
+    """
+    with ToolManager() as tool_client:
+        tool_client.add_tool(request.function)
+    return {"message": "Tool added successfully"}

@@ -13,6 +13,10 @@ class Task(BaseModel):
 
     @property
     def response(self):
+
+        if self._response is None:
+            return None
+
         if type(self._response) == str:
             return self._response
 
