@@ -46,8 +46,21 @@ class CallManager:
             azure_endpoint = Configuration.get("AZURE_OPENAI_ENDPOINT")
             azure_api_version = Configuration.get("AZURE_OPENAI_API_VERSION")
             azure_api_key = Configuration.get("AZURE_OPENAI_API_KEY")
-            if not azure_endpoint or not azure_api_version or not azure_api_key:
-                return {"status_code": 401, "detail": "No API key provided. Please set AZURE_OPENAI_ENDPOINT, AZURE_OPENAI_API_VERSION, and AZURE_OPENAI_API_KEY in your configuration."}
+
+            missing_keys = []
+            if not azure_endpoint:
+                missing_keys.append("AZURE_OPENAI_ENDPOINT")
+            if not azure_api_version:
+                missing_keys.append("AZURE_OPENAI_API_VERSION")
+            if not azure_api_key:
+                missing_keys.append("AZURE_OPENAI_API_KEY")
+
+            if missing_keys:
+                return {
+                    "status_code": 401,
+                    "detail": f"No API key provided. Please set {', '.join(missing_keys)} in your configuration."
+                }
+
             model = AsyncAzureOpenAI(api_version=azure_api_version, azure_endpoint=azure_endpoint, api_key=azure_api_key)
             model = OpenAIModel('gpt-4o', openai_client=model)
 
