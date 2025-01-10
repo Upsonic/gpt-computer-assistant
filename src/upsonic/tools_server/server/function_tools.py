@@ -1,3 +1,4 @@
+import traceback
 from fastapi import HTTPException
 from pydantic import BaseModel
 import inspect
@@ -25,7 +26,7 @@ def _get_json_type(python_type: Type) -> str:
     return type_mapping.get(python_type, "string")
 
 
-def tool(description: str = ""):
+def tool(description: str = "", custom_properties: Dict[str, Any] = {}, custom_required: List[str] = []):
     """
     Decorator to register a function as a tool.
 
@@ -46,6 +47,8 @@ def tool(description: str = ""):
             # Get the first line of the docstring as description
             tool_description = func.__doc__.strip().split('\n')[0].strip()
 
+
+        
         for param_name, param in sig.parameters.items():
             param_type = (
                 param.annotation if param.annotation != inspect.Parameter.empty else Any
@@ -65,6 +68,13 @@ def tool(description: str = ""):
             # If parameter has no default value, it's required
             if param.default == inspect.Parameter.empty:
                 required.append(param_name)
+
+
+        if custom_properties:
+            properties = custom_properties
+
+        if custom_required:
+            required = custom_required
 
         # Register the function with the extracted description
         registered_functions[func.__name__] = {
@@ -97,7 +107,7 @@ class ToolRequest(BaseModel):
 
 
 @app.post(f"{prefix}/tools")
-@timeout(30.0)
+@timeout(300.0)
 async def list_tools():
     print("Listing tools...")
 
@@ -119,7 +129,7 @@ async def list_tools():
 
 
 @app.post(f"{prefix}/call_tool")
-@timeout(30.0)
+@timeout(300.0)
 async def call_tool(request: ToolRequest):
     print(f"Received tool call request: {request}")
 
@@ -141,7 +151,7 @@ async def call_tool(request: ToolRequest):
         print(f"Tool call result: {result}")
         return {"result": result}
     except Exception as e:
-        print(f"Error calling tool: {e}")
+        traceback.print_exc()
         raise HTTPException(status_code=500, detail=f"Failed to call tool: {str(e)}")
 
 

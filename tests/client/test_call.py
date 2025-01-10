@@ -62,39 +62,4 @@ def test_call_with_tools():
     assert any_found_add_numbers
 
 
-def test_call_with_mcp_server():
-    task = Task(description="What are your tools?", response_format=ToolList)
-    server.call(task, tools=["add_numbers", "fetch"], mcp_servers=[{"command": "uvx", "args": ["mcp-server-fetch"]}])
-    print(task.response)
 
-    any_found_add_numbers = False
-    any_found_fetch = False
-    for tool in task.response.tools:
-        if "add_numbers" in tool.raw_name.lower():
-            any_found_add_numbers = True
-            
-        if "fetch" in tool.raw_name.lower():
-            any_found_fetch = True
-            
-
-    print(any_found_add_numbers, any_found_fetch)
-    assert any_found_add_numbers and any_found_fetch
-
-
-def test_call_with_env_variable():
-    task = Task(description="What are your tools?", response_format=ToolList)
-    server.call(task, tools=["add_numbers", "fetch"], mcp_servers=[{"command": "uvx", "args": ["mcp-server-fetch"], "env": {"test": "test"}}])
-    print(task.response)
-
-    any_found_add_numbers = False
-    any_found_fetch = False
-    for tool in task.response.tools:
-        if "add_numbers" in tool.raw_name.lower():
-            any_found_add_numbers = True
-            
-        if "fetch" in tool.raw_name.lower():
-            any_found_fetch = True
-            
-
-    print(any_found_add_numbers, any_found_fetch)
-    assert any_found_add_numbers and any_found_fetch

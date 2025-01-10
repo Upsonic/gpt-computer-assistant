@@ -47,7 +47,7 @@ class UpsonicClient(Call, Storage, Tools):
         """
         with httpx.Client() as client:
 
-            response = client.post(self.url + endpoint, json=data)
+            response = client.post(self.url + endpoint, json=data, timeout=600.0)
             if response.status_code == 408:
                 raise TimeoutException("Request timed out")
             response.raise_for_status()

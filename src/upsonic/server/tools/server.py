@@ -59,3 +59,19 @@ async def add_tool(request: AddToolRequest):
     with ToolManager() as tool_client:
         tool_client.add_tool(request.function)
     return {"message": "Tool added successfully"}
+
+
+class AddMCPToolRequest(BaseModel):
+    command: str
+    args: List[str]
+    env: Dict[str, str]
+
+
+@app.post(f"{prefix}/add_mcp_tool")
+async def add_mcp_tool(request: AddMCPToolRequest):
+    """
+    Endpoint to add a tool.
+    """
+    with ToolManager() as tool_client:
+        tool_client.add_mcp_tool(request.command, request.args, request.env)
+    return {"message": "Tool added successfully"}

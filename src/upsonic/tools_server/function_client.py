@@ -52,6 +52,7 @@ class FunctionToolManager:
     def tools(self) -> List[Callable[..., Dict[str, Any]]]:
         """Initialize tool-specific methods based on available tools."""
         tools_response = self.list_tools()
+        print("tools_response", tools_response)
         tools = tools_response.get("available_tools", {}).get("tools", [])
 
         functions: List[Callable[..., Dict[str, Any]]] = []
@@ -105,6 +106,9 @@ class FunctionToolManager:
                         if i < len(required):
                             all_kwargs[required[i]] = arg
 
+
+                    print("all_kwargs", all_kwargs)
+                    print("required", required)
                     for req in required:
                         if req not in all_kwargs:
                             raise ValueError(f"Missing required parameter: {req}")
@@ -125,6 +129,10 @@ class FunctionToolManager:
                 )
 
                 return tool_function
+
+            print("tool_name", tool_name)
+            print("properties", properties)
+            print("required", required)
 
             func = create_tool_function(tool_name, properties, required)
             functions.append(func)

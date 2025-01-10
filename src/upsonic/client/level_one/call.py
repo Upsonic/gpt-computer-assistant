@@ -21,7 +21,7 @@ class Call:
         self,
         task: Task,
         tools: list[str] = [],
-        mcp_servers: list[dict[str, Union[str, dict[str, str], dict[str, str], dict[str, str]]]] = [],
+
         llm_model: str = "gpt-4o",
     ) -> Any:
         from ..trace import sentry_sdk
@@ -32,7 +32,7 @@ class Call:
             prompt: The input prompt for GPT-4
             response_format: The expected response format (can be a type or Pydantic model)
             tools: Optional list of tool names to use
-            mcp_servers: Optional list of MCP server configurations
+
 
         Returns:
             The response in the specified format
@@ -63,7 +63,7 @@ class Call:
                     "prompt": task.description,
                     "response_format": response_format_str,
                     "tools": tools or [],
-                    "mcp_servers": mcp_servers or [],
+
                     "llm_model": llm_model,
                 }
 

@@ -60,6 +60,12 @@ class Tools:
         result = self.send_request("/tools/add_tool", data)
         return result
     
+
+
+    def add_mcp_tool(self, command: str, args: List[str], env: Dict[str, str] = {}) -> Dict[str, Any]:
+        result = self.send_request("/tools/add_mcp_tool", {"command": command, "args": args, "env": env})
+        return result
+
     def install_library(self, library: str) -> Dict[str, Any]:
         result = self.send_request("/tools/install_library", {"library": library})
         return result

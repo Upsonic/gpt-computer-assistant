@@ -17,11 +17,11 @@ class GPT4ORequest(BaseModel):
     prompt: str
     response_format: Optional[Any] = []
     tools: Optional[Any] = []
-    mcp_servers: Optional[Any] = []
+
     llm_model: Optional[Any] = "gpt-4o"
 
 
-def run_sync_gpt4o(prompt, response_format, tools, mcp_servers, llm_model):
+def run_sync_gpt4o(prompt, response_format, tools, llm_model):
     # Create a new event loop for this thread
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
@@ -30,7 +30,7 @@ def run_sync_gpt4o(prompt, response_format, tools, mcp_servers, llm_model):
             prompt=prompt,
             response_format=response_format,
             tools=tools,
-            mcp_servers=mcp_servers,
+
             llm_model=llm_model,
         )
     finally:
@@ -71,7 +71,7 @@ async def call_gpt4o(request: GPT4ORequest):
         else:
             response_format = str
 
-        print(request.mcp_servers)
+
 
         loop = asyncio.get_running_loop()
         with ThreadPoolExecutor() as pool:
@@ -81,7 +81,7 @@ async def call_gpt4o(request: GPT4ORequest):
                 request.prompt,
                 response_format,
                 request.tools,
-                request.mcp_servers,
+
                 request.llm_model,
             )
 
