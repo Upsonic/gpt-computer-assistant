@@ -8,6 +8,7 @@ from .task_response import CustomTaskResponse, ObjectResponse
 
 class Task(BaseModel):
     description: str
+    tools: list[str] = []
     response_format: Union[Type[CustomTaskResponse], Type[ObjectResponse], Any] = None
     _response: Any = None
 

@@ -21,7 +21,6 @@ class Call:
     def call(
         self,
         task: Task,
-        tools: list[str] = [],
 
         llm_model: str = None,
     ) -> Any:
@@ -41,6 +40,8 @@ class Call:
 
         if llm_model is None:
             llm_model = self.default_llm_model
+
+        tools = task.tools
 
 
         response_format = task.response_format
