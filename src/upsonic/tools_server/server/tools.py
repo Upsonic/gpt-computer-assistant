@@ -98,7 +98,8 @@ def add_tool_(function, description: str = "", properties: Dict[str, Any] = {}, 
     # Apply the tool decorator with empty description
 
     # ANalyze the functino signature
-    print("function", function)
+    print("function",  function)
+    print("function.__name__", function.__name__)
     print("function.__annotations__", function.__annotations__)
 
     
@@ -175,18 +176,21 @@ async def add_tool(request: AddToolRequest):
     decoded_function = base64.b64decode(request.function)
     deserialized_function = cloudpickle.loads(decoded_function)
 
+    print("deserialized_function", deserialized_function)
+
     add_tool_(deserialized_function)
     return {"message": "Tool added successfully"}
 
 
 
 class AddMCPToolRequest(BaseModel):
+    name: str
     command: str
     args: List[str]
     env: Dict[str, str]
 
 
-async def add_mcp_tool_(command: str, args: List[str], env: Dict[str, str]):
+async def add_mcp_tool_(name: str, command: str, args: List[str], env: Dict[str, str]):
     """
     Add a tool.
     """
@@ -309,6 +313,9 @@ async def add_mcp_tool_(command: str, args: List[str], env: Dict[str, str]):
 
             # Create function with proper annotations
             func = create_tool_function(tool_name, properties, required)
+            #name should be name__function_name
+            full_name = f"{name}__{tool_name}"
+            func.__name__ = full_name
             add_tool_(func, description=tool_desc, properties=properties, required=required)
 
 
@@ -317,5 +324,5 @@ async def add_mcp_tool(request: AddMCPToolRequest):
     """
     Endpoint to add a tool.
     """
-    await add_mcp_tool_(request.command, request.args, request.env)
+    await add_mcp_tool_(request.name, request.command, request.args, request.env)
     return {"message": "Tool added successfully"}

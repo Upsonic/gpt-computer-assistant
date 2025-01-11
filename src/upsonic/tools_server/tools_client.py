@@ -70,14 +70,14 @@ class ToolManager:
             return response.json()
 
 
-    def add_mcp_tool(self, command: str, args: List[str], env: Dict[str, str]) -> Dict[str, Any]:
+    def add_mcp_tool(self, name: str, command: str, args: List[str], env: Dict[str, str]) -> Dict[str, Any]:
         """
         Add a tool.
         """
         with httpx.Client(timeout=600.0) as session:
             response = session.post(
                 f"{self.base_url}/tools/add_mcp_tool",
-                json={"command": command, "args": args, "env": env},
+                json={"name": name, "command": command, "args": args, "env": env},
             )
             response.raise_for_status()
             return response.json()

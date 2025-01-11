@@ -113,6 +113,7 @@ async def list_tools():
 
     tools = []
     for name, info in registered_functions.items():
+        print("name", name)
         tools.append(
             {
                 "name": name,

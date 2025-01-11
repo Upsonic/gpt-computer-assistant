@@ -45,7 +45,18 @@ class Call:
         if llm_model is None:
             llm_model = self.default_llm_model
 
-        tools = task.tools
+        tools_ = task.tools
+
+        tools = []
+        for i in tools_:
+            print(type(i))
+
+            if isinstance(i, type):
+                print(i.__name__)
+                tools.append(i.__name__+".*")
+            # If its a string, get the name of the string
+            elif isinstance(i, str):
+                print(i)
 
 
         response_format = task.response_format
@@ -96,6 +107,8 @@ class Call:
 
                 if result["status_code"] == 500:
                     raise CallErrorException(result)
+                
+
 
             with sentry_sdk.start_span(op="deserialize", description="Deserialize the result"):
                 # Deserialize the result

@@ -18,13 +18,13 @@ class UnsupportedLLMModelException(Exception):
 class Tools:
     def tool(self, library: Optional[Union[str, List[str]]] = None):
         """
-        Decorator to register a function as a tool.
+        Decorator to register a function or class as a tool.
         Can be used as @tool(), @tool("pandas"), or @tool(["pandas", "numpy"])
 
         Args:
             library: Optional library name or list of library names to install before registering the tool
         """
-        def decorator(func: Callable):
+        def decorator(obj: Union[Callable, Type]):
             # Install libraries first if specified
             if library:
                 if isinstance(library, str):
@@ -33,20 +33,45 @@ class Tools:
                     for lib in library:
                         self.install_library(lib)
             
-            # Register the function as a tool
-            self.add_tool(func)
-            
-            # Return the original function
-            return func
+            # If it's a class, register each method as a tool
+            if isinstance(obj, type):
+                class_name = obj.__name__
+                # Get all methods that don't start with underscore
+                methods = [(name, getattr(obj, name)) for name in dir(obj) 
+                          if not name.startswith('_') and callable(getattr(obj, name))]
+                
+                # Register each method as a tool
+                for name, method in methods:
+                    # Convert the method to a standalone function
+                    def create_standalone(method, full_name):
+                        def standalone(*args, **kwargs):
+                            return method(*args, **kwargs)
+                        standalone.__name__ = full_name
+                        return standalone
+                    
+                    full_name = f"{class_name}__{name}"
+                    standalone = create_standalone(method, full_name)
+                    standalone.__annotations__ = method.__annotations__
+                    standalone.__doc__ = method.__doc__
+                    standalone.__name__ = full_name
+                    self.add_tool(standalone)
+                
+                return obj
+            else:
+                # Register the function as a tool
+                self.add_tool(obj)
+                return obj
+                
         return decorator
 
     def add_tool(
         self,
         function,
     ) -> Any:
+        
+        print(function)
 
         # Get the function then make a cloudpickle of it
-
         the_module = dill.detect.getmodule(function)
         if the_module is not None:
             cloudpickle.register_pickle_by_value(the_module)
@@ -62,8 +87,8 @@ class Tools:
     
 
 
-    def add_mcp_tool(self, command: str, args: List[str], env: Dict[str, str] = {}) -> Dict[str, Any]:
-        result = self.send_request("/tools/add_mcp_tool", {"command": command, "args": args, "env": env})
+    def add_mcp_tool(self, name: str, command: str, args: List[str], env: Dict[str, str] = {}) -> Dict[str, Any]:
+        result = self.send_request("/tools/add_mcp_tool", {"name": name, "command": command, "args": args, "env": env})
         return result
 
     def install_library(self, library: str) -> Dict[str, Any]:
@@ -88,10 +113,12 @@ class Tools:
             command = getattr(cls, "command", None)
             args = getattr(cls, "args", [])
             env = getattr(cls, "env", {})
+
+            name = cls.__name__
             
             if not command:
                 raise ValueError("MCP tool class must have a 'command' attribute")
                 
-            self.add_mcp_tool(command, args, env)
+            self.add_mcp_tool(name, command, args, env)
             return cls
         return decorator

@@ -71,6 +71,7 @@ class CallManager:
         roulette_agent = Agent(
             model,
             result_type=response_format,
+
         )
 
 

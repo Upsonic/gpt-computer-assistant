@@ -10,8 +10,30 @@ class FunctionToolManager:
         self.base_url = "http://localhost:8086"
 
     def get_tools_by_name(self, name: list[str]):
-        """Get tools by name"""
-        return [tool for tool in self.tools() if tool.__name__ in name]
+        """
+        Get tools by name, supporting wildcard patterns.
+        
+        Args:
+            name: List of tool names or patterns (e.g. ["FileSystem.*", "MyTools.*"])
+            
+        Returns:
+            List of matching tools
+        """
+        matching_tools = []
+        for tool in self.tools():
+            tool_name = tool.__name__
+            for pattern in name:
+                # Handle wildcard pattern
+                if pattern.endswith(".*"):
+                    prefix = pattern[:-2]  # Remove .* from the end
+                    if tool_name.startswith(prefix):
+                        matching_tools.append(tool)
+                        break
+                # Exact match
+                elif tool_name == pattern:
+                    matching_tools.append(tool)
+                    break
+        return matching_tools
 
     def __enter__(self):
         return self
