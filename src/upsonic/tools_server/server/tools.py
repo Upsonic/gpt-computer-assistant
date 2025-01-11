@@ -270,10 +270,10 @@ async def add_mcp_tool_(name: str, command: str, args: List[str], env: Dict[str,
                         # Remove None kwargs
                         all_kwargs = {k: v for k, v in all_kwargs.items() if v is not None}
 
-                        print("Before call_tool")
+
                         result = await new_session.call_tool(name=tool_name, arguments=all_kwargs)
-                        print("After call_tool")
-                        
+
+
                         return {"result": result}
 
                 # Set function name and annotations
