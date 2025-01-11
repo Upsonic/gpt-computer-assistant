@@ -7,16 +7,33 @@ from openai import AsyncAzureOpenAI
 from pydantic import BaseModel
 from pydantic_ai.result import ResultData
 from fastapi import HTTPException, status
+from functools import wraps
+from typing import Any, Callable
 
 from ...storage.configuration import Configuration
 
-
 from ...tools_server.function_client import FunctionToolManager
 
-
-
-
-
+def tool_wrapper(func: Callable) -> Callable:
+    @wraps(func)
+    def wrapper(*args: Any, **kwargs: Any) -> Any:
+        # Log the tool call
+        tool_name = getattr(func, "__name__", str(func))
+        print(f"Tool called: {tool_name}")
+        print(f"Arguments: {args}")
+        print(f"Keyword arguments: {kwargs}")
+        
+        try:
+            # Call the original function
+            result = func(*args, **kwargs)
+            print(f"Tool execution successful: {tool_name}")
+            return result
+        except Exception as e:
+            print(f"Tool execution failed: {tool_name}")
+            print(f"Error: {str(e)}")
+            raise
+    
+    return wrapper
 
 class CallManager:
     def gpt_4o(
@@ -71,6 +88,7 @@ class CallManager:
         roulette_agent = Agent(
             model,
             result_type=response_format,
+            retries=5
 
         )
 
@@ -78,7 +96,9 @@ class CallManager:
 
         with FunctionToolManager() as function_client:
             for each in function_client.get_tools_by_name(tools):
-                roulette_agent.tool_plain(each, retries=5)
+                # Wrap the tool with our wrapper
+                wrapped_tool = tool_wrapper(each)
+                roulette_agent.tool_plain(wrapped_tool, retries=5)
 
         result = roulette_agent.run_sync(prompt)
 
