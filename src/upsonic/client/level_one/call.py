@@ -49,15 +49,15 @@ class Call:
 
         tools = []
         for i in tools_:
-            print(type(i))
+
 
             if isinstance(i, type):
-                print(i.__name__)
+
                 tools.append(i.__name__+".*")
             # If its a string, get the name of the string
             elif isinstance(i, str):
-                print(i)
 
+                tools.append(i)
 
         response_format = task.response_format
         with sentry_sdk.start_transaction(op="task", name="Call.call") as transaction:

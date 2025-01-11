@@ -109,11 +109,11 @@ class ToolRequest(BaseModel):
 @app.post(f"{prefix}/tools")
 @timeout(30.0)
 async def list_tools():
-    print("Listing tools...")
+
 
     tools = []
     for name, info in registered_functions.items():
-        print("name", name)
+
         tools.append(
             {
                 "name": name,
@@ -132,7 +132,7 @@ async def list_tools():
 @app.post(f"{prefix}/call_tool")
 @timeout(30.0)
 async def call_tool(request: ToolRequest):
-    print(f"Received tool call request: {request}")
+
 
     if request.tool_name not in registered_functions:
         raise HTTPException(
@@ -149,10 +149,10 @@ async def call_tool(request: ToolRequest):
         else:
             result = func(**request.arguments)
             
-        print(f"Tool call result: {result}")
+
         return {"result": result}
     except Exception as e:
-        traceback.print_exc()
+
         return {"status_code": 500, "detail": f"Failed to call tool: {str(e)}"}
 
 

@@ -68,8 +68,7 @@ class Tools:
         self,
         function,
     ) -> Any:
-        
-        print(function)
+
 
         # Get the function then make a cloudpickle of it
         the_module = dill.detect.getmodule(function)

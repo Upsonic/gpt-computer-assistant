@@ -21,13 +21,13 @@ def timeout(duration: float):
     def decorator(func):
         @wraps(func)
         async def wrapper(*args, **kwargs):
-            print(f"Starting execution of {func.__name__} with timeout {duration} seconds")
+
             try:
                 result = await asyncio.wait_for(func(*args, **kwargs), timeout=duration)
-                print(f"Execution of {func.__name__} completed successfully")
+
                 return result
             except asyncio.TimeoutError:
-                print(f"Execution of {func.__name__} timed out after {duration} seconds")
+
                 raise HTTPException(
                     status_code=408,
                     detail=f"Operation timed out after {duration} seconds",

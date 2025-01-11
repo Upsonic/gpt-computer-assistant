@@ -16,9 +16,6 @@ import asyncio
 from contextlib import asynccontextmanager
 @asynccontextmanager
 async def managed_session(command: str, args: list, env: dict | None = None):
-    print("env", env)
-    print("args", args)
-    print("command", command)
 
     if env is None:
         env = get_default_environment()
@@ -69,7 +66,7 @@ def install_library_(library):
         )
         return result.returncode == 0
     except subprocess.CalledProcessError:
-        traceback.print_exc()
+
         return False
 
 
@@ -83,7 +80,7 @@ def uninstall_library_(library):
         )
         return result.returncode == 0
     except subprocess.CalledProcessError:
-        traceback.print_exc()
+
         return False
     
 
@@ -97,10 +94,7 @@ def add_tool_(function, description: str = "", properties: Dict[str, Any] = {}, 
     from ..server.function_tools import tool
     # Apply the tool decorator with empty description
 
-    # ANalyze the functino signature
-    print("function",  function)
-    print("function.__name__", function.__name__)
-    print("function.__annotations__", function.__annotations__)
+
 
     
     decorated_function = tool(description=description, custom_properties=properties, custom_required=required)(function)
@@ -145,9 +139,9 @@ async def install_library(request: InstallLibraryRequest):
         A success message
     """
 
-    print("install_library", request)
+
     install_library_(request.library)
-    print("install_library done")
+
     return {"message": "Library installed successfully"}
 
 
@@ -176,7 +170,7 @@ async def add_tool(request: AddToolRequest):
     decoded_function = base64.b64decode(request.function)
     deserialized_function = cloudpickle.loads(decoded_function)
 
-    print("deserialized_function", deserialized_function)
+
 
     add_tool_(deserialized_function)
     return {"message": "Tool added successfully"}
@@ -211,8 +205,7 @@ async def add_mcp_tool_(name: str, command: str, args: List[str], env: Dict[str,
 
         tools = tools.tools
         for tool in tools:
-            print("\n\n")
-            print("tool", tool)
+
             tool_name: str = tool.name
             tool_desc: str = tool.description
             input_schema: Dict[str, Any] = tool.inputSchema
@@ -242,14 +235,6 @@ async def add_mcp_tool_(name: str, command: str, args: List[str], env: Dict[str,
                         defaults[param_name] = param_info.get("default", None)
 
                 async def tool_function(*args: Any, **kwargs: Any) -> Dict[str, Any]:
-                    print("\n=== Tool Function Debug ===")
-                    print(f"Tool Name: {tool_name}")
-                    print(f"Args: {args}")
-                    print(f"Kwargs: {kwargs}")
-                    print(f"Required Parameters: {required}")
-                    print(f"Command: {tool_function.command}")
-                    print(f"Command Args: {tool_function.args}")
-                    print(f"Environment: {tool_function.env}")
 
                     # Convert positional args to kwargs
                     if len(args) > len(required):
@@ -263,7 +248,7 @@ async def add_mcp_tool_(name: str, command: str, args: List[str], env: Dict[str,
                         if i < len(required):
                             all_kwargs[required[i]] = arg
 
-                    print(f"Combined kwargs: {all_kwargs}")
+
 
                     # Validate required parameters
                     for req in required:
@@ -275,20 +260,20 @@ async def add_mcp_tool_(name: str, command: str, args: List[str], env: Dict[str,
                         if param not in all_kwargs:
                             all_kwargs[param] = default
 
-                    print(f"Final kwargs with defaults: {all_kwargs}")
+
 
                     # Create a new session for each call using the function's stored parameters
-                    print("Creating new session...")
+
                     async with managed_session(command=tool_function.command, args=tool_function.args, env=tool_function.env) as new_session:
-                        print("Calling tool...", tool_function.command, tool_function.args, tool_function.env, tool_name)
-                        print("all_kwargs", all_kwargs)
+
 
                         # Remove None kwargs
                         all_kwargs = {k: v for k, v in all_kwargs.items() if v is not None}
 
+                        print("Before call_tool")
                         result = await new_session.call_tool(name=tool_name, arguments=all_kwargs)
-                        print(f"Tool result: {result}")
-                        print("=== End Tool Function Debug ===\n")
+                        print("After call_tool")
+                        
                         return {"result": result}
 
                 # Set function name and annotations
@@ -306,8 +291,7 @@ async def add_mcp_tool_(name: str, command: str, args: List[str], env: Dict[str,
                 tool_function.args = args
                 tool_function.env = env
 
-                # Print the required parameters
-                print("required", required)
+
 
                 return tool_function
 
