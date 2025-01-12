@@ -128,6 +128,7 @@ class InstallLibraryRequest(BaseModel):
 
 
 @app.post(f"{prefix}/install_library")
+@timeout(30.0)
 async def install_library(request: InstallLibraryRequest):
     """
     Endpoint to install a library.
@@ -147,6 +148,7 @@ async def install_library(request: InstallLibraryRequest):
 
 
 @app.post(f"{prefix}/uninstall_library")
+@timeout(30.0)
 async def uninstall_library(request: InstallLibraryRequest):
     """
     Endpoint to uninstall a library.
@@ -162,6 +164,7 @@ class AddToolRequest(BaseModel):
     function: str
 
 @app.post(f"{prefix}/add_tool")
+@timeout(30.0)
 async def add_tool(request: AddToolRequest):
     """
     Endpoint to add a tool.
@@ -324,6 +327,7 @@ async def add_mcp_tool_(name: str, command: str, args: List[str], env: Dict[str,
 
 
 @app.post(f"{prefix}/add_mcp_tool")
+@timeout(30.0)
 async def add_mcp_tool(request: AddMCPToolRequest):
     """
     Endpoint to add a tool.
