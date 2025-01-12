@@ -8,6 +8,8 @@ from .storage.storage import Storage
 from .tools.tools import Tools
 
 
+from .printing import connected_to_server
+
 class ServerStatusException(Exception):
     """Custom exception for server status check failures."""
     pass
@@ -21,10 +23,43 @@ class UpsonicClient(Call, Storage, Tools):
 
 
     def __init__(self, url: str):
+        self.server_type = "Upsonic"
+
+        if url == "devserver":
+            self.server_type = "Local(DevServer)"
+            url = "http://0.0.0.0:7541"
+            from ..server import run_dev_server, stop_dev_server, is_tools_server_running, is_main_server_running
+            run_dev_server()
+
+            import atexit
+
+            def exit_handler():
+                if is_tools_server_running() or is_main_server_running():
+                    stop_dev_server()
+
+            atexit.register(exit_handler)
+
+
+        if "0.0.0.0" in url:
+            self.server_type = "Local(Docker)"
+        elif "localhost" in url:
+            self.server_type = "Local(Docker)"
+
+        elif "upsonic.ai" in url:
+            self.server_type = "Cloud(Upsonic)"
+        else:
+            self.server_type = "Cloud(Unknown)"
+
+
+        self.url = url
+        self.default_llm_model = "gpt-4o"
         self.url = url
         self.default_llm_model = "gpt-4o"
         if not self.status():
+            connected_to_server(self.server_type, "Failed")
             raise ServerStatusException("Failed to connect to the server at initialization.")
+    
+        connected_to_server(self.server_type, "Established")
 
 
     def set_default_llm_model(self, llm_model: str):

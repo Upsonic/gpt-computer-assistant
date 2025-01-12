@@ -34,7 +34,7 @@ def run_tools_server():
     _server_process.daemon = True  # Make process daemon so it exits when parent exits
     _server_process.start()
     time.sleep(2)  # Give the server a moment to start
-    print("Tools server started")
+
 
 
 
@@ -53,7 +53,7 @@ def stop_tools_server():
     _server_process.terminate()
     _server_process.join()
     _server_process = None
-    print("Tools server stopped")
+
 
 def is_tools_server_running() -> bool:
     """Check if the tools server is currently running."""

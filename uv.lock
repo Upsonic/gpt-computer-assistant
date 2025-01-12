@@ -1028,6 +1028,7 @@ dependencies = [
     { name = "httpx" },
     { name = "pickledb" },
     { name = "pydantic" },
+    { name = "rich" },
     { name = "sentry-sdk", extra = ["opentelemetry"] },
     { name = "toml" },
 ]
@@ -1060,6 +1061,7 @@ requires-dist = [
     { name = "pydantic", specifier = ">=2.10.4" },
     { name = "pydantic-ai", marker = "extra == 'server'", specifier = ">=0.0.17" },
     { name = "python-dotenv", marker = "extra == 'server'", specifier = ">=1.0.1" },
+    { name = "rich", specifier = ">=13.9.4" },
     { name = "sentry-sdk", extras = ["opentelemetry"], specifier = ">=2.19.2" },
     { name = "toml", specifier = ">=0.10.2" },
     { name = "uvicorn", marker = "extra == 'server'", specifier = ">=0.34.0" },

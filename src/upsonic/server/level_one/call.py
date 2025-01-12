@@ -98,10 +98,7 @@ class CallManager:
 
         with FunctionToolManager() as function_client:
             the_list_of_tools = function_client.get_tools_by_name(tools)
-            print("the_list_of_tools")
-            print(the_list_of_tools)
-            print("tools")
-            print(tools)
+
             for each in the_list_of_tools:
                 # Wrap the tool with our wrapper
   
@@ -111,21 +108,16 @@ class CallManager:
                 the_wrapped_tools.append(wrapped_tool)
             
 
-        print("the_wrapped_tools")
-        print(the_wrapped_tools)
+
 
         for each in the_wrapped_tools:
-            print("each")
-            print(each)
-            print(each.__name__)
-            print(each.__doc__)
-            print(each)
+
             # İnspect signature of the tool
             signature = inspect.signature(each)
-            print(signature)
+
             roulette_agent.tool_plain(each, retries=5)
 
-        print("roulette_agent")
+
         result = roulette_agent.run_sync(prompt)
 
         return {"status_code": 200, "result": result.data}

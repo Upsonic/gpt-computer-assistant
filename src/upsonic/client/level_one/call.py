@@ -1,3 +1,4 @@
+import time
 import cloudpickle
 import dill
 import base64
@@ -6,6 +7,8 @@ from typing import Any, List, Dict, Optional, Type, Union
 from pydantic import BaseModel
 
 from ..tasks.tasks import Task
+
+from ..printing import call_end
 
 class NoAPIKeyException(Exception):
     pass
@@ -23,6 +26,36 @@ class Call:
 
 
     def call(
+        self,
+        task: Task,
+        llm_model: str = None,
+    ) -> Any:
+        
+        start_time = time.time()
+
+
+        try:
+            the_result = self.call_(task, llm_model)
+        except Exception as e:
+
+            try:
+                from ...server import stop_dev_server, stop_main_server, is_tools_server_running, is_main_server_running
+
+                if is_tools_server_running() or is_main_server_running():
+                    stop_dev_server()
+
+            except Exception as e:
+                pass
+
+            raise e
+
+        end_time = time.time()
+
+        call_end(the_result["result"], the_result["llm_model"], the_result["response_format"], start_time, end_time)
+
+        return True
+
+    def call_(
         self,
         task: Task,
 
@@ -122,4 +155,14 @@ class Call:
 
         task._response = deserialized_result
 
-        return True
+
+        response_format_req = None
+        if response_format_str == "str":
+            response_format_req = response_format_str
+        else:
+            # Class name
+            response_format_req = response_format.__name__
+        
+
+        return {"result": deserialized_result, "llm_model": llm_model, "response_format": response_format_req}
+

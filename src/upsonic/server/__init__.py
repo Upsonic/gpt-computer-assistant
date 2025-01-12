@@ -45,7 +45,7 @@ def run_main_server():
     _server_process.daemon = True  # Make process daemon so it exits when parent exits
     _server_process.start()
     time.sleep(2)  # Give the server a moment to start
-    print("Main server started")
+
 
 def run_main_server_internal():
     uvicorn.run("upsonic.server.api:app", host="0.0.0.0", port=7541, reload=True)
@@ -63,7 +63,7 @@ def stop_main_server():
     _server_process.terminate()
     _server_process.join()
     _server_process = None
-    print("Main server stopped")
+
 
 
 def is_main_server_running() -> bool:
