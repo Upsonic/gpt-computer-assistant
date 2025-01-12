@@ -52,7 +52,7 @@ def test_call_with_response_format():
 
 
 def test_call_with_tools():
-    task = Task(description="What are your tools?", tools=["add_numbers"], response_format=StrInListResponse("tool_raw_name"))
+    task = Task(description="What are your tools?", tools=["add_numbers"], response_format=StrInListResponse("tools_raw_names"))
     server.call(task)
 
     any_found_add_numbers = False
