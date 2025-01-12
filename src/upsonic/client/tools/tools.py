@@ -1,3 +1,4 @@
+import inspect
 import cloudpickle
 import dill
 import base64
@@ -44,6 +45,7 @@ class Tools:
                 for name, method in methods:
                     # Convert the method to a standalone function
                     def create_standalone(method, full_name):
+                        @wraps(method)
                         def standalone(*args, **kwargs):
                             return method(*args, **kwargs)
                         standalone.__name__ = full_name
@@ -51,16 +53,16 @@ class Tools:
                     
                     full_name = f"{class_name}__{name}"
                     standalone = create_standalone(method, full_name)
-                    standalone.__annotations__ = method.__annotations__
-                    standalone.__doc__ = method.__doc__
-                    standalone.__name__ = full_name
                     self.add_tool(standalone)
                 
                 return obj
             else:
                 # Register the function as a tool
-                self.add_tool(obj)
-                return obj
+                @wraps(obj)
+                def wrapper(*args, **kwargs):
+                    return obj(*args, **kwargs)
+                self.add_tool(wrapper)
+                return wrapper
                 
         return decorator
 
@@ -68,6 +70,7 @@ class Tools:
         self,
         function,
     ) -> Any:
+
 
 
         # Get the function then make a cloudpickle of it

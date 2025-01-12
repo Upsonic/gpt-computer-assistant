@@ -1,4 +1,5 @@
 import base64
+import inspect
 import subprocess
 import traceback
 import asyncio
@@ -84,7 +85,7 @@ def uninstall_library_(library):
         return False
     
 
-def add_tool_(function, description: str = "", properties: Dict[str, Any] = {}, required: List[str] = []):
+def add_tool_(function, description: str = "", properties: Dict[str, Any] = None, required: List[str] = None):
     """
     Add a tool to the registered functions.
     
@@ -93,7 +94,6 @@ def add_tool_(function, description: str = "", properties: Dict[str, Any] = {}, 
     """
     from ..server.function_tools import tool
     # Apply the tool decorator with empty description
-
 
 
     
@@ -203,6 +203,7 @@ async def add_mcp_tool_(name: str, command: str, args: List[str], env: Dict[str,
     async with managed_session(command=command, args=args, env=env) as session:
         tools = await session.list_tools()
 
+
         tools = tools.tools
         for tool in tools:
 
@@ -234,8 +235,34 @@ async def add_mcp_tool_(name: str, command: str, args: List[str], env: Dict[str,
                         annotations[param_name] = param_type
                         defaults[param_name] = param_info.get("default", None)
 
-                async def tool_function(*args: Any, **kwargs: Any) -> Dict[str, Any]:
+                # Create the signature parameters
+                from inspect import Parameter, Signature
+                
+                parameters = []
+                # Add required parameters first
+                for param_name in required:
+                    param_type = annotations[param_name]
+                    parameters.append(
+                        Parameter(
+                            name=param_name,
+                            kind=Parameter.POSITIONAL_OR_KEYWORD,
+                            annotation=param_type
+                        )
+                    )
+                
+                # Add optional parameters
+                for param_name, param_type in annotations.items():
+                    if param_name not in required:
+                        parameters.append(
+                            Parameter(
+                                name=param_name,
+                                kind=Parameter.POSITIONAL_OR_KEYWORD,
+                                annotation=param_type,
+                                default=defaults[param_name]
+                            )
+                        )
 
+                async def tool_function(*args: Any, **kwargs: Any) -> Dict[str, Any]:
                     # Convert positional args to kwargs
                     if len(args) > len(required):
                         raise TypeError(
@@ -248,8 +275,6 @@ async def add_mcp_tool_(name: str, command: str, args: List[str], env: Dict[str,
                         if i < len(required):
                             all_kwargs[required[i]] = arg
 
-
-
                     # Validate required parameters
                     for req in required:
                         if req not in all_kwargs:
@@ -260,20 +285,10 @@ async def add_mcp_tool_(name: str, command: str, args: List[str], env: Dict[str,
                         if param not in all_kwargs:
                             all_kwargs[param] = default
 
-
-
-                    # Create a new session for each call using the function's stored parameters
-
                     async with managed_session(command=tool_function.command, args=tool_function.args, env=tool_function.env) as new_session:
-
-
                         # Remove None kwargs
                         all_kwargs = {k: v for k, v in all_kwargs.items() if v is not None}
-
-
                         result = await new_session.call_tool(name=tool_name, arguments=all_kwargs)
-
-
                         return {"result": result}
 
                 # Set function name and annotations
@@ -282,16 +297,18 @@ async def add_mcp_tool_(name: str, command: str, args: List[str], env: Dict[str,
                     **annotations,
                     "return": Dict[str, Any],
                 }
-                tool_function.__doc__ = (
-                    f"{tool_desc}\n\nReturns:\n    Tool execution results"
+                tool_function.__doc__ = f"{tool_desc}\n\nReturns:\n    Tool execution results"
+
+                # Create and set the signature
+                tool_function.__signature__ = Signature(
+                    parameters=parameters,
+                    return_annotation=Dict[str, Any]
                 )
 
                 # Store session parameters as attributes of the function
                 tool_function.command = command
                 tool_function.args = args
                 tool_function.env = env
-
-
 
                 return tool_function
 
@@ -300,6 +317,9 @@ async def add_mcp_tool_(name: str, command: str, args: List[str], env: Dict[str,
             #name should be name__function_name
             full_name = f"{name}__{tool_name}"
             func.__name__ = full_name
+
+
+
             add_tool_(func, description=tool_desc, properties=properties, required=required)
 
 

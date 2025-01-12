@@ -37,6 +37,7 @@ def tool(description: str = "", custom_properties: Dict[str, Any] = None, custom
     def decorator(func: Callable):
         sig = inspect.signature(func)
 
+
         # Get parameter info
         properties = {}
         required = []

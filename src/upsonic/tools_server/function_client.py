@@ -1,5 +1,7 @@
 import httpx
 from typing import Dict, List, Any, Callable, Optional
+from functools import wraps
+import inspect
 
 
 class FunctionToolManager:
@@ -75,6 +77,8 @@ class FunctionToolManager:
         """Initialize tool-specific methods based on available tools."""
         tools_response = self.list_tools()
 
+
+
         tools = tools_response.get("available_tools", {}).get("tools", [])
 
         functions: List[Callable[..., Dict[str, Any]]] = []
@@ -105,27 +109,41 @@ class FunctionToolManager:
             ) -> Callable[..., Dict[str, Any]]:
                 annotations = {}
                 defaults = {}
+                parameters = []
 
+                # Build parameters for both required and optional arguments
                 for param_name in required:
                     param_info = properties[param_name]
                     param_type = get_python_type(param_info.get("type", "any"))
                     annotations[param_name] = param_type
+                    parameters.append(
+                        inspect.Parameter(
+                            param_name,
+                            inspect.Parameter.POSITIONAL_OR_KEYWORD,
+                            annotation=param_type
+                        )
+                    )
 
                 for param_name, param_info in properties.items():
                     if param_name not in required:
                         param_type = get_python_type(param_info.get("type", "any"))
                         annotations[param_name] = param_type
-                        defaults[param_name] = param_info.get("default", None)
+                        default_value = param_info.get("default", None)
+                        defaults[param_name] = default_value
+                        parameters.append(
+                            inspect.Parameter(
+                                param_name,
+                                inspect.Parameter.POSITIONAL_OR_KEYWORD,
+                                default=default_value,
+                                annotation=param_type
+                            )
+                        )
 
                 def tool_function(*args: Any, **kwargs: Any) -> Dict[str, Any]:
-
-
                     all_kwargs = kwargs.copy()
                     for i, arg in enumerate(args):
                         if i < len(required):
                             all_kwargs[required[i]] = arg
-
-
 
                     for param, default in defaults.items():
                         if param not in all_kwargs:
@@ -133,14 +151,15 @@ class FunctionToolManager:
 
                     return self.call_tool(tool_name, all_kwargs)
 
+                # Create a signature object and apply it to the function
+                sig = inspect.Signature(parameters=parameters, return_annotation=Dict[str, Any])
+                tool_function.__signature__ = sig
                 tool_function.__name__ = tool_name
                 tool_function.__annotations__ = {
                     **annotations,
                     "return": Dict[str, Any],
                 }
-                tool_function.__doc__ = (
-                    f"{tool_desc}\n\nReturns:\n    Tool execution results"
-                )
+                tool_function.__doc__ = f"{tool_desc}\n\nReturns:\n    Tool execution results"
 
                 return tool_function
 

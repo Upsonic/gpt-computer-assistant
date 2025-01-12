@@ -1,3 +1,4 @@
+import inspect
 from pydantic_ai import Agent
 from pydantic_ai.models.openai import OpenAIModel
 from pydantic_ai.models.anthropic import AnthropicModel
@@ -9,6 +10,8 @@ from pydantic_ai.result import ResultData
 from fastapi import HTTPException, status
 from functools import wraps
 from typing import Any, Callable
+from pydantic_ai import RunContext, Tool
+
 
 from ...storage.configuration import Configuration
 
@@ -19,19 +22,16 @@ def tool_wrapper(func: Callable) -> Callable:
     def wrapper(*args: Any, **kwargs: Any) -> Any:
         # Log the tool call
         tool_name = getattr(func, "__name__", str(func))
-        print(f"Tool called: {tool_name}")
-        print(f"Arguments: {args}")
-        print(f"Keyword arguments: {kwargs}")
+
         
         try:
             # Call the original function
             result = func(*args, **kwargs)
-            print(f"Tool execution successful: {tool_name}")
+
             return result
         except Exception as e:
-            print(f"Tool execution failed: {tool_name}")
-            print(f"Error: {str(e)}")
-            raise
+            print("Tool call failed:", e)
+            return {"status_code": 500, "detail": f"Tool call failed: {e}"}
     
     return wrapper
 
@@ -94,12 +94,38 @@ class CallManager:
 
 
 
-        with FunctionToolManager() as function_client:
-            for each in function_client.get_tools_by_name(tools):
-                # Wrap the tool with our wrapper
-                wrapped_tool = tool_wrapper(each)
-                roulette_agent.tool_plain(wrapped_tool, retries=5)
+        the_wrapped_tools = []
 
+        with FunctionToolManager() as function_client:
+            the_list_of_tools = function_client.get_tools_by_name(tools)
+            print("the_list_of_tools")
+            print(the_list_of_tools)
+            print("tools")
+            print(tools)
+            for each in the_list_of_tools:
+                # Wrap the tool with our wrapper
+  
+    
+                wrapped_tool = tool_wrapper(each)
+
+                the_wrapped_tools.append(wrapped_tool)
+            
+
+        print("the_wrapped_tools")
+        print(the_wrapped_tools)
+
+        for each in the_wrapped_tools:
+            print("each")
+            print(each)
+            print(each.__name__)
+            print(each.__doc__)
+            print(each)
+            # İnspect signature of the tool
+            signature = inspect.signature(each)
+            print(signature)
+            roulette_agent.tool_plain(each, retries=5)
+
+        print("roulette_agent")
         result = roulette_agent.run_sync(prompt)
 
         return {"status_code": 200, "result": result.data}
