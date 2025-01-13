@@ -97,7 +97,7 @@ class CallManager:
         if context_string != "":
             system_prompt = f"You are a helpful assistant. User want to add an old task context to the task. The context is: {context_string}"
 
-        print("system_prompt", system_prompt)
+
         roulette_agent = Agent(
             model,
             result_type=response_format,
