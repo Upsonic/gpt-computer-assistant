@@ -11,21 +11,35 @@ import uvicorn
 import multiprocessing
 import signal
 import time
+import os
+import sys
 from typing import Optional
 
 warnings.filterwarnings("ignore", category=UserWarning)
 
 _server_process: Optional[multiprocessing.Process] = None
 
-def run_main_server():
+def _setup_log_directory():
+    """Create logs directory if it doesn't exist"""
+    log_dir = "logs"
+    if not os.path.exists(log_dir):
+        os.makedirs(log_dir)
+    return log_dir
+
+def run_main_server(redirect_output: bool = False):
     """Start the main server if it's not already running."""
     global _server_process
     
     if _server_process is not None and _server_process.is_alive():
-
         return
 
     def run_server():
+        if redirect_output:
+            # Redirect stdout and stderr to log files only in dev mode
+            log_dir = _setup_log_directory()
+            sys.stdout = open(os.path.join(log_dir, 'main_server.log'), 'a')
+            sys.stderr = open(os.path.join(log_dir, 'main_server_error.log'), 'a')
+        
         # Ignore SIGTERM in child process to prevent signal handler conflicts
         signal.signal(signal.SIGTERM, signal.SIG_IGN)
         config = uvicorn.Config(
@@ -76,8 +90,8 @@ from ..tools_server import run_tools_server, stop_tools_server, is_tools_server_
 
 
 def run_dev_server():
-    run_main_server()
-    run_tools_server()
+    run_main_server(redirect_output=True)
+    run_tools_server(redirect_output=True)
 
     while not is_main_server_running() or not is_tools_server_running():
         time.sleep(1)
