@@ -78,13 +78,15 @@ class Agent:
             with sentry_sdk.start_span(op="prepare_request", description="Prepare request data"):
                 # Prepare the request data
                 data = {
+                    "agent_id": agent_configuration.agent_id,
                     "prompt": task.description,
                     "response_format": response_format_str,
                     "tools": tools or [],
                     "context": context,
                     "llm_model": llm_model,
                     "system_prompt": None,
-                    "retries": agent_configuration.retries
+                    "retries": agent_configuration.retries,
+                    "memory": agent_configuration.memory
                 }
 
 

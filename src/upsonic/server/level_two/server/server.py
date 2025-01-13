@@ -14,28 +14,31 @@ prefix = "/level_two"
 
 
 class AgentRequest(BaseModel):
+    agent_id: str
     prompt: str
     response_format: Optional[Any] = []
     tools: Optional[Any] = []
     context: Optional[Any] = None
     llm_model: Optional[Any] = "gpt-4o"
     system_prompt: Optional[Any] = None
-    retries: Optional[Any] = 3
+    retries: Optional[Any] = 1
+    memory: Optional[Any] = False
 
-
-def run_sync_agent(prompt, response_format, tools, context, llm_model, system_prompt, retries):
+def run_sync_agent(agent_id, prompt, response_format, tools, context, llm_model, system_prompt, retries, memory):
     # Create a new event loop for this thread
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
     try:
         return Agent.agent(
+            agent_id=agent_id,
             prompt=prompt,
             response_format=response_format,
             tools=tools,
             context=context,
             llm_model=llm_model,
             system_prompt=system_prompt,
-            retries=retries
+            retries=retries,
+            memory=memory
         )
     finally:
         loop.close()
@@ -91,13 +94,15 @@ async def call_agent(request: AgentRequest):
             result = await loop.run_in_executor(
                 pool,
                 run_sync_agent,
+                request.agent_id,
                 request.prompt,
                 response_format,
                 request.tools,
                 context,
                 request.llm_model,
                 request.system_prompt,
-                request.retries
+                request.retries,
+                request.memory
             )
 
         if request.response_format != "str" and result["status_code"] == 200:

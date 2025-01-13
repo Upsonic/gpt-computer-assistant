@@ -11,28 +11,41 @@ from ...storage.configuration import Configuration
 
 
 
+from ..level_utilized.memory import save_temporary_memory, get_temporary_memory
 
 from ..level_utilized.utility import agent_creator
 
 class AgentManager:
     def agent(
         self,
+        agent_id: str,
         prompt: str,
         response_format: BaseModel = str,
         tools: list[str] = [],
         context: Any = None,
         llm_model: str = "gpt-4o",
         system_prompt: Optional[Any] = None,
-        retries: int = 3
+        retries: int = 1,
+        memory: bool = False
     ) -> ResultData:
 
         
         roulette_agent = agent_creator(response_format, tools, context, llm_model, system_prompt)
 
         roulette_agent.retries = retries
+        
+
+        message_history = None
+        if memory:
+            message_history = get_temporary_memory(agent_id)
+        
     
 
-        result = roulette_agent.run_sync(prompt)
+
+        result = roulette_agent.run_sync(prompt, message_history=message_history)
+
+        if memory:
+            save_temporary_memory(result.all_messages(), agent_id)
 
         return {"status_code": 200, "result": result.data}
 
