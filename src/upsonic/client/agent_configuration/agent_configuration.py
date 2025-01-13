@@ -11,5 +11,9 @@ class AgentConfiguration(BaseModel):
     company_url: str
     company_objective: str
 
+    sub_task: bool = False
+
+    retries: int = 3
+
 
 

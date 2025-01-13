@@ -11,18 +11,11 @@ from ..tasks.tasks import Task
 
 from ..printing import call_end
 
-class NoAPIKeyException(Exception):
-    pass
-
-
-class UnsupportedLLMModelException(Exception):
-    pass
-
-
-class CallErrorException(Exception):
-    pass
 
 from ..tasks.task_response import ObjectResponse
+
+
+from ..level_utilized.utility import context_serializer, response_format_serializer, tools_serializer, response_format_deserializer, error_handler
 
 class Call:
 
@@ -86,62 +79,18 @@ class Call:
         if llm_model is None:
             llm_model = self.default_llm_model
 
-        tools_ = task.tools
-
-        tools = []
-        for i in tools_:
 
 
-            if isinstance(i, type):
-
-                tools.append(i.__name__+".*")
-            # If its a string, get the name of the string
-            elif isinstance(i, str):
-
-                tools.append(i)
+        tools = tools_serializer(task.tools)
 
         response_format = task.response_format
         with sentry_sdk.start_transaction(op="task", name="Call.call") as transaction:
             with sentry_sdk.start_span(op="serialize", description="Serialize response format"):
                 # Serialize the response format if it's a type or BaseModel
-                if response_format is None:
-                    response_format_str = "str"
-                elif isinstance(response_format, (type, BaseModel)):
-                    # If it's a Pydantic model or other type, cloudpickle and base64 encode it
-                    the_module = dill.detect.getmodule(response_format)
-                    if the_module is not None:
-                        cloudpickle.register_pickle_by_value(the_module)
-                    pickled_format = cloudpickle.dumps(response_format)
-                    response_format_str = base64.b64encode(pickled_format).decode("utf-8")
-                else:
-                    response_format_str = "str"
+                response_format_str = response_format_serializer(task.response_format)
 
 
-                context = task.context
-                if context is not None:
-                    copy_of_context = copy.deepcopy(context)
-                    if isinstance(copy_of_context, list):
-                        for each in copy_of_context:
-
-                            each.tools = []
-                            each.response_format = None
-
-
-                            the_module = dill.detect.getmodule(each)
-                            if the_module is not None:
-                                cloudpickle.register_pickle_by_value(the_module)
-                            pickled_context = cloudpickle.dumps(each)
-                            each = base64.b64encode(pickled_context).decode("utf-8")
-                    else:
-                        # Serialize the context
-                        copy_of_context.tools = []
-                        the_module = dill.detect.getmodule(copy_of_context)
-                        if the_module is not None:
-                            cloudpickle.register_pickle_by_value(the_module)
-                    pickled_context = cloudpickle.dumps(copy_of_context)
-                    context = base64.b64encode(pickled_context).decode("utf-8")
-                else:
-                    context = None
+                context = context_serializer(task.context)
 
 
 
@@ -166,25 +115,14 @@ class Call:
                 result = result["result"]
 
 
-                
-                if result["status_code"] == 401:
-                    raise NoAPIKeyException(result["detail"])
-                
-                if result["status_code"] == 400:
-                    raise UnsupportedLLMModelException(result["detail"])
+                error_handler(result)
 
-                if result["status_code"] == 500:
-                    raise CallErrorException(result)
                 
 
 
             with sentry_sdk.start_span(op="deserialize", description="Deserialize the result"):
-                # Deserialize the result
-                if response_format_str != "str":
-                    decoded_result = base64.b64decode(result["result"])
-                    deserialized_result = cloudpickle.loads(decoded_result)
-                else:
-                    deserialized_result = result["result"]
+
+                deserialized_result = response_format_deserializer(response_format_str, result)
 
 
 
