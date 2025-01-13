@@ -22,6 +22,7 @@ class UnsupportedLLMModelException(Exception):
 class CallErrorException(Exception):
     pass
 
+from ..tasks.task_response import ObjectResponse
 
 class Call:
 
@@ -134,7 +135,6 @@ class Call:
                     else:
                         # Serialize the context
                         copy_of_context.tools = []
-                        copy_of_context.response_format = None
                         the_module = dill.detect.getmodule(copy_of_context)
                         if the_module is not None:
                             cloudpickle.register_pickle_by_value(the_module)
@@ -153,6 +153,7 @@ class Call:
                     "tools": tools or [],
                     "context": context,
                     "llm_model": llm_model,
+                    "system_prompt": None
                 }
 
 
@@ -199,4 +200,43 @@ class Call:
         
 
         return {"result": deserialized_result, "llm_model": llm_model, "response_format": response_format_req}
+
+
+
+
+    def multiple(self, task: Task, llm_model: str = None):
+        # Generate a list of sub tasks
+
+        class SubTask(ObjectResponse):
+            description: str
+
+        class SubTaskList(ObjectResponse):
+            sub_tasks: List[SubTask]
+
+        prompt = "You are a helpful assistant. User have an general task. You need to generate a list of sub tasks. Each sub task should be a Actionable step of main task. Do not duplicate your self each next task can see older tasks. You need to return a list of sub tasks. You should say to agent to make this job not making plan again and again. We need actions."
+
+
+
+
+
+        sub_tasker = Task(description=prompt, response_format=SubTaskList, context=task)
+
+        self.call(sub_tasker, llm_model)
+
+
+        sub_tasks = []
+        for each in sub_tasker.response.sub_tasks:
+            sub_tasks.append(Task(description=each.description))
+
+        for each in sub_tasks:
+            each.tools = task.tools
+
+            each.context = sub_tasks
+
+        sub_tasks[-1].response_format = task.response_format
+
+
+        return sub_tasks
+
+
 

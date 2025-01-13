@@ -19,9 +19,10 @@ class GPT4ORequest(BaseModel):
     tools: Optional[Any] = []
     context: Optional[Any] = None
     llm_model: Optional[Any] = "gpt-4o"
+    system_prompt: Optional[Any] = None
 
 
-def run_sync_gpt4o(prompt, response_format, tools, context, llm_model):
+def run_sync_gpt4o(prompt, response_format, tools, context, llm_model, system_prompt):
     # Create a new event loop for this thread
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
@@ -32,6 +33,7 @@ def run_sync_gpt4o(prompt, response_format, tools, context, llm_model):
             tools=tools,
             context=context,
             llm_model=llm_model,
+            system_prompt=system_prompt
         )
     finally:
         loop.close()
@@ -92,6 +94,7 @@ async def call_gpt4o(request: GPT4ORequest):
                 request.tools,
                 context,
                 request.llm_model,
+                request.system_prompt
             )
 
         if request.response_format != "str" and result["status_code"] == 200:

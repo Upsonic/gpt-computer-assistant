@@ -9,7 +9,7 @@ from pydantic import BaseModel
 from pydantic_ai.result import ResultData
 from fastapi import HTTPException, status
 from functools import wraps
-from typing import Any, Callable
+from typing import Any, Callable, Optional
 from pydantic_ai import RunContext, Tool
 
 
@@ -43,6 +43,7 @@ class CallManager:
         tools: list[str] = [],
         context: Any = None,
         llm_model: str = "gpt-4o",
+        system_prompt: Optional[Any] = None 
     ) -> ResultData:
 
         if llm_model == "gpt-4o":
@@ -89,20 +90,35 @@ class CallManager:
         if context is not None:
             if isinstance(context, list):
                 for each in context:
-                    context_string += f"The context is: {each} {each.response}"
+                    the_response_format = None
+                    try:
+                        the_response_format = each.response_format.model_json_schema()
+                    except:
+                        pass
+                    context_string += f"The context is: {each} {each.response} {the_response_format}"
             else:
-                context_string = f"The context is: {context} {context.response}"
+                the_response_format = None
+                try:
+                    the_response_format = context.response_format.model_json_schema()
+                except:
+                    pass
+                context_string = f"The context is: {context} {context.response} {the_response_format}"
 
-        system_prompt = ()
-        if context_string != "":
-            system_prompt = f"You are a helpful assistant. User want to add an old task context to the task. The context is: {context_string}"
+        system_prompt_ = ()
+
+        if system_prompt is not None:
+            system_prompt_ = system_prompt + f"The context is: {context_string}"
+        elif context_string != "":
+            system_prompt_ = f"You are a helpful assistant. User want to add an old task context to the task. The context is: {context_string}"
+        
+        print("system_prompt", system_prompt)
 
 
         roulette_agent = Agent(
             model,
             result_type=response_format,
             retries=5,
-            system_prompt=system_prompt
+            system_prompt=system_prompt_
 
         )
 
