@@ -4,6 +4,7 @@ import cloudpickle
 import dill
 import base64
 import httpx
+import hashlib
 from typing import Any, List, Dict, Optional, Type, Union
 from pydantic import BaseModel
 
@@ -24,7 +25,7 @@ from ..level_utilized.utility import context_serializer, response_format_seriali
 
 
 
-
+from ...storage.caching import save_to_cache_with_expiry, get_from_cache_with_expiry
 
 
 
@@ -180,8 +181,23 @@ class Agent:
     def agent(self, agent_configuration: AgentConfiguration, task: Task,  llm_model: str = None):
         print(agent_configuration)
 
-        the_characterization = self.create_characterization(agent_configuration, llm_model)
+        copy_agent_configuration = copy.deepcopy(agent_configuration)
+        copy_agent_configuration_json = copy_agent_configuration.model_dump_json(include={"job_title", "company_url", "company_objective"})
+        print("copy_agent_configuration_json", copy_agent_configuration_json)
+
         
+        the_characterization_cache_key = f"characterization_{hashlib.sha256(copy_agent_configuration_json.encode()).hexdigest()}"
+
+        if agent_configuration.caching:
+            the_characterization = get_from_cache_with_expiry(the_characterization_cache_key)
+            if the_characterization is None:
+                the_characterization = self.create_characterization(agent_configuration, llm_model)
+                save_to_cache_with_expiry(the_characterization, the_characterization_cache_key, agent_configuration.cache_expiry)
+        else:
+            the_characterization = self.create_characterization(agent_configuration, llm_model)
+
+        
+
         the_task = task
 
         if agent_configuration.sub_task:

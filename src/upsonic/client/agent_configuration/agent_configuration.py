@@ -20,6 +20,9 @@ class AgentConfiguration(BaseModel):
 
     memory: bool = False
 
+    caching: bool = True
+    cache_expiry: int = 60 * 60
+
 
 
     @property

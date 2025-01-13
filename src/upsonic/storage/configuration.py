@@ -32,3 +32,5 @@ Configuration.initialize("ANTHROPIC_API_KEY")
 Configuration.initialize("AZURE_OPENAI_ENDPOINT")
 Configuration.initialize("AZURE_OPENAI_API_VERSION")
 Configuration.initialize("AZURE_OPENAI_API_KEY")
+
+ClientConfiguration = ConfigManager(db_name="client_config.db")

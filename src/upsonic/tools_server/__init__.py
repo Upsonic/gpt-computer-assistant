@@ -30,7 +30,13 @@ def run_tools_server(redirect_output: bool = False):
             sys.stderr = open(os.path.join(log_dir, 'tools_server_error.log'), 'a')
         
         # Ignore SIGTERM in child process to prevent signal handler conflicts
-        signal.signal(signal.SIGTERM, signal.SIG_IGN)
+        # Set up a basic signal handler that just exits
+        def handle_signal(signum, frame):
+            sys.exit(0)
+            
+        signal.signal(signal.SIGTERM, handle_signal)
+        signal.signal(signal.SIGINT, handle_signal)
+        
         config = uvicorn.Config(
             "upsonic.tools_server.server.api:app", 
             host="0.0.0.0", 
