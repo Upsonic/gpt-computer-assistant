@@ -17,11 +17,11 @@ class GPT4ORequest(BaseModel):
     prompt: str
     response_format: Optional[Any] = []
     tools: Optional[Any] = []
-
+    context: Optional[Any] = None
     llm_model: Optional[Any] = "gpt-4o"
 
 
-def run_sync_gpt4o(prompt, response_format, tools, llm_model):
+def run_sync_gpt4o(prompt, response_format, tools, context, llm_model):
     # Create a new event loop for this thread
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
@@ -30,7 +30,7 @@ def run_sync_gpt4o(prompt, response_format, tools, llm_model):
             prompt=prompt,
             response_format=response_format,
             tools=tools,
-
+            context=context,
             llm_model=llm_model,
         )
     finally:
@@ -71,6 +71,15 @@ async def call_gpt4o(request: GPT4ORequest):
         else:
             response_format = str
 
+        if request.context is not None:
+            try:
+                pickled_context = base64.b64decode(request.context)
+                context = cloudpickle.loads(pickled_context)
+            except Exception as e:
+                context = None
+        else:
+            context = None
+
 
 
         loop = asyncio.get_running_loop()
@@ -81,7 +90,7 @@ async def call_gpt4o(request: GPT4ORequest):
                 request.prompt,
                 response_format,
                 request.tools,
-
+                context,
                 request.llm_model,
             )
 

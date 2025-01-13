@@ -11,6 +11,8 @@ class Task(BaseModel):
     tools: list[Any] = []
     response_format: Union[Type[CustomTaskResponse], Type[ObjectResponse], Any] = None
     _response: Any = None
+    context: Any = None
+    
 
     @property
     def response(self):

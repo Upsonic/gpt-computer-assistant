@@ -41,7 +41,7 @@ class CallManager:
         prompt: str,
         response_format: BaseModel = str,
         tools: list[str] = [],
-
+        context: Any = None,
         llm_model: str = "gpt-4o",
     ) -> ResultData:
 
@@ -85,10 +85,24 @@ class CallManager:
 
             return {"status_code": 400, "detail": f"Unsupported LLM model: {llm_model}"}
 
+        context_string = ""
+        if context is not None:
+            if isinstance(context, list):
+                for each in context:
+                    context_string += f"The context is: {each} {each.response}"
+            else:
+                context_string = f"The context is: {context} {context.response}"
+
+        system_prompt = ()
+        if context_string != "":
+            system_prompt = f"You are a helpful assistant. User want to add an old task context to the task. The context is: {context_string}"
+
+        print("system_prompt", system_prompt)
         roulette_agent = Agent(
             model,
             result_type=response_format,
-            retries=5
+            retries=5,
+            system_prompt=system_prompt
 
         )
 
@@ -117,6 +131,11 @@ class CallManager:
 
             roulette_agent.tool_plain(each, retries=5)
 
+
+
+
+        
+    
 
         result = roulette_agent.run_sync(prompt)
 

@@ -1,3 +1,4 @@
+import copy
 import time
 import cloudpickle
 import dill
@@ -109,6 +110,34 @@ class Call:
                     response_format_str = "str"
 
 
+                context = task.context
+                if context is not None:
+                    copy_of_context = copy.deepcopy(context)
+                    if isinstance(copy_of_context, list):
+                        for each in copy_of_context:
+
+                            each.tools = []
+                            each.response_format = None
+
+
+                            the_module = dill.detect.getmodule(each)
+                            if the_module is not None:
+                                cloudpickle.register_pickle_by_value(the_module)
+                            pickled_context = cloudpickle.dumps(each)
+                            each = base64.b64encode(pickled_context).decode("utf-8")
+                    else:
+                        # Serialize the context
+                        copy_of_context.tools = []
+                        copy_of_context.response_format = None
+                        the_module = dill.detect.getmodule(copy_of_context)
+                        if the_module is not None:
+                            cloudpickle.register_pickle_by_value(the_module)
+                    pickled_context = cloudpickle.dumps(copy_of_context)
+                    context = base64.b64encode(pickled_context).decode("utf-8")
+                else:
+                    context = None
+
+
 
             with sentry_sdk.start_span(op="prepare_request", description="Prepare request data"):
                 # Prepare the request data
@@ -116,14 +145,13 @@ class Call:
                     "prompt": task.description,
                     "response_format": response_format_str,
                     "tools": tools or [],
-
+                    "context": context,
                     "llm_model": llm_model,
                 }
 
 
 
             with sentry_sdk.start_span(op="send_request", description="Send request to server"):
-                # Use the send_request method from the Base class
                 result = self.send_request("/level_one/gpt4o", data)
 
 
