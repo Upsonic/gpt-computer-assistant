@@ -28,7 +28,7 @@ class Call:
 
     def call(
         self,
-        task: Task,
+        task: Union[Task, List[Task]],
         llm_model: str = None,
     ) -> Any:
         
@@ -36,7 +36,11 @@ class Call:
 
 
         try:
-            the_result = self.call_(task, llm_model)
+            if isinstance(task, list):
+                for each in task:
+                    the_result = self.call_(each, llm_model)
+            else:
+                the_result = self.call_(task, llm_model)
         except Exception as e:
 
             try:
