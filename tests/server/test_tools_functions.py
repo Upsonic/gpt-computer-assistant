@@ -31,7 +31,7 @@ async def test_list_tools():
     tools = data["available_tools"]["tools"]
 
     # Should have add_numbers and concat_strings
-    assert len(tools) == 2
+    assert len(tools) == 4
 
     # Verify add_numbers
     add_numbers = next(t for t in tools if t["name"] == "add_numbers")
