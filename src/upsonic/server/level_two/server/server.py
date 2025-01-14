@@ -45,7 +45,7 @@ def run_sync_agent(agent_id, prompt, response_format, tools, context, llm_model,
 
 
 @app.post(f"{prefix}/agent")
-@timeout(300.0)  # 5 minutes timeout for AI operations
+@timeout(500.0)  # 5 minutes timeout for AI operations
 async def call_agent(request: AgentRequest):
     """
     Endpoint to call GPT-4 with optional tools and MCP servers.

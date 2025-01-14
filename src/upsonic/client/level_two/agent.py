@@ -345,3 +345,63 @@ class Agent:
 
 
 
+
+
+    def multi_agent(self, agent_configurations: List[AgentConfiguration], tasks: Any, llm_model: str = None):
+
+
+        agent_tasks = []
+
+        the_agents = {}
+
+        for each in agent_configurations:
+            agent_key = each.agent_id[:5] + "_" + each.job_title
+            the_agents[agent_key] = each
+
+
+        the_agents_keys = list(the_agents.keys())
+
+
+
+        class TheAgents_(ObjectResponse):
+            agents: List[str]
+
+
+        the_agents_ = TheAgents_(agents=the_agents_keys)
+
+
+        class SelectedAgent(ObjectResponse):
+            selected_agent: str
+
+
+        if isinstance(tasks, list) != True:
+            tasks = [tasks]
+
+        
+        for each in tasks:
+            is_end = False
+            while is_end == False:
+                selecting_task  = Task(description="Select an agent for this task", response_format=SelectedAgent, context=[the_agents_, each])
+
+                self.call(selecting_task, llm_model)
+
+                if selecting_task.response.selected_agent in the_agents:
+                    is_end = True
+
+                print("Agent ", selecting_task.response.selected_agent, " selected for task ", each.description)
+
+                agent_tasks.append({
+                    "agent": the_agents[selecting_task.response.selected_agent],
+                    "task": each
+                })
+                    
+
+        print(agent_tasks)
+
+        for each in agent_tasks:
+            self.agent(each["agent"], each["task"], llm_model)
+
+
+        return the_agents
+
+
