@@ -4,14 +4,22 @@ import cloudpickle
 import base64
 
 from pydantic import BaseModel
+from ..knowledge_base.knowledge_base import KnowledgeBase
 
 
-def context_serializer(context):
+def serialize_context(context, client):
+    if isinstance(context, KnowledgeBase):
+        context = context.markdown(client)
+    
+    print(type(context))
+    return context
+
+def context_serializer(context, client):
     if context is not None:
         copy_of_context = copy.deepcopy(context)
+        
         if isinstance(copy_of_context, list):
-            for each in copy_of_context:
-
+            for i, each in enumerate(copy_of_context):
                 try:
                     each.tools = []
                 except:
@@ -21,18 +29,24 @@ def context_serializer(context):
                 except:
                     pass
 
-
-                the_module = dill.detect.getmodule(each)
-                if the_module is not None:
-                    cloudpickle.register_pickle_by_value(the_module)
-                pickled_context = cloudpickle.dumps(each)
-                each = base64.b64encode(pickled_context).decode("utf-8")
+                copy_of_context[i] = serialize_context(each, client)
         else:
-            # Serialize the context
-            copy_of_context.tools = []
+            try:
+                copy_of_context.tools = []
+            except:
+                pass
+            try:
+                copy_of_context.response_format = None
+            except:
+                pass
+
+            copy_of_context = serialize_context(copy_of_context, client)
+
             the_module = dill.detect.getmodule(copy_of_context)
             if the_module is not None:
                 cloudpickle.register_pickle_by_value(the_module)
+
+
         pickled_context = cloudpickle.dumps(copy_of_context)
         context = base64.b64encode(pickled_context).decode("utf-8")
     else:

@@ -111,7 +111,7 @@ class Agent:
                 response_format_str = response_format_serializer(task.response_format)
 
 
-                context = context_serializer(task.context)
+                context = context_serializer(task.context, self)
 
 
 
@@ -220,31 +220,7 @@ class Agent:
         return total_character
 
 
-    def knowledge_base(self, agent_configuration: AgentConfiguration, llm_model: str = None):
 
-        class KnowledgeBase(ObjectResponse):
-            knowledges: Dict[str, str]
-
-        # Create a cache key based on the knowledge base files
-        knowledge_base_files_str = ",".join(sorted(agent_configuration.knowledge_base.sources))
-        knowledge_base_cache_key = f"knowledge_base_{hashlib.sha256(knowledge_base_files_str.encode()).hexdigest()}"
-
-        if agent_configuration.caching:
-            cached_knowledge_base = get_from_cache_with_expiry(knowledge_base_cache_key)
-            if cached_knowledge_base is not None:
-                return cached_knowledge_base
-
-        knowledge_base = KnowledgeBase(knowledges={})
-        the_list_of_files = agent_configuration.knowledge_base.files
-        
-        for each in the_list_of_files:
-            markdown_content = self.markdown(each)
-            knowledge_base.knowledges[each] = markdown_content
-
-        if agent_configuration.caching:
-            save_to_cache_with_expiry(knowledge_base, knowledge_base_cache_key, agent_configuration.cache_expiry)
-
-        return knowledge_base
 
 
 
@@ -314,7 +290,12 @@ class Agent:
                     the_task.context = [knowledge_base]
 
 
-
+        if agent_configuration.tools:
+            if isinstance(the_task, list):
+                for each in the_task:
+                    each.tools = agent_configuration.tools
+            else:
+                the_task.tools = agent_configuration.tools
         
 
         if isinstance(the_task, list):

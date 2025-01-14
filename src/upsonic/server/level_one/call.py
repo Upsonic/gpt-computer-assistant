@@ -25,6 +25,7 @@ class CallManager:
         system_prompt: Optional[Any] = None 
     ) -> ResultData:
 
+        print("context", context)
         
         roulette_agent = agent_creator(response_format, tools, context, llm_model, system_prompt)
     

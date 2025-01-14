@@ -90,7 +90,7 @@ class Call:
                 response_format_str = response_format_serializer(task.response_format)
 
 
-                context = context_serializer(task.context)
+                context = context_serializer(task.context, self)
 
 
 
