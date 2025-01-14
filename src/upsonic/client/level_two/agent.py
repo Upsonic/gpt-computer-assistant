@@ -10,7 +10,7 @@ from pydantic import BaseModel
 
 from ..tasks.tasks import Task
 
-from ..printing import call_end
+from ..printing import agent_end
 
 
 
@@ -38,6 +38,45 @@ class Agent:
 
 
     def agent_(
+        self,
+        agent_configuration: AgentConfiguration,
+        task: Task,
+        llm_model: str = None,
+    ) -> Any:
+        
+        start_time = time.time()
+
+
+        try:
+            if isinstance(task, list):
+                for each in task:
+                    the_result = self.send_agent_request(agent_configuration, each, llm_model)
+                    agent_end(the_result["result"], the_result["llm_model"], the_result["response_format"], start_time, time.time())
+            else:
+                the_result = self.send_agent_request(agent_configuration, task, llm_model)
+                agent_end(the_result["result"], the_result["llm_model"], the_result["response_format"], start_time, time.time())
+        except Exception as e:
+
+            try:
+                from ...server import stop_dev_server, stop_main_server, is_tools_server_running, is_main_server_running
+
+                if is_tools_server_running() or is_main_server_running():
+                    stop_dev_server()
+
+            except Exception as e:
+                pass
+
+            raise e
+
+        end_time = time.time()
+
+        
+
+        return True
+        
+
+
+    def send_agent_request(
         self,
         agent_configuration: AgentConfiguration,
         task: Task,
@@ -111,7 +150,9 @@ class Agent:
 
 
 
+        print(deserialized_result)
         task._response = deserialized_result
+        print(task.response)
 
 
         response_format_req = None
@@ -123,6 +164,8 @@ class Agent:
         
 
         return {"result": deserialized_result, "llm_model": llm_model, "response_format": response_format_req}
+
+
 
 
 
@@ -177,13 +220,45 @@ class Agent:
         return total_character
 
 
+    def knowledge_base(self, agent_configuration: AgentConfiguration, llm_model: str = None):
+
+        class KnowledgeBase(ObjectResponse):
+            knowledges: Dict[str, str]
+
+        # Create a cache key based on the knowledge base files
+        knowledge_base_files_str = ",".join(sorted(agent_configuration.knowledge_base.sources))
+        knowledge_base_cache_key = f"knowledge_base_{hashlib.sha256(knowledge_base_files_str.encode()).hexdigest()}"
+
+        if agent_configuration.caching:
+            cached_knowledge_base = get_from_cache_with_expiry(knowledge_base_cache_key)
+            if cached_knowledge_base is not None:
+                return cached_knowledge_base
+
+        knowledge_base = KnowledgeBase(knowledges={})
+        the_list_of_files = agent_configuration.knowledge_base.files
+        
+        for each in the_list_of_files:
+            markdown_content = self.markdown(each)
+            knowledge_base.knowledges[each] = markdown_content
+
+        if agent_configuration.caching:
+            save_to_cache_with_expiry(knowledge_base, knowledge_base_cache_key, agent_configuration.cache_expiry)
+
+        return knowledge_base
+
+
+
 
     def agent(self, agent_configuration: AgentConfiguration, task: Task,  llm_model: str = None):
-        print(agent_configuration)
+
+        original_task = task
+
+
+
 
         copy_agent_configuration = copy.deepcopy(agent_configuration)
         copy_agent_configuration_json = copy_agent_configuration.model_dump_json(include={"job_title", "company_url", "company_objective"})
-        print("copy_agent_configuration_json", copy_agent_configuration_json)
+
 
         
         the_characterization_cache_key = f"characterization_{hashlib.sha256(copy_agent_configuration_json.encode()).hexdigest()}"
@@ -196,14 +271,25 @@ class Agent:
         else:
             the_characterization = self.create_characterization(agent_configuration, llm_model)
 
-        
 
+
+        knowledge_base = None
+
+        if agent_configuration.knowledge_base:
+            knowledge_base = self.knowledge_base(agent_configuration, llm_model)
+            
+
+
+
+        
         the_task = task
 
         if agent_configuration.sub_task:
             sub_tasks = self.multiple(task, llm_model)
 
+
             for each in sub_tasks:
+
                 if isinstance(each.context, list):
                     each.context.append(the_characterization)
                 else:
@@ -212,24 +298,45 @@ class Agent:
 
             the_task = sub_tasks
 
+
+        # Add knowledge base to the context for each task
+        if knowledge_base:
+            if isinstance(the_task, list):
+                for each in the_task:
+                    if each.context:
+                        each.context.append(knowledge_base)
+                    else:
+                        each.context = [knowledge_base]
+            else:
+                if the_task.context:
+                    the_task.context.append(knowledge_base)
+                else:
+                    the_task.context = [knowledge_base]
+
+
+
         
 
         if isinstance(the_task, list):
             for each in the_task:
-                self.agent_(agent_configuration, each, llm_model=llm_model)
+
+                self.agent_(agent_configuration, each, llm_model=llm_model) 
         else:
             self.agent_(agent_configuration, the_task, llm_model=llm_model)
 
 
         if agent_configuration.sub_task:
-            return the_task[-1].response
+            original_task._response = the_task[-1].response
+
         else:
-            return the_task.response
+            original_task._response = the_task.response
 
 
     def multiple(self, task: Task, llm_model: str = None):
         # Generate a list of sub tasks
 
+
+        
         class SubTask(ObjectResponse):
             description: str
 
@@ -238,26 +345,20 @@ class Agent:
 
         prompt = "You are a helpful assistant. User have an general task. You need to generate a list of sub tasks. Each sub task should be a Actionable step of main task. Do not duplicate your self each next task can see older tasks. You need to return a list of sub tasks. You should say to agent to make this job not making plan again and again. We need actions."
 
-
-
-
-
         sub_tasker = Task(description=prompt, response_format=SubTaskList, context=task)
 
         self.call(sub_tasker, llm_model)
 
-
         sub_tasks = []
+        previous_tasks = []
         for each in sub_tasker.response.sub_tasks:
-            sub_tasks.append(Task(description=each.description))
-
-        for each in sub_tasks:
-            each.tools = task.tools
-
-            each.context = sub_tasks
+            new_task = Task(description=each.description)
+            new_task.tools = task.tools
+            new_task.context = previous_tasks.copy()  # Only include previous tasks in context
+            sub_tasks.append(new_task)
+            previous_tasks.append(new_task)
 
         sub_tasks[-1].response_format = task.response_format
-
 
         return sub_tasks
 

@@ -93,14 +93,24 @@ def agent_creator(
                         the_response_format = each.response_format.model_json_schema()
                     except:
                         pass
-                    context_string += f"The context is: {each} {each.response} {the_response_format}"
+                    the_response = None
+                    try:
+                        the_response = each.response
+                    except:
+                        pass
+                    context_string += f"The context is: {each} {the_response} {the_response_format}"
             else:
                 the_response_format = None
                 try:
                     the_response_format = context.response_format.model_json_schema()
                 except:
                     pass
-                context_string = f"The context is: {context} {context.response} {the_response_format}"
+                the_response = None
+                try:
+                    the_response = context.response
+                except:
+                    pass
+                context_string = f"The context is: {context} {the_response} {the_response_format}"
 
         system_prompt_ = ()
 

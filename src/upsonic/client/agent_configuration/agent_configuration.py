@@ -6,6 +6,7 @@ from pydantic import BaseModel
 from typing import Any, List, Dict, Optional, Type, Union
 
 
+from ..knowledge_base.knowledge_base import KnowledgeBase
 
 
 class AgentConfiguration(BaseModel):
@@ -14,7 +15,7 @@ class AgentConfiguration(BaseModel):
     company_url: str
     company_objective: str
 
-    sub_task: bool = False
+    sub_task: bool = True
 
     retries: int = 1
 
@@ -22,6 +23,8 @@ class AgentConfiguration(BaseModel):
 
     caching: bool = True
     cache_expiry: int = 60 * 60
+
+    knowledge_base: KnowledgeBase = None
 
 
 

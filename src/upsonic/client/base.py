@@ -7,6 +7,7 @@ from .level_one.call import Call
 from .level_two.agent import Agent
 from .storage.storage import Storage
 from .tools.tools import Tools
+from .markdown.markdown import Markdown
 
 
 from .printing import connected_to_server
@@ -20,7 +21,7 @@ class TimeoutException(Exception):
     pass
 
 # Create a base class with url
-class UpsonicClient(Call, Storage, Tools, Agent):
+class UpsonicClient(Call, Storage, Tools, Agent, Markdown):
 
 
     def __init__(self, url: str):
@@ -80,20 +81,24 @@ class UpsonicClient(Call, Storage, Tools, Agent):
         except httpx.RequestError:
             return False
 
-    def send_request(self, endpoint: str, data: Dict[str, Any]) -> Any:
+    def send_request(self, endpoint: str, data: Dict[str, Any], files: Dict[str, Any] = None) -> Any:
         """
         General method to send an API request.
 
         Args:
             endpoint: The API endpoint to send the request to.
             data: The data to send in the request.
+            files: Optional files to upload.
 
         Returns:
             The response from the API.
         """
         with httpx.Client() as client:
-
-            response = client.post(self.url + endpoint, json=data, timeout=600.0)
+            if files:
+                response = client.post(self.url + endpoint, data=data, files=files, timeout=600.0)
+            else:
+                response = client.post(self.url + endpoint, json=data, timeout=600.0)
+                
             if response.status_code == 408:
                 raise TimeoutException("Request timed out")
             response.raise_for_status()

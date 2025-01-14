@@ -36,6 +36,8 @@ dev = [
 server = [
     "beautifulsoup4>=4.12.3",
     "google>=3.0.0",
+    "markitdown>=0.0.1a3",
+    "python-multipart>=0.0.20",
     "requests>=2.32.3",
 ]
 

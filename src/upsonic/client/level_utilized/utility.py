@@ -12,8 +12,14 @@ def context_serializer(context):
         if isinstance(copy_of_context, list):
             for each in copy_of_context:
 
-                each.tools = []
-                each.response_format = None
+                try:
+                    each.tools = []
+                except:
+                    pass
+                try:
+                    each.response_format = None
+                except:
+                    pass
 
 
                 the_module = dill.detect.getmodule(each)

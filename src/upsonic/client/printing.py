@@ -88,3 +88,37 @@ def call_end(result: Any, llm_model: str, response_format: str, start_time: floa
     console.print(panel)
     spacing()
 
+
+
+def agent_end(result: Any, llm_model: str, response_format: str, start_time: float, end_time: float):
+    table = Table(show_header=False, expand=True, box=None)
+    table.width = 40
+
+    table.add_row("[bold]LLM Model:[/bold]", f"{llm_model}")
+    # Add spacing
+    table.add_row("")
+    result_str = str(result)
+    # Limit result to 370 characters
+    result_str = result_str[:370]
+    # Add ellipsis if result is truncated
+    if len(result_str) < len(str(result)):
+        result_str += "[bold white]...[/bold white]"
+
+    table.add_row("[bold]Result:[/bold]", f"[green]{result_str}[/green]")
+    # Add spacing
+    table.add_row("")
+    table.add_row("[bold]Response Format:[/bold]", f"{response_format}")
+
+    time_taken = end_time - start_time
+    time_taken_str = f"{time_taken:.2f} seconds"
+    table.add_row("[bold]Time Taken:[/bold]", f"{time_taken_str}")
+    panel = Panel(
+        table,
+        title="[bold white]Upsonic - Agent Result[/bold white]",
+        border_style="white",
+        expand=True,
+        width=50
+    )
+
+    console.print(panel)
+    spacing()
