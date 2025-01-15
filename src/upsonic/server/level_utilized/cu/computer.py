@@ -133,6 +133,9 @@ class ComputerTool(BaseAnthropicTool):
         coordinate: tuple[int, int] | None = None,
         **kwargs,
     ):
+        print("action", action)
+        print("text", text)
+        print("coordinate", coordinate)
         if action in ("mouse_move", "left_click_drag"):
             if coordinate is None:
                 raise ToolError(f"coordinate is required for {action}")
@@ -251,9 +254,7 @@ class ComputerTool(BaseAnthropicTool):
             print(f"Optimized file size: {os.path.getsize(path)} bytes")
             base64_image = base64.b64encode(path.read_bytes()).decode()
             path.unlink()  # Remove the temporary file
-            return ToolResult(
-              base64_image=base64_image
-            )
+            
         raise ToolError(f"Failed to take screenshot")
 
     async def shell(self, command: str, take_screenshot=True) -> ToolResult:
