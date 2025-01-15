@@ -240,15 +240,12 @@ class ComputerTool(BaseAnthropicTool):
             from PIL import Image
 
             with Image.open(path) as img:
-                # Convert to RGB to ensure better compression
-                if img.mode in ('RGBA', 'P'):
-                    img = img.convert('RGB')
                 
                 # Resize with high-quality downsampling
                 img = img.resize((x, y), Image.Resampling.LANCZOS)
                 
                 # Save with optimization and reduced quality
-                img.save(path, quality=85, optimize=True)
+                img.save(path)
 
         if path.exists():
             print(f"Optimized file size: {os.path.getsize(path)} bytes")
