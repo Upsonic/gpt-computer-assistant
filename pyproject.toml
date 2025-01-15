@@ -39,6 +39,7 @@ server = [
     "botocore>=1.35.99",
     "google>=3.0.0",
     "markitdown>=0.0.1a3",
+    "matplotlib>=3.10.0",
     "pyautogui>=0.9.54",
     "python-multipart>=0.0.20",
     "requests>=2.32.3",
