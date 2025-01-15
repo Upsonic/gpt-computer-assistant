@@ -11,6 +11,7 @@ from fastapi import HTTPException, status
 from functools import wraps
 from typing import Any, Callable, Optional
 from pydantic_ai import RunContext, Tool
+from anthropic import AsyncAnthropicBedrock
 
 
 from ...storage.configuration import Configuration
@@ -50,14 +51,31 @@ def agent_creator(
 
                 return {"status_code": 401, "detail": "No API key provided. Please set OPENAI_API_KEY in your configuration."}
             model = OpenAIModel(llm_model, api_key=openai_api_key)
-        elif llm_model == "claude-3-5-sonnet-latest":
+        elif llm_model == "claude-3-5-sonnet":
             anthropic_api_key = Configuration.get("ANTHROPIC_API_KEY")
             if not anthropic_api_key:
 
                 return {"status_code": 401, "detail": "No API key provided. Please set ANTHROPIC_API_KEY in your configuration."}
-            model = AnthropicModel(llm_model, api_key=anthropic_api_key)
+            model = AnthropicModel("claude-3-5-sonnet-latest", api_key=anthropic_api_key)
 
         
+        elif llm_model == "claude-3-5-sonnet-aws":
+            aws_access_key_id = Configuration.get("AWS_ACCESS_KEY_ID")
+            aws_secret_access_key = Configuration.get("AWS_SECRET_ACCESS_KEY")
+            aws_region = Configuration.get("AWS_REGION")
+
+
+            if not aws_access_key_id or not aws_secret_access_key or not aws_region:
+                return {"status_code": 401, "detail": "No AWS credentials provided. Please set AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, and AWS_REGION in your configuration."}
+            
+            model = AsyncAnthropicBedrock(
+                aws_access_key=aws_access_key_id,
+                aws_secret_key=aws_secret_access_key,
+                aws_region=aws_region
+            )
+
+            model = AnthropicModel("us.anthropic.claude-3-5-sonnet-20241022-v2:0", anthropic_client=model)
+
         elif llm_model == "gpt-4o-azure":
             azure_endpoint = Configuration.get("AZURE_OPENAI_ENDPOINT")
             azure_api_version = Configuration.get("AZURE_OPENAI_API_VERSION")

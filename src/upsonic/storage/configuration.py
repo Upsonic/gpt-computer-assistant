@@ -33,4 +33,9 @@ Configuration.initialize("AZURE_OPENAI_ENDPOINT")
 Configuration.initialize("AZURE_OPENAI_API_VERSION")
 Configuration.initialize("AZURE_OPENAI_API_KEY")
 
+
+Configuration.initialize("AWS_ACCESS_KEY_ID")
+Configuration.initialize("AWS_SECRET_ACCESS_KEY")
+Configuration.initialize("AWS_REGION")
+
 ClientConfiguration = ConfigManager(db_name="client_config.db")
