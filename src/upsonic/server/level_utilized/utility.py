@@ -176,6 +176,14 @@ def agent_creator(
 
 
 
+        # Computer use
+
+        if "claude-3-5-sonnet" in llm_model:
+            print("Tools", tools)
+            if "ComputerUse.*" in tools:
+                from .cu import ComputerUse__computer_action
+                roulette_agent.tool_plain(ComputerUse__computer_action, retries=5)
+
         
 
 

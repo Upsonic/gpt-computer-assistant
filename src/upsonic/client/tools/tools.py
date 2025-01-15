@@ -15,6 +15,9 @@ class NoAPIKeyException(Exception):
 class UnsupportedLLMModelException(Exception):
     pass
 
+class ComputerUse:
+    pass
+
 
 class Tools:
     def tool(self, library: Optional[Union[str, List[str]]] = None):
