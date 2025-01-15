@@ -182,8 +182,9 @@ def agent_creator(
             print("Tools", tools)
             if "ComputerUse.*" in tools:
                 try:
-                    from .cu import ComputerUse__computer_action
-                    roulette_agent.tool_plain(ComputerUse__computer_action, retries=5)
+                    from .cu import ComputerUse_tools
+                    for each in ComputerUse_tools:
+                        roulette_agent.tool_plain(each, retries=5)
                 except Exception as e:
                     print("Error", e)
 

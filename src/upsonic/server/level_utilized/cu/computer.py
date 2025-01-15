@@ -294,17 +294,69 @@ class ComputerTool(BaseAnthropicTool):
         # scale down
         return round(x * x_scaling_factor), round(y * y_scaling_factor)
 
-# Create functions for the tools
-async def ComputerUse__computer_action(action: Action, text: str | None = None, coordinate: tuple[int, int] | None = None, **kwargs):
-    """
-    Execute a computer action using the ComputerTool.
-    
-    Args:
-        action (Action): The type of action to perform
-        text (str, optional): Text input for typing or key actions
-        coordinate (tuple[int, int], optional): Screen coordinates for mouse actions
-        **kwargs: Additional keyword arguments
-    """
+
+
+async def ComputerUse__type(text: str, **kwargs):
+    """Execute a typing action using the ComputerTool."""
     tool = ComputerTool()
-    return await tool(action=action, text=text, coordinate=coordinate, **kwargs)
+    return await tool(action="type", text=text, **kwargs)
+
+async def ComputerUse__key(text: str, **kwargs):
+    """Execute a key press action using the ComputerTool."""
+    tool = ComputerTool()
+    return await tool(action="key", text=text, **kwargs)
+
+async def ComputerUse__mouse_move(coordinate: tuple[int, int], **kwargs):
+    """Execute a mouse move action using the ComputerTool."""
+    tool = ComputerTool()
+    return await tool(action="mouse_move", coordinate=coordinate, **kwargs)
+
+async def ComputerUse__left_click(**kwargs):
+    """Execute a left click action using the ComputerTool."""
+    tool = ComputerTool()
+    return await tool(action="left_click", **kwargs)
+
+async def ComputerUse__right_click(**kwargs):
+    """Execute a right click action using the ComputerTool."""
+    tool = ComputerTool()
+    return await tool(action="right_click", **kwargs)
+
+async def ComputerUse__middle_click(**kwargs):
+    """Execute a middle click action using the ComputerTool."""
+    tool = ComputerTool()
+    return await tool(action="middle_click", **kwargs)
+
+async def ComputerUse__double_click(**kwargs):
+    """Execute a double click action using the ComputerTool."""
+    tool = ComputerTool()
+    return await tool(action="double_click", **kwargs)
+
+async def ComputerUse__left_click_drag(coordinate: tuple[int, int], **kwargs):
+    """Execute a left click drag action using the ComputerTool."""
+    tool = ComputerTool()
+    return await tool(action="left_click_drag", coordinate=coordinate, **kwargs)
+
+async def ComputerUse__screenshot(**kwargs):
+    """Take a screenshot using the ComputerTool."""
+    tool = ComputerTool()
+    return await tool(action="screenshot", **kwargs)
+
+async def ComputerUse__cursor_position(**kwargs):
+    """Get the current cursor position using the ComputerTool."""
+    tool = ComputerTool()
+    return await tool(action="cursor_position", **kwargs)
+
+# List of all computer use tools
+ComputerUse_tools = [
+    ComputerUse__type,
+    ComputerUse__key,
+    ComputerUse__mouse_move,
+    ComputerUse__left_click,
+    ComputerUse__right_click,
+    ComputerUse__middle_click,
+    ComputerUse__double_click,
+    ComputerUse__left_click_drag,
+    ComputerUse__screenshot,
+    ComputerUse__cursor_position
+]
 

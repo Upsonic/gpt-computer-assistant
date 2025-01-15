@@ -3,7 +3,7 @@ from .bash import BashTool
 from .collection import ToolCollection
 from .computer import ComputerTool
 from .edit import EditTool
-from .computer import ComputerUse__computer_action
+from .computer import ComputerUse_tools
 
 __ALL__ = [
     BashTool,
@@ -12,5 +12,5 @@ __ALL__ = [
     EditTool,
     ToolCollection,
     ToolResult,
-    ComputerUse__computer_action
+    ComputerUse_tools
 ]
