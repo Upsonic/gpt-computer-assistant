@@ -62,7 +62,7 @@ async def call_gpt4o(request: GPT4ORequest):
                 pickled_data = base64.b64decode(request.response_format)
                 response_format = cloudpickle.loads(pickled_data)
             except Exception as e:
-       
+                traceback.print_exc()
                 # Fallback to basic type mapping if unpickling fails
                 type_mapping = {
                     "str": str,
@@ -79,6 +79,7 @@ async def call_gpt4o(request: GPT4ORequest):
                 pickled_context = base64.b64decode(request.context)
                 context = cloudpickle.loads(pickled_context)
             except Exception as e:
+                traceback.print_exc()
                 context = None
         else:
             context = None
