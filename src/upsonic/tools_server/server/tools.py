@@ -108,6 +108,7 @@ def add_tool_(function, description: str = "", properties: Dict[str, Any] = None
 
 
 import cloudpickle
+cloudpickle.DEFAULT_PROTOCOL = 4
 from fastapi import HTTPException
 from pydantic import BaseModel
 from mcp import ClientSession, StdioServerParameters

@@ -7,6 +7,7 @@ from ...api import app, timeout
 import asyncio
 from concurrent.futures import ThreadPoolExecutor
 import cloudpickle
+cloudpickle.DEFAULT_PROTOCOL = 4
 import base64
 from ....storage.configuration import Configuration
 
