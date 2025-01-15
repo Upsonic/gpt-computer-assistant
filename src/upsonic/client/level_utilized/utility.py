@@ -11,7 +11,6 @@ def serialize_context(context, client):
     if isinstance(context, KnowledgeBase):
         context = context.markdown(client)
     
-    print(type(context))
     return context
 
 def context_serializer(context, client):
@@ -79,7 +78,9 @@ def response_format_deserializer(response_format_str, result):
     else:
         deserialized_result = result["result"]
 
-    return deserialized_result
+    result["result"] = deserialized_result
+
+    return result
 
 
 def tools_serializer(tools_):

@@ -33,10 +33,10 @@ class Call:
             if isinstance(task, list):
                 for each in task:
                     the_result = self.call_(each, llm_model)
-                    call_end(the_result["result"], the_result["llm_model"], the_result["response_format"], start_time, time.time())
+                    call_end(the_result["result"], the_result["llm_model"], the_result["response_format"], start_time, time.time(), the_result["usage"])
             else:
                 the_result = self.call_(task, llm_model)
-                call_end(the_result["result"], the_result["llm_model"], the_result["response_format"], start_time, time.time())
+                call_end(the_result["result"], the_result["llm_model"], the_result["response_format"], start_time, time.time(), the_result["usage"])
         except Exception as e:
 
             try:
@@ -109,24 +109,29 @@ class Call:
 
             with sentry_sdk.start_span(op="send_request", description="Send request to server"):
                 result = self.send_request("/level_one/gpt4o", data)
+                original_result = result
 
-
-
+                
                 result = result["result"]
+            
+                
 
 
                 error_handler(result)
 
                 
 
+                
+
 
             with sentry_sdk.start_span(op="deserialize", description="Deserialize the result"):
-
                 deserialized_result = response_format_deserializer(response_format_str, result)
 
 
 
-        task._response = deserialized_result
+
+
+        task._response = deserialized_result["result"]
 
 
         response_format_req = None
@@ -135,9 +140,11 @@ class Call:
         else:
             # Class name
             response_format_req = response_format.__name__
+
+
         
 
-        return {"result": deserialized_result, "llm_model": llm_model, "response_format": response_format_req}
+        return {"result": deserialized_result["result"], "llm_model": llm_model, "response_format": response_format_req, "usage": deserialized_result["usage"]}
 
 
 

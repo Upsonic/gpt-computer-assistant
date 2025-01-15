@@ -3,6 +3,7 @@ from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
 from rich.align import Align
+from .price import get_estimated_cost
 
 console = Console()
 
@@ -55,7 +56,7 @@ def connected_to_server(server_type: str, status: str):
 
     spacing()
 
-def call_end(result: Any, llm_model: str, response_format: str, start_time: float, end_time: float):
+def call_end(result: Any, llm_model: str, response_format: str, start_time: float, end_time: float, usage: dict):
     table = Table(show_header=False, expand=True, box=None)
     table.width = 40
 
@@ -74,6 +75,7 @@ def call_end(result: Any, llm_model: str, response_format: str, start_time: floa
     table.add_row("")
     table.add_row("[bold]Response Format:[/bold]", f"{response_format}")
 
+    table.add_row("[bold]Estimated Cost:[/bold]", f"{get_estimated_cost(usage['input_tokens'], usage['output_tokens'], llm_model)}$")
     time_taken = end_time - start_time
     time_taken_str = f"{time_taken:.2f} seconds"
     table.add_row("[bold]Time Taken:[/bold]", f"{time_taken_str}")
@@ -90,7 +92,7 @@ def call_end(result: Any, llm_model: str, response_format: str, start_time: floa
 
 
 
-def agent_end(result: Any, llm_model: str, response_format: str, start_time: float, end_time: float):
+def agent_end(result: Any, llm_model: str, response_format: str, start_time: float, end_time: float, usage: dict, tool_count: int, context_count: int):
     table = Table(show_header=False, expand=True, box=None)
     table.width = 40
 
@@ -108,7 +110,9 @@ def agent_end(result: Any, llm_model: str, response_format: str, start_time: flo
     # Add spacing
     table.add_row("")
     table.add_row("[bold]Response Format:[/bold]", f"{response_format}")
-
+    
+    table.add_row("[bold]Tools Used:[/bold]", f"{tool_count} [bold]Context Used:[/bold]", f"{context_count}")
+    table.add_row("[bold]Estimated Cost:[/bold]", f"{get_estimated_cost(usage['input_tokens'], usage['output_tokens'], llm_model)}$")
     time_taken = end_time - start_time
     time_taken_str = f"{time_taken:.2f} seconds"
     table.add_row("[bold]Time Taken:[/bold]", f"{time_taken_str}")
@@ -120,5 +124,21 @@ def agent_end(result: Any, llm_model: str, response_format: str, start_time: flo
         width=50
     )
 
+    console.print(panel)
+    spacing()
+
+
+def agent_total_cost(total_input_tokens: int, total_output_tokens: int, llm_model: str):
+    table = Table(show_header=False, expand=True, box=None)
+    table.width = 40
+
+    table.add_row("[bold]Estimated Cost:[/bold]", f"{get_estimated_cost(total_input_tokens, total_output_tokens, llm_model)}$")
+    panel = Panel(
+        table,
+        title="[bold white]Upsonic - Agent Total Cost[/bold white]",
+        border_style="white",
+        expand=True,
+        width=50
+    )
     console.print(panel)
     spacing()

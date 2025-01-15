@@ -25,14 +25,15 @@ class CallManager:
         system_prompt: Optional[Any] = None 
     ) -> ResultData:
 
-        print("context", context)
         
         roulette_agent = agent_creator(response_format, tools, context, llm_model, system_prompt)
     
 
         result = roulette_agent.run_sync(prompt)
 
-        return {"status_code": 200, "result": result.data}
+        usage = result.usage()
+
+        return {"status_code": 200, "result": result.data, "usage": {"input_tokens": usage.request_tokens, "output_tokens": usage.response_tokens}}
 
 
 Call = CallManager()

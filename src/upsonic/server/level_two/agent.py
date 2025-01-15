@@ -44,10 +44,12 @@ class AgentManager:
 
         result = roulette_agent.run_sync(prompt, message_history=message_history)
 
+        usage = result.usage()
+
         if memory:
             save_temporary_memory(result.all_messages(), agent_id)
 
-        return {"status_code": 200, "result": result.data}
+        return {"status_code": 200, "result": result.data, "usage": {"input_tokens": usage.request_tokens, "output_tokens": usage.response_tokens}}
 
 
 Agent = AgentManager()

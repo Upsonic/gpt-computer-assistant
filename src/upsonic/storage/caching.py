@@ -31,7 +31,7 @@ def save_to_cache_with_expiry(data: Any, cache_key: str, expiry_seconds: int) ->
     }
     serialized_data = base64.b64encode(cloudpickle.dumps(cache_data)).decode('utf-8')
     ClientConfiguration.set(f"cache_{cache_key}", serialized_data)
-    print(f"Saved data to cache with key {cache_key}, expires in {expiry_seconds} seconds")
+
     # test
     
 
@@ -48,7 +48,7 @@ def get_from_cache_with_expiry(cache_key: str) -> Optional[Any]:
     serialized_data = ClientConfiguration.get(f"cache_{cache_key}")
 
     if serialized_data is None:
-        print("No data found in cache for key:", cache_key)
+
         return None
     
     try:
@@ -56,13 +56,13 @@ def get_from_cache_with_expiry(cache_key: str) -> Optional[Any]:
         current_time = int(time.time())
         
         if current_time > cache_data['expiry_time']:
-            print(f"Cache expired for key: {cache_key}")
+
             # Clean up expired cache
             ClientConfiguration.set(f"cache_{cache_key}", None)
             return None
             
-        print(f"Retrieved valid cached data for key: {cache_key}")
+
         return cache_data['data']
     except Exception as e:
-        print(f"Error retrieving cached data: {str(e)}")
+
         return None

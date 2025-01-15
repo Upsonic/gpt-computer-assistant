@@ -10,7 +10,7 @@ from pydantic import BaseModel
 
 from ..tasks.tasks import Task
 
-from ..printing import agent_end
+from ..printing import agent_end, agent_total_cost
 
 
 
@@ -47,14 +47,18 @@ class Agent:
         start_time = time.time()
 
 
+        results = []
+
         try:
             if isinstance(task, list):
                 for each in task:
                     the_result = self.send_agent_request(agent_configuration, each, llm_model)
-                    agent_end(the_result["result"], the_result["llm_model"], the_result["response_format"], start_time, time.time())
+                    results.append(the_result)
+                    agent_end(the_result["result"], the_result["llm_model"], the_result["response_format"], start_time, time.time(), the_result["usage"], the_result["tool_count"], the_result["context_count"])
             else:
                 the_result = self.send_agent_request(agent_configuration, task, llm_model)
-                agent_end(the_result["result"], the_result["llm_model"], the_result["response_format"], start_time, time.time())
+                results.append(the_result)
+                agent_end(the_result["result"], the_result["llm_model"], the_result["response_format"], start_time, time.time(), the_result["usage"], the_result["tool_count"], the_result["context_count"])
         except Exception as e:
 
             try:
@@ -72,7 +76,7 @@ class Agent:
 
         
 
-        return True
+        return results
         
 
 
@@ -150,9 +154,9 @@ class Agent:
 
 
 
-        print(deserialized_result)
-        task._response = deserialized_result
-        print(task.response)
+
+        task._response = deserialized_result["result"]
+
 
 
         response_format_req = None
@@ -162,8 +166,10 @@ class Agent:
             # Class name
             response_format_req = response_format.__name__
         
+        if context is None:
+            context = []
 
-        return {"result": deserialized_result, "llm_model": llm_model, "response_format": response_format_req}
+        return {"result": deserialized_result["result"], "llm_model": llm_model, "response_format": response_format_req, "usage": deserialized_result["usage"], "tool_count": len(tools), "context_count": len(context)}
 
 
 
@@ -298,12 +304,14 @@ class Agent:
                 the_task.tools = agent_configuration.tools
         
 
+        results = []    
         if isinstance(the_task, list):
             for each in the_task:
-
-                self.agent_(agent_configuration, each, llm_model=llm_model) 
+                result = self.agent_(agent_configuration, each, llm_model=llm_model)
+                results += result
         else:
-            self.agent_(agent_configuration, the_task, llm_model=llm_model)
+            result = self.agent_(agent_configuration, the_task, llm_model=llm_model)
+            results += result
 
 
         if agent_configuration.sub_task:
@@ -311,6 +319,22 @@ class Agent:
 
         else:
             original_task._response = the_task.response
+
+        
+        total_input_tokens = 0
+        total_output_tokens = 0
+        for each in results:
+
+            total_input_tokens += each["usage"]["input_tokens"]
+            total_output_tokens += each["usage"]["output_tokens"]
+
+        the_llm_model = llm_model
+        if the_llm_model is None:
+            the_llm_model = self.default_llm_model
+
+        agent_total_cost(total_input_tokens, total_output_tokens, the_llm_model)
+
+
 
 
     def multiple(self, task: Task, llm_model: str = None):
@@ -388,7 +412,7 @@ class Agent:
                 if selecting_task.response.selected_agent in the_agents:
                     is_end = True
 
-                print("Agent ", selecting_task.response.selected_agent, " selected for task ", each.description)
+
 
                 agent_tasks.append({
                     "agent": the_agents[selecting_task.response.selected_agent],
@@ -396,7 +420,7 @@ class Agent:
                 })
                     
 
-        print(agent_tasks)
+
 
         for each in agent_tasks:
             self.agent(each["agent"], each["task"], llm_model)
