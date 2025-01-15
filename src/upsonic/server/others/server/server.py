@@ -13,7 +13,7 @@ from ....storage.configuration import Configuration
 import os
 import tempfile
 from markitdown import MarkItDown
-import pyautogui
+
 from fastapi.responses import FileResponse
 import uuid
 
@@ -32,6 +32,7 @@ async def take_screenshot():
     Returns:
         The screenshot image file
     """
+    import pyautogui
     try:
         # Create a temporary directory if it doesn't exist
         temp_dir = os.path.join(tempfile.gettempdir(), "upsonic_screenshots")
