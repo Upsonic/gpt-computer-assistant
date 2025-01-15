@@ -1,3 +1,9 @@
+import warnings
+
+warnings.filterwarnings("ignore", category=ResourceWarning)
+warnings.filterwarnings("ignore", category=PendingDeprecationWarning)
+
+
 from .client.base import UpsonicClient
 from .client.tasks.task_response import ObjectResponse, StrResponse, IntResponse, FloatResponse, BoolResponse, StrInListResponse
 from .client.tasks.tasks import Task
