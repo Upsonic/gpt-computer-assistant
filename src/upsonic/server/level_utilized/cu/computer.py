@@ -253,8 +253,12 @@ class ComputerTool(BaseAnthropicTool):
             path.unlink()  # Remove the temporary file
 
             return {
-                    "type": "image_url",
-                    "image_url": {"url": f"data:image/png;base64,{base64_image}"},
+                    "type": "image",
+                    "source": {
+                        "type": "base64",
+                        "media_type": "image/png",
+                        "data": base64_image,
+                    },
                 }
         raise ToolError(f"Failed to take screenshot")
 
