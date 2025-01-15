@@ -21,7 +21,8 @@ RUN apt-get update && apt-get install -y \
     xvfb \
     software-properties-common \
     tzdata \
-    python3.12
+    python3.12 python3.12-distutils python3.12-dev gcc \
+    python3-pyqt5 python3-tk libportaudio2
 
 RUN curl -sS https://bootstrap.pypa.io/get-pip.py | python3.12
 
@@ -38,7 +39,7 @@ RUN apt-get remove -y xfce4-power-manager
 
 RUN curl -sL https://deb.nodesource.com/setup_18.x -o /tmp/nodesource_setup.sh
 RUN bash /tmp/nodesource_setup.sh
-RUN apt-get install -y nodejs python3-tk
+RUN apt-get install -y nodejs
 
 
 # Add symbolic link for uvx
