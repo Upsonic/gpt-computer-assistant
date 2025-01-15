@@ -251,9 +251,11 @@ class ComputerTool(BaseAnthropicTool):
             print(f"Optimized file size: {os.path.getsize(path)} bytes")
             base64_image = base64.b64encode(path.read_bytes()).decode()
             path.unlink()  # Remove the temporary file
-            return ToolResult(
-              base64_image=base64_image
-            )
+
+            return {
+                    "type": "image_url",
+                    "image_url": {"url": f"data:image/png;base64,{base64_image}"},
+                }
         raise ToolError(f"Failed to take screenshot")
 
     async def shell(self, command: str, take_screenshot=True) -> ToolResult:
