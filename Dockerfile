@@ -21,10 +21,10 @@ RUN apt-get update && apt-get install -y \
     xvfb \
     software-properties-common \
     tzdata \
-    python3.12 python3.12-dev gcc \
-    python3-pyqt5 python3-tk libportaudio2 scrot
+    python3.10 python3.10-dev python3.10-distutils gcc \
+    python3.10-pyqt5 python3.10-tk libportaudio2 scrot
 
-RUN curl -sS https://bootstrap.pypa.io/get-pip.py | python3.12
+RUN curl -sS https://bootstrap.pypa.io/get-pip.py | python3.10
 
 RUN add-apt-repository ppa:mozillateam/ppa
 RUN apt-get update && apt-get install -y firefox-esr
@@ -74,8 +74,8 @@ RUN mkdir /home/docker/Upsonic
 COPY Upsonic /home/docker/Upsonic
 
 
-RUN python3.12 -m pip install --upgrade pip
-RUN python3.12 -m pip install /home/docker/Upsonic[server]
+RUN python3.10 -m pip install --upgrade pip
+RUN python3.10 -m pip install /home/docker/Upsonic[server]
 
 
 ADD Upsonic/wallpaper.png /home/docker/Pictures/wallpaper.png
@@ -93,6 +93,6 @@ RUN chmod +x /home/docker/.vnc/xstartup
 
 
 CMD /bin/bash -c "export DISPLAY=:1 && /usr/bin/vncserver :1 -geometry 1366x768 -depth 24 && \
-    python3.12 -c 'from upsonic.server import run_main_server; run_main_server()' & \
-    python3.12 -c 'from upsonic.server import run_tools_server; run_tools_server()' & \
+    python3.10 -c 'from upsonic.server import run_main_server; run_main_server()' & \
+    python3.10 -c 'from upsonic.server import run_tools_server; run_tools_server()' & \
     wait"
