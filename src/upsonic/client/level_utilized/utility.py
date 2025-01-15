@@ -1,7 +1,7 @@
 import copy
 import dill
 import cloudpickle
-cloudpickle.DEFAULT_PROTOCOL = 4
+cloudpickle.DEFAULT_PROTOCOL = 2
 import base64
 
 from pydantic import BaseModel

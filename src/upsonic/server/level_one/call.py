@@ -28,12 +28,14 @@ class CallManager:
         
         roulette_agent = agent_creator(response_format, tools, context, llm_model, system_prompt)
     
+        try:
 
-        result = roulette_agent.run_sync(prompt)
+            result = roulette_agent.run_sync(prompt)
 
-        usage = result.usage()
+            usage = result.usage()
 
-        return {"status_code": 200, "result": result.data, "usage": {"input_tokens": usage.request_tokens, "output_tokens": usage.response_tokens}}
-
+            return {"status_code": 200, "result": result.data, "usage": {"input_tokens": usage.request_tokens, "output_tokens": usage.response_tokens}}
+        except AttributeError:
+            return roulette_agent
 
 Call = CallManager()

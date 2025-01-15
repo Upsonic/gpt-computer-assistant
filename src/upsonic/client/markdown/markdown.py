@@ -1,5 +1,5 @@
 import cloudpickle
-cloudpickle.DEFAULT_PROTOCOL = 4
+cloudpickle.DEFAULT_PROTOCOL = 2
 import dill
 import base64
 import httpx

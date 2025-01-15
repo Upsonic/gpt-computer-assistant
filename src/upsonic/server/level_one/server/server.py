@@ -7,7 +7,7 @@ from ..call import Call
 import asyncio
 from concurrent.futures import ThreadPoolExecutor
 import cloudpickle
-cloudpickle.DEFAULT_PROTOCOL = 4
+cloudpickle.DEFAULT_PROTOCOL = 2
 import base64
 
 
