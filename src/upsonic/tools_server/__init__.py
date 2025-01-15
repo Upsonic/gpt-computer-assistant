@@ -39,7 +39,7 @@ def run_tools_server(redirect_output: bool = False):
         
         config = uvicorn.Config(
             "upsonic.tools_server.server.api:app", 
-            host="0.0.0.0", 
+            host="localhost", 
             port=8086,
             log_level="error",
             access_log=False

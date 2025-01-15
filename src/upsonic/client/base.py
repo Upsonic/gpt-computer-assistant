@@ -42,7 +42,7 @@ class UpsonicClient(Call, Storage, Tools, Agent, Markdown, Others):
 
         if url == "devserver":
             
-            url = "http://0.0.0.0:7541"
+            url = "http://localhost:7541"
             from ..server import run_dev_server, stop_dev_server, is_tools_server_running, is_main_server_running
             run_dev_server()
 

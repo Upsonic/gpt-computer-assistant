@@ -52,7 +52,7 @@ def run_main_server(redirect_output: bool = False):
         
         config = uvicorn.Config(
             "upsonic.server.api:app", 
-            host="0.0.0.0", 
+            host="localhost", 
             port=7541,
             log_level="error",
             access_log=False
