@@ -22,7 +22,7 @@ RUN apt-get update && apt-get install -y \
     software-properties-common \
     tzdata \
     python3.12 python3.12-dev gcc \
-    python3-pyqt5 python3-tk libportaudio2
+    python3-pyqt5 python3-tk libportaudio2 scrot
 
 RUN curl -sS https://bootstrap.pypa.io/get-pip.py | python3.12
 
