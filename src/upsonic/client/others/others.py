@@ -6,13 +6,14 @@ from typing import Any, List, Dict, Optional, Type, Union
 from pydantic import BaseModel
 import os
 import tempfile
-import matplotlib.pyplot as plt
-import matplotlib.image as mpimg
+
 from io import BytesIO
 
 
 class Others:
     def screenshot(self, show: bool = True, save_path: Optional[str] = None) -> Optional[bytes]:
+        import matplotlib.pyplot as plt
+        import matplotlib.image as mpimg
         """
         Take a screenshot using the server and optionally display it or save it.
 
