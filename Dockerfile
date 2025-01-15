@@ -38,7 +38,7 @@ RUN apt-get remove -y xfce4-power-manager
 
 RUN curl -sL https://deb.nodesource.com/setup_18.x -o /tmp/nodesource_setup.sh
 RUN bash /tmp/nodesource_setup.sh
-RUN apt-get install -y nodejs
+RUN apt-get install -y nodejs python3-tk
 
 
 # Add symbolic link for uvx
