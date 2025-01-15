@@ -22,7 +22,7 @@ RUN apt-get update && apt-get install -y \
     software-properties-common \
     tzdata \
     python3.10 python3.10-dev python3.10-distutils gcc \
-    python3.10-pyqt5 python3.10-tk libportaudio2 scrot
+    python3-pyqt5 python3-tk libportaudio2 scrot
 
 RUN curl -sS https://bootstrap.pypa.io/get-pip.py | python3.10
 
