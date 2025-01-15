@@ -20,6 +20,9 @@ from typing import Optional
 
 warnings.filterwarnings("ignore", category=UserWarning)
 
+warnings.filterwarnings("ignore", category=ResourceWarning)
+warnings.filterwarnings("ignore", category=PendingDeprecationWarning)
+
 _server_process: Optional[multiprocessing.Process] = None
 
 def _setup_log_directory():
