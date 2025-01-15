@@ -6,7 +6,7 @@ readme = "README.md"
 authors = [
     { name = "Onur ULUSOY", email = "onur@upsonic.co" }
 ]
-requires-python = ">=3.12,<3.13"
+requires-python = ">=3.10"
 dependencies = [
     "cloudpickle>=3.1.0",
     "dill>=0.3.9",
