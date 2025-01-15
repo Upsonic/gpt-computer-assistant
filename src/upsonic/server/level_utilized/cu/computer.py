@@ -248,7 +248,7 @@ class ComputerTool(BaseAnthropicTool):
                 img = img.resize((x, y), Image.Resampling.LANCZOS)
                 
                 # Save with optimization and reduced quality
-                img.save(path, 'JPEG', quality=85, optimize=True)
+                img.save(path, quality=85, optimize=True)
 
         if path.exists():
             print(f"Optimized file size: {os.path.getsize(path)} bytes")
