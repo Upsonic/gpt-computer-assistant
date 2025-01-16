@@ -9,6 +9,10 @@ import psutil
 import socket
 from contextlib import closing
 
+# Set environment variable to avoid fork() issues on macOS
+if sys.platform == 'darwin':
+    os.environ['OBJC_DISABLE_INITIALIZE_FORK_SAFETY'] = 'YES'
+
 class ServerManager:
     def __init__(self, app_path: str, host: str, port: int, name: str):
         self.app_path = app_path
@@ -17,6 +21,14 @@ class ServerManager:
         self.name = name
         self._process: Optional[multiprocessing.Process] = None
         self._pid_file = os.path.join(os.path.expanduser("~"), f".upsonic_{name}_server.pid")
+        
+        # Set up platform-specific configurations
+        if sys.platform == 'darwin':
+            self._mp_context = multiprocessing.get_context('fork')
+        elif sys.platform == 'win32':
+            self._mp_context = multiprocessing.get_context('spawn')
+        else:  # Linux and others
+            self._mp_context = multiprocessing.get_context('fork')
 
     def _setup_log_directory(self):
         """Create logs directory if it doesn't exist"""
@@ -85,27 +97,27 @@ class ServerManager:
         if self._is_port_in_use():
             raise RuntimeError(f"Port {self.port} is already in use")
 
-        # Set up multiprocessing based on platform
-        if sys.platform == 'darwin':
-            multiprocessing.set_start_method('fork', force=True)
-        elif sys.platform == 'win32':
-            multiprocessing.set_start_method('spawn', force=True)
-
-        self._process = multiprocessing.Process(
+        # Create process using the platform-specific context
+        self._process = self._mp_context.Process(
             target=self._run_server,
             args=(redirect_output,),
             name=f"upsonic_{self.name}_server"
         )
         self._process.daemon = True
-        self._process.start()
-        self._write_pid()
         
-        # Wait for server to start
-        start_time = time.time()
-        while not self._is_port_in_use() and time.time() - start_time < 10:
-            if not self._process.is_alive():
-                raise RuntimeError(f"Failed to start {self.name} server")
-            time.sleep(0.1)
+        try:
+            self._process.start()
+            self._write_pid()
+            
+            # Wait for server to start
+            start_time = time.time()
+            while not self._is_port_in_use() and time.time() - start_time < 10:
+                if not self._process.is_alive():
+                    raise RuntimeError(f"Failed to start {self.name} server")
+                time.sleep(0.1)
+        except Exception as e:
+            self.stop()  # Clean up if startup fails
+            raise RuntimeError(f"Failed to start {self.name} server: {str(e)}")
 
     def stop(self):
         """Stop the server if it's running."""
