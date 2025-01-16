@@ -171,7 +171,7 @@ def concat_strings(str1: str, str2: str) -> str:
 
 
 @tool()
-def google(query: str, max_number: int = 20) -> list:
+def Search__google(query: str, max_number: int = 20) -> list:
     """
     Search the query on Google and return the results.
     """
@@ -188,7 +188,7 @@ import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 @tool()
-def read_website(url: str, max_content_length: int = 5000) -> dict:
+def Search__read_website(url: str, max_content_length: int = 5000) -> dict:
     """
     Read the content of a website and return the title, meta data, content, and sub-links.
     """

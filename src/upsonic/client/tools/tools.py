@@ -19,6 +19,9 @@ class UnsupportedLLMModelException(Exception):
 class ComputerUse:
     pass
 
+class Search:
+    pass
+
 
 class Tools:
     def tool(self, library: Optional[Union[str, List[str]]] = None):
