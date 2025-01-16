@@ -47,6 +47,9 @@ def run_tools_server(redirect_output: bool = False):
         return
 
     if sys.platform == 'darwin':
+        # Use 'spawn' instead of 'fork' on macOS
+        multiprocessing.set_start_method('spawn', force=True)
+    else:
         multiprocessing.set_start_method('fork', force=True)
 
     _server_process = multiprocessing.Process(target=_run_server, args=(redirect_output,))

@@ -63,6 +63,8 @@ def run_main_server(redirect_output: bool = False):
         return
 
     if sys.platform == 'darwin':
+        multiprocessing.set_start_method('spawn', force=True)
+    else:
         multiprocessing.set_start_method('fork', force=True)
 
     _server_process = multiprocessing.Process(target=_run_server, args=(redirect_output,))
@@ -92,6 +94,8 @@ from ..tools_server import run_tools_server, stop_tools_server, is_tools_server_
 
 def run_dev_server():
     if sys.platform == 'darwin':
+        multiprocessing.set_start_method('spawn', force=True)
+    else:
         multiprocessing.set_start_method('fork', force=True)
     run_main_server(redirect_output=True)
     run_tools_server(redirect_output=True)
