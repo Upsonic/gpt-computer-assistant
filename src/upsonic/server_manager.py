@@ -1,17 +1,12 @@
-import multiprocessing
 import os
 import signal
 import sys
 import time
-import uvicorn
-from typing import Optional
-import psutil
 import socket
+import subprocess
+import psutil
 from contextlib import closing
-
-# Set environment variable to avoid fork() issues on macOS
-if sys.platform == 'darwin':
-    os.environ['OBJC_DISABLE_INITIALIZE_FORK_SAFETY'] = 'YES'
+from typing import Optional
 
 class ServerManager:
     def __init__(self, app_path: str, host: str, port: int, name: str):
@@ -19,23 +14,8 @@ class ServerManager:
         self.host = host
         self.port = port
         self.name = name
-        self._process: Optional[multiprocessing.Process] = None
+        self._process: Optional[subprocess.Popen] = None
         self._pid_file = os.path.join(os.path.expanduser("~"), f".upsonic_{name}_server.pid")
-        
-        # Set up platform-specific configurations
-        if sys.platform == 'darwin':
-            self._mp_context = multiprocessing.get_context('fork')
-        elif sys.platform == 'win32':
-            self._mp_context = multiprocessing.get_context('spawn')
-        else:  # Linux and others
-            self._mp_context = multiprocessing.get_context('fork')
-
-    def _setup_log_directory(self):
-        """Create logs directory if it doesn't exist"""
-        log_dir = "logs"
-        if not os.path.exists(log_dir):
-            os.makedirs(log_dir)
-        return log_dir
 
     def _is_port_in_use(self) -> bool:
         with closing(socket.socket(socket.AF_INET, socket.SOCK_STREAM)) as sock:
@@ -43,7 +23,7 @@ class ServerManager:
 
     def _write_pid(self):
         """Write the current process ID to the PID file"""
-        if self._process:
+        if self._process and self._process.pid:
             with open(self._pid_file, 'w') as f:
                 f.write(str(self._process.pid))
 
@@ -65,29 +45,6 @@ class ServerManager:
         except OSError:
             pass
 
-    def _run_server(self, redirect_output: bool = False):
-        """Run the server process with the specified configuration."""
-        if redirect_output:
-            log_dir = self._setup_log_directory()
-            sys.stdout = open(os.path.join(log_dir, f'{self.name}_server.log'), 'a')
-            sys.stderr = open(os.path.join(log_dir, f'{self.name}_server_error.log'), 'a')
-        
-        def handle_signal(signum, frame):
-            sys.exit(0)
-            
-        signal.signal(signal.SIGTERM, handle_signal)
-        signal.signal(signal.SIGINT, handle_signal)
-        
-        config = uvicorn.Config(
-            self.app_path,
-            host=self.host,
-            port=self.port,
-            log_level="error",
-            access_log=False
-        )
-        server = uvicorn.Server(config)
-        server.run()
-
     def start(self, redirect_output: bool = False):
         """Start the server if it's not already running."""
         if self.is_running():
@@ -97,24 +54,49 @@ class ServerManager:
         if self._is_port_in_use():
             raise RuntimeError(f"Port {self.port} is already in use")
 
-        # Create process using the platform-specific context
-        self._process = self._mp_context.Process(
-            target=self._run_server,
-            args=(redirect_output,),
-            name=f"upsonic_{self.name}_server"
-        )
-        self._process.daemon = True
-        
+        # Set up logging
+        if redirect_output:
+            log_dir = "logs"
+            if not os.path.exists(log_dir):
+                os.makedirs(log_dir)
+            stdout = open(os.path.join(log_dir, f'{self.name}_server.log'), 'a')
+            stderr = open(os.path.join(log_dir, f'{self.name}_server_error.log'), 'a')
+        else:
+            stdout = subprocess.PIPE
+            stderr = subprocess.PIPE
+
+        # Prepare the command
+        cmd = [
+            sys.executable, "-m", "uvicorn",
+            self.app_path,
+            "--host", self.host,
+            "--port", str(self.port),
+            "--log-level", "error",
+            "--no-access-log"
+        ]
+
         try:
-            self._process.start()
+            # Start the server process
+            self._process = subprocess.Popen(
+                cmd,
+                stdout=stdout,
+                stderr=stderr,
+                start_new_session=True  # This creates a new process group
+            )
             self._write_pid()
-            
+
             # Wait for server to start
             start_time = time.time()
-            while not self._is_port_in_use() and time.time() - start_time < 10:
-                if not self._process.is_alive():
-                    raise RuntimeError(f"Failed to start {self.name} server")
+            max_wait_time = 30  # Increase wait time for slower systems
+            while not self._is_port_in_use() and time.time() - start_time < max_wait_time:
+                if self._process.poll() is not None:
+                    # Process has terminated
+                    raise RuntimeError(f"Server process terminated unexpectedly with code {self._process.returncode}")
                 time.sleep(0.1)
+
+            if time.time() - start_time >= max_wait_time:
+                raise RuntimeError(f"Timeout waiting for {self.name} server to start")
+
         except Exception as e:
             self.stop()  # Clean up if startup fails
             raise RuntimeError(f"Failed to start {self.name} server: {str(e)}")
@@ -125,23 +107,30 @@ class ServerManager:
         if pid:
             try:
                 process = psutil.Process(pid)
-                process.terminate()
-                process.wait(timeout=5)
-            except (psutil.NoSuchProcess, psutil.TimeoutExpired):
+                # Try to terminate the process group
+                os.killpg(os.getpgid(process.pid), signal.SIGTERM)
+                try:
+                    process.wait(timeout=5)
+                except psutil.TimeoutExpired:
+                    # If termination fails, force kill the process group
+                    os.killpg(os.getpgid(process.pid), signal.SIGKILL)
+            except (psutil.NoSuchProcess, ProcessLookupError):
                 pass
 
-        if self._process and self._process.is_alive():
-            self._process.terminate()
-            self._process.join(timeout=5)
-            if self._process.is_alive():
-                self._process.kill()
+        if self._process:
+            try:
+                self._process.terminate()
+                self._process.wait(timeout=5)
+            except (subprocess.TimeoutExpired, ProcessLookupError):
+                if self._process.poll() is None:
+                    self._process.kill()
 
         self._process = None
         self._cleanup_pid()
 
     def is_running(self) -> bool:
         """Check if the server is currently running."""
-        if self._process and self._process.is_alive():
+        if self._process and self._process.poll() is None:
             return True
 
         pid = self._read_pid()
