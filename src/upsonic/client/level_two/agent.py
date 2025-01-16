@@ -111,7 +111,7 @@ class Agent:
 
         response_format = task.response_format
         with sentry_sdk.start_transaction(op="task", name="Call.call") as transaction:
-            with sentry_sdk.start_span(op="serialize", description="Serialize response format"):
+            with sentry_sdk.start_span(op="serialize", name="Serialize response format"):
                 # Serialize the response format if it's a type or BaseModel
                 response_format_str = response_format_serializer(task.response_format)
 
@@ -120,7 +120,7 @@ class Agent:
 
 
 
-            with sentry_sdk.start_span(op="prepare_request", description="Prepare request data"):
+            with sentry_sdk.start_span(op="prepare_request", name="Prepare request data"):
                 # Prepare the request data
                 data = {
                     "agent_id": agent_configuration.agent_id,
@@ -136,7 +136,7 @@ class Agent:
 
 
 
-            with sentry_sdk.start_span(op="send_request", description="Send request to server"):
+            with sentry_sdk.start_span(op="send_request", name="Send request to server"):
                 result = self.send_request("/level_two/agent", data)
 
 
@@ -149,7 +149,7 @@ class Agent:
                 
 
 
-            with sentry_sdk.start_span(op="deserialize", description="Deserialize the result"):
+            with sentry_sdk.start_span(op="deserialize", name="Deserialize the result"):
 
                 deserialized_result = response_format_deserializer(response_format_str, result)
 

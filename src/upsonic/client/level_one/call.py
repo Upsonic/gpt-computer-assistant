@@ -87,7 +87,7 @@ class Call:
 
         response_format = task.response_format
         with sentry_sdk.start_transaction(op="task", name="Call.call") as transaction:
-            with sentry_sdk.start_span(op="serialize", description="Serialize response format"):
+            with sentry_sdk.start_span(op="serialize", name="Serialize response format"):
                 # Serialize the response format if it's a type or BaseModel
                 response_format_str = response_format_serializer(task.response_format)
 
@@ -96,7 +96,7 @@ class Call:
 
 
 
-            with sentry_sdk.start_span(op="prepare_request", description="Prepare request data"):
+            with sentry_sdk.start_span(op="prepare_request", name="Prepare request data"):
                 # Prepare the request data
                 data = {
                     "prompt": task.description,
@@ -109,7 +109,7 @@ class Call:
 
 
 
-            with sentry_sdk.start_span(op="send_request", description="Send request to server"):
+            with sentry_sdk.start_span(op="send_request", name="Send request to server"):
                 result = self.send_request("/level_one/gpt4o", data)
                 original_result = result
 
@@ -126,7 +126,7 @@ class Call:
                 
 
 
-            with sentry_sdk.start_span(op="deserialize", description="Deserialize the result"):
+            with sentry_sdk.start_span(op="deserialize", name="Deserialize the result"):
                 deserialized_result = response_format_deserializer(response_format_str, result)
 
 
