@@ -27,10 +27,31 @@ class CallManager:
 
         
         roulette_agent = agent_creator(response_format, tools, context, llm_model, system_prompt)
-    
+        
+        message = [                   {
+                        "type": "text",
+                        "text": f"{prompt}"
+                    }]
+
+
+
         try:
 
-            result = roulette_agent.run_sync(prompt)
+            if "claude-3-5-sonnet" in llm_model:
+                print("Tools", tools)
+                if "ComputerUse.*" in tools:
+                    try:
+                        from ..level_utilized.cu import ComputerUse_screenshot_tool
+                        result_of_screenshot = ComputerUse_screenshot_tool()
+                        message.append(result_of_screenshot)
+                    except Exception as e:
+                        print("Error", e)
+
+        
+            print("Message", message)
+
+
+            result = roulette_agent.run_sync(message)
 
             usage = result.usage()
 

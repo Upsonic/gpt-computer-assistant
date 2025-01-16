@@ -39,10 +39,31 @@ class AgentManager:
         if memory:
             message_history = get_temporary_memory(agent_id)
         
-    
+
+        
+        message = [                   {
+                        "type": "text",
+                        "text": f"{prompt}"
+                    }]
 
 
-        result = roulette_agent.run_sync(prompt, message_history=message_history)
+
+
+
+        if "claude-3-5-sonnet" in llm_model:
+            print("Tools", tools)
+            if "ComputerUse.*" in tools:
+                try:
+                    from ..level_utilized.cu import ComputerUse__screenshot
+                    message.append(ComputerUse__screenshot())
+                except Exception as e:
+                    print("Error", e)
+
+        
+
+
+
+        result = roulette_agent.run_sync(message, message_history=message_history)
 
         usage = result.usage()
 

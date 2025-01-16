@@ -222,7 +222,7 @@ class ComputerTool(BaseAnthropicTool):
         if action != "cursor_position":
             return await self.screenshot()
 
-    async def screenshot(self):
+    def screenshot(self):
         """Take a screenshot of the current screen and return the base64 encoded image."""
         temp_dir = Path(tempfile.gettempdir())
         path = temp_dir / f"screenshot_{uuid4().hex}.png"
@@ -260,6 +260,7 @@ class ComputerTool(BaseAnthropicTool):
                         "data": base64_image,
                     },
                 }
+                
         raise ToolError(f"Failed to take screenshot")
 
     async def shell(self, command: str, take_screenshot=True) -> ToolResult:
@@ -345,6 +346,12 @@ async def ComputerUse__screenshot():
     """Take a screenshot using the ComputerTool."""
     tool = ComputerTool()
     return await tool(action="screenshot")
+
+
+def ComputerUse_screenshot_tool():
+    """Take a screenshot using the ComputerTool and return the base64 encoded image."""
+    tool = ComputerTool()
+    return tool.screenshot()
 
 async def ComputerUse__cursor_position():
     """Get the current cursor position using the ComputerTool."""
