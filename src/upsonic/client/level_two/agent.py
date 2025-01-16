@@ -170,7 +170,9 @@ class Agent:
         if context is None:
             context = []
 
-        return {"result": deserialized_result["result"], "llm_model": llm_model, "response_format": response_format_req, "usage": deserialized_result["usage"], "tool_count": len(tools), "context_count": len(context)}
+        len_of_context = len(task.context) if task.context is not None else 0
+
+        return {"result": deserialized_result["result"], "llm_model": llm_model, "response_format": response_format_req, "usage": deserialized_result["usage"], "tool_count": len(tools), "context_count": len_of_context}
 
 
 
@@ -220,9 +222,11 @@ class Agent:
             website_content: Union[SearchResult, None]
             company_objective: Union[CompanyObjective, None]
             human_objective: Union[HumanObjective, None]
+            name_of_the_human_of_tasks: str = None
+            contact_of_the_human_of_tasks: str = None
 
 
-        total_character = Characterization(website_content=search_task.response, company_objective=company_objective_task.response, human_objective=human_objective_task.response)
+        total_character = Characterization(website_content=search_task.response, company_objective=company_objective_task.response, human_objective=human_objective_task.response, name_of_the_human_of_tasks=agent_configuration.name, contact_of_the_human_of_tasks=agent_configuration.contact)
 
         return total_character
 
@@ -240,7 +244,7 @@ class Agent:
 
 
         copy_agent_configuration = copy.deepcopy(agent_configuration)
-        copy_agent_configuration_json = copy_agent_configuration.model_dump_json(include={"job_title", "company_url", "company_objective"})
+        copy_agent_configuration_json = copy_agent_configuration.model_dump_json(include={"job_title", "company_url", "company_objective", "name", "contact"})
 
 
         
@@ -280,6 +284,11 @@ class Agent:
 
 
             the_task = sub_tasks
+        else:
+            if isinstance(task.context, list):
+                task.context.append(the_characterization)
+            else:
+                task.context = [the_characterization]
 
 
         # Add knowledge base to the context for each task
@@ -349,9 +358,9 @@ class Agent:
         class SubTaskList(ObjectResponse):
             sub_tasks: List[SubTask]
 
-        prompt = "You are a helpful assistant. User have an general task. You need to generate a list of sub tasks. Each sub task should be a Actionable step of main task. Do not duplicate your self each next task can see older tasks. You need to return a list of sub tasks. You should say to agent to make this job not making plan again and again. We need actions."
+        prompt = "You are a helpful assistant. User have an general task. You need to generate a list of sub tasks. Each sub task should be a Actionable step of main task. Do not duplicate your self each next task can see older tasks. You need to return a list of sub tasks. You should say to agent to make this job not making plan again and again. We need actions. If  If you have tools that can help you for the task specify them in the task."
 
-        sub_tasker = Task(description=prompt, response_format=SubTaskList, context=task)
+        sub_tasker = Task(description=prompt, response_format=SubTaskList, context=task, tools=task.tools)
 
         self.call(sub_tasker, llm_model)
 

@@ -14,6 +14,8 @@ class AgentConfiguration(BaseModel):
     job_title: str
     company_url: str
     company_objective: str
+    name: str = None
+    contact: str = None
 
     sub_task: bool = True
 
