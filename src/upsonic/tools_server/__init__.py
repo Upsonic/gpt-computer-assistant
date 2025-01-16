@@ -58,8 +58,8 @@ def run_tools_server(redirect_output: bool = False):
 
 
 
-def run_tools_server_internal():
-    uvicorn.run("upsonic.tools_server.server.api:app", host="0.0.0.0", port=8086, reload=True)
+def run_tools_server_internal(reload: bool = True):
+    uvicorn.run("upsonic.tools_server.server.api:app", host="localhost", port=8086, reload=reload)
 
 
 def stop_tools_server():

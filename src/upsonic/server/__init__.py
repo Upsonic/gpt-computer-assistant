@@ -72,8 +72,8 @@ def run_main_server(redirect_output: bool = False):
     time.sleep(2)  # Give the server a moment to start
 
 
-def run_main_server_internal():
-    uvicorn.run("upsonic.server.api:app", host="0.0.0.0", port=7541, reload=True)
+def run_main_server_internal(reload: bool = True):
+    uvicorn.run("upsonic.server.api:app", host="0.0.0.0", port=7541, reload=reload)
 
 
 
