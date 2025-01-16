@@ -208,7 +208,7 @@ class ComputerTool(BaseAnthropicTool):
                 pyautogui.click(button=button.get(action, "left"))
 
         elif action == "screenshot":
-            return await self.screenshot()
+            return self.screenshot()
 
         elif action == "cursor_position":
             x, y = pyautogui.position()
@@ -220,7 +220,7 @@ class ComputerTool(BaseAnthropicTool):
 
         # Take a screenshot after the action (except for cursor_position)
         if action != "cursor_position":
-            return await self.screenshot()
+            return self.screenshot()
 
     def screenshot(self):
         """Take a screenshot of the current screen and return the base64 encoded image."""
