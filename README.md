@@ -114,10 +114,9 @@ Our Framework officially supports Model Context Protocol (MCP) and custom tools.
 
 ```python
 @client.mcp()
-class GitHub:
-    command = "npx"
-    args = ["-y", "@modelcontextprotocol/server-github"]
-    env = {"GITHUB_PERSONAL_ACCESS_TOKEN": "YOUR_TOKEN"}
+class hackernews_mcp:
+    command = "uvx"
+    args = ["mcp-hn"]
 
 @client.tool()
 class MyTools:
