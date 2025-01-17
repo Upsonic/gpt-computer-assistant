@@ -24,7 +24,7 @@ class TimeoutException(Exception):
 class UpsonicClient(Call, Storage, Tools, Agent, Markdown, Others):
 
 
-    def __init__(self, url: str):
+    def __init__(self, url: str, debug: bool = False):
 
 
 
@@ -44,7 +44,10 @@ class UpsonicClient(Call, Storage, Tools, Agent, Markdown, Others):
             
             url = "http://localhost:7541"
             from ..server import run_dev_server, stop_dev_server, is_tools_server_running, is_main_server_running
-            run_dev_server()
+            if debug:
+                run_dev_server(redirect_output=False)
+            else:
+                run_dev_server(redirect_output=True)
 
             import atexit
 
