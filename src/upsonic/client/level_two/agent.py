@@ -54,10 +54,12 @@ class Agent:
             if isinstance(task, list):
                 for each in task:
                     the_result = self.send_agent_request(agent_configuration, each, llm_model)
+                    the_result["time"] = time.time() - start_time
                     results.append(the_result)
                     agent_end(the_result["result"], the_result["llm_model"], the_result["response_format"], start_time, time.time(), the_result["usage"], the_result["tool_count"], the_result["context_count"])
             else:
                 the_result = self.send_agent_request(agent_configuration, task, llm_model)
+                the_result["time"] = time.time() - start_time
                 results.append(the_result)
                 agent_end(the_result["result"], the_result["llm_model"], the_result["response_format"], start_time, time.time(), the_result["usage"], the_result["tool_count"], the_result["context_count"])
         except Exception as e:
@@ -331,6 +333,10 @@ class Agent:
             original_task._response = the_task.response
 
         
+        total_time = 0
+        for each in results:
+            total_time += each["time"]
+
         total_input_tokens = 0
         total_output_tokens = 0
         for each in results:
@@ -342,7 +348,7 @@ class Agent:
         if the_llm_model is None:
             the_llm_model = self.default_llm_model
 
-        agent_total_cost(total_input_tokens, total_output_tokens, the_llm_model)
+        agent_total_cost(total_input_tokens, total_output_tokens, total_time, the_llm_model)
 
 
 

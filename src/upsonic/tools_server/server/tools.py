@@ -328,7 +328,7 @@ async def add_mcp_tool_(name: str, command: str, args: List[str], env: Dict[str,
 
 
 @app.post(f"{prefix}/add_mcp_tool")
-@timeout(30.0)
+@timeout(60.0)
 async def add_mcp_tool(request: AddMCPToolRequest):
     """
     Endpoint to add a tool.

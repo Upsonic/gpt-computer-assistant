@@ -128,11 +128,12 @@ def agent_end(result: Any, llm_model: str, response_format: str, start_time: flo
     spacing()
 
 
-def agent_total_cost(total_input_tokens: int, total_output_tokens: int, llm_model: str):
+def agent_total_cost(total_input_tokens: int, total_output_tokens: int, total_time: float, llm_model: str):
     table = Table(show_header=False, expand=True, box=None)
     table.width = 40
 
     table.add_row("[bold]Estimated Cost:[/bold]", f"{get_estimated_cost(total_input_tokens, total_output_tokens, llm_model)}$")
+    table.add_row("[bold]Time Taken:[/bold]", f"{total_time:.2f} seconds")
     panel = Panel(
         table,
         title="[bold white]Upsonic - Agent Total Cost[/bold white]",
