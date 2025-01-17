@@ -102,6 +102,7 @@ class News(ObjectResponse):
     title: str
     body: str
     url: str
+    tags: list[str]
 
 class response_format(ObjectResponse):
     news_list: list[News]
@@ -252,9 +253,27 @@ client.multi_agent([agent1, agent2], [task1, task2])
 ```
 
 ### Reliable Computer Use
+Computer use can able to human task like humans, mouse move, mouse click, typing and scrolling and etc. So you can build tasks over non-API systems. It can help your linkedin cases, internal tools. Computer use is supported by only Claude for now.
 
-### Dockerized Server Deploy
+```python
 
-### Refrection (Soon)
+from upsonic.client.tools import ComputerUse
 
-### Verifiers (Soon)
+...
+
+tools = [ComputerUse]
+...
+
+```
+
+
+<br>
+<br>
+<br>
+<br>
+
+### Coming Soon
+
+- **Dockerized Server Deploy**
+- **Refrection**
+- **Verifiers**
