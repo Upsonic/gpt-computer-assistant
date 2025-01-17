@@ -42,10 +42,10 @@ def is_main_server_running() -> bool:
     """Check if the main server is currently running."""
     return _server_manager.is_running()
 
-def run_dev_server():
+def run_dev_server(redirect_output=True):
     """Run both main and tools servers for development"""
-    run_main_server(redirect_output=True)
-    run_tools_server(redirect_output=True)
+    run_main_server(redirect_output=redirect_output)
+    run_tools_server(redirect_output=redirect_output)
     import time
     while not is_main_server_running() or not is_tools_server_running():
         time.sleep(0.1)
