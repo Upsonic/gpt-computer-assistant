@@ -112,7 +112,7 @@ class Agent:
         tools = tools_serializer(task.tools)
 
         response_format = task.response_format
-        with sentry_sdk.start_transaction(op="task", name="Call.call") as transaction:
+        with sentry_sdk.start_transaction(op="task", name="Agent.send_agent_request") as transaction:
             with sentry_sdk.start_span(op="serialize", name="Serialize response format"):
                 # Serialize the response format if it's a type or BaseModel
                 response_format_str = response_format_serializer(task.response_format)

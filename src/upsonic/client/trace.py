@@ -5,13 +5,6 @@ from ..get_version import get_library_version
 from ..system_id import get_system_id
 
 
-class SilentTransport(Transport):
-    def __init__(self, options):
-        super().__init__(options)
-        self.capture_failed_request = lambda *args, **kwargs: None
-
-    def capture_envelope(self, envelope):
-        pass
 
 
 sentry_sdk_.init(
@@ -19,7 +12,7 @@ sentry_sdk_.init(
     traces_sample_rate=1.0,
     release=f"upsonic@{get_library_version()}",
     server_name="upsonic_client",
-    transport=SilentTransport
+
 )
 
 sentry_sdk_.set_user({"id": get_system_id()})
