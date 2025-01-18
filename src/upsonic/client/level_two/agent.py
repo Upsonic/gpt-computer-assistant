@@ -364,9 +364,9 @@ class Agent:
         class SubTaskList(ObjectResponse):
             sub_tasks: List[SubTask]
 
-        prompt = "You are a helpful assistant. User have an general task. You need to generate a list of sub tasks. Each sub task should be a Actionable step of main task. Do not duplicate your self each next task can see older tasks. You need to return a list of sub tasks. You should say to agent to make this job not making plan again and again. We need actions. If  If you have tools that can help you for the task specify them in the task. At the latest task focus on to use older task contexts and returning the wide answer."
+        prompt = "You are a helpful assistant. User have an general task. You need to generate a list of sub tasks. Each sub task should be a Actionable step of main task. Do not duplicate your self each next task can see older tasks. You need to return a list of sub tasks. You should say to agent to make this job not making plan again and again. We need actions. If  If you have tools that can help you for the task specify them in the task. At the latest task focus on to use older task contexts and returning the wide answer. If there is an context its the user want to see so create tasks to fill them all."
 
-        sub_tasker = Task(description=prompt, response_format=SubTaskList, context=task, tools=task.tools)
+        sub_tasker = Task(description=prompt, response_format=SubTaskList, context=[task, task.response_format], tools=task.tools)
 
         self.call(sub_tasker, llm_model)
 
