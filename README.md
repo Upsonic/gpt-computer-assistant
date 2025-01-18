@@ -1,3 +1,5 @@
+# We do NOT and WILL not have any Crypto Projects, they are a complete SCAM
+
 
 <img src="https://github.com/user-attachments/assets/10a3a9ca-1f39-410c-ac48-a7365de589d9" >
 
@@ -6,8 +8,6 @@
 
   <p>
     <a href="https://discord.gg/qApFmWMt8x"><img alt="Static Badge" src="https://img.shields.io/badge/Discord-Join?style=social&logo=discord" height=30></a>
-    .
-    <a href="https://x.com/GPTCompAsst"><img alt="Static Badge" src="https://img.shields.io/badge/X_App-Join?style=social&logo=x" height=30></a>
     .
     <a href="https://trendshift.io/repositories/10584" target="_blank"><img src="https://trendshift.io/api/badge/repositories/10584" alt="unclecode%2Fcrawl4ai | Trendshift" height=30/></a>
     .
@@ -55,7 +55,7 @@ Upsonic offers a cutting-edge enterprise-ready framework where you can orchestra
 ## Installation
 
 ```bash
-pip install 'upsonic[server]'==0.35.0a1737117468
+pip install 'upsonic[server]'==0.35.0a1737212799
 
 ```
 <br>
@@ -102,6 +102,7 @@ class News(ObjectResponse):
     title: str
     body: str
     url: str
+    tags: list[str]
 
 class response_format(ObjectResponse):
     news_list: list[News]
@@ -252,9 +253,27 @@ client.multi_agent([agent1, agent2], [task1, task2])
 ```
 
 ### Reliable Computer Use
+Computer use can able to human task like humans, mouse move, mouse click, typing and scrolling and etc. So you can build tasks over non-API systems. It can help your linkedin cases, internal tools. Computer use is supported by only Claude for now.
 
-### Dockerized Server Deploy
+```python
 
-### Refrection (Soon)
+from upsonic.client.tools import ComputerUse
 
-### Verifiers (Soon)
+...
+
+tools = [ComputerUse]
+...
+
+```
+
+
+<br>
+<br>
+<br>
+<br>
+
+### Coming Soon
+
+- **Dockerized Server Deploy**
+- **Refrection**
+- **Verifiers**
