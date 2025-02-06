@@ -47,6 +47,8 @@ Upsonic offers a cutting-edge enterprise-ready framework where you can orchestra
 
 You can access our documentation at [docs.upsonic.ai](https://docs.upsonic.ai/). All concepts and examples are available there.
 
+Additionally, you can find many [MCP tutorials](https://docs.mcp.run/category/tutorials) to help you get started with MCP integration.
+
 <br>
 <br>
 
